@@ -10,7 +10,7 @@ name: CI (Build & Test)
 on:
   pull_request:
     branches:
-      - master
+      - main
       - development
 
 jobs:
@@ -22,8 +22,8 @@ jobs:
         if: github.base_ref == 'development'
         run: |
           echo "NODE_ENV=development" >> $GITHUB_ENV
-      - name: Are we PR-ing against master?
-        if: github.base_ref == 'master'
+      - name: Are we PR-ing against main?
+        if: github.base_ref == 'main'
         run: |
           echo "GITHUB_REF_SLUG=latest" >> $GITHUB_ENV
           echo "NODE_ENV=production" >> $GITHUB_ENV
