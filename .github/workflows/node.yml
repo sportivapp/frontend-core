@@ -38,6 +38,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run linter
+        if: github.base_ref == 'development'
         run: npm run lint
       - name: Build
         run: npm run generate
