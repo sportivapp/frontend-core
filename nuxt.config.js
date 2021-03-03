@@ -3,12 +3,14 @@ import languages from './static/lang/languages'
 const dev = () => process.env.NODE_ENV !== 'production'
 
 export default {
+  target: 'static',
   ssr: false,
   publicRuntimeConfig: {
     tournamentUrl: process.env.tournamentUrl || 'https://tournament.sportiv.app',
     tournamentSeeAll: process.env.tournamentSeeAll || 'https://tournament.sportiv.app/tournament',
     tournamentCreateUrl: process.env.tournamentCreateUrl || 'https://tournament.sportiv.app/create'
   },
+
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
     title: 'Sportiv',

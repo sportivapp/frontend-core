@@ -5,7 +5,7 @@
   >
     <v-col cols="4">
       <p class="about-info text-justify">
-         {{ $t('aboutUs.aboutInfoLeftParagraph') }}
+        {{ $t('aboutUs.aboutInfoLeftParagraph') }}
       </p>
     </v-col>
 
