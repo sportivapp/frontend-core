@@ -22,15 +22,6 @@ jobs:
         node-version: [14]
     steps:
       - uses: actions/checkout@v2
-      - name: Are we PR-ing against dev?
-        if: github.base_ref == 'development'
-        run: |
-          echo "NODE_ENV=development" >> $GITHUB_ENV
-      - name: Are we PR-ing against main?
-        if: github.base_ref == 'main'
-        run: |
-          echo "GITHUB_REF_SLUG=latest" >> $GITHUB_ENV
-          echo "NODE_ENV=production" >> $GITHUB_ENV
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
@@ -38,7 +29,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run linter
-        if: github.base_ref == 'development'
         run: npm run lint
       - name: Build
         run: npm run generate
