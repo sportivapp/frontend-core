@@ -6,6 +6,8 @@ LABEL org.opencontainers.image.source https://github.com/sportivapp/consumer-web
 
 ARG node_env=development
 
+RUN apt-get update && apt-get -qq -y install --no-install-recommends make g++ python
+
 COPY package.json /app/sportivapp/consumer-webapp-nuxt/package.json
 COPY package-lock.json /app/sportivapp/consumer-webapp-nuxt/package-lock.json
 
@@ -20,7 +22,7 @@ COPY . /app/sportivapp/consumer-webapp-nuxt
 
 ENV NODE_ENV=$node_env
 
-RUN npm generate
+RUN npm run generate
 
 # Stage 2
 FROM nginx:alpine
