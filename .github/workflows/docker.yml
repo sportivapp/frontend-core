@@ -2,7 +2,7 @@
 #  docker.yml
 #  Sportiv
 #
-#  Created by Yefta Sutanto on 01/03/21.
+#  Created by Yefta Sutanto on 04/03/21.
 #
 
 name: Publish Docker image
@@ -11,6 +11,7 @@ on:
   push:
     branches:
       - main
+      - staging
       - development
 
 jobs:
@@ -24,6 +25,10 @@ jobs:
         if: github.ref == 'refs/heads/development'
         run: |
           echo "NODE_ENV=development" >> $GITHUB_ENV
+      - name: Are we on staging?
+        if: github.ref == 'refs/heads/staging'
+        run: |
+          echo "NODE_ENV=staging" >> $GITHUB_ENV
       - name: Are we on main?
         if: github.ref == 'refs/heads/main'
         run: |
