@@ -11,6 +11,7 @@ on:
   push:
     branches:
       - main
+      - staging
       - development
 
 jobs:
@@ -24,6 +25,10 @@ jobs:
         if: github.ref == 'refs/heads/development'
         run: |
           echo "NODE_ENV=development" >> $GITHUB_ENV
+      - name: Are we on staging?
+        if: github.ref == 'refs/heads/staging'
+        run: |
+          echo "NODE_ENV=staging" >> $GITHUB_ENV
       - name: Are we on main?
         if: github.ref == 'refs/heads/main'
         run: |
