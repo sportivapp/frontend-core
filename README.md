@@ -22,13 +22,21 @@ npm install
 npm run dev
 ```
 
-## Local .env
+## .env
 
-for running in your machine, please prepare your local .env
+for running in your machine, please prepare your .env
+
+Development
 ```bash
-BASE_URL_API_TOURNAMENT=https://apitournament.quickplay.app
-BASE_URL_SPORTIV=https://quickplay.app/backend
-SRC_URL_SPORTIV=https://quickplay.app/src/
+tournamentUrl=https://tournament.quickplay.app
+tournamentCreateUrl=https://tournament.quickplay.app/tournament/form/step-1 
+```
+Production
+```bash
+tournamentUrl=https://tournament.sportiv.app
+tournamentSeeAll=https://tournament.sportiv.app/tournament
+tournamentCreateUrl=https://tournament.sportiv.app/tournament/form/step-1
+
 ```
 
 ## Deployment Staging
