@@ -89,7 +89,7 @@ export default {
   proxy: {
     '/backend': {
       target: dev()
-        ? 'https://api.quickplay.app/api/v1'
+        ? 'https://api.quickplay.app/core/api/v1'
         : '/',
       pathRewrite: {
         '^/backend': '/'
@@ -97,7 +97,7 @@ export default {
     },
     '/src': {
       target: dev()
-        ? 'https://api.quickplay.app/'
+        ? 'https://api.quickplay.app/core'
         : '/src/',
       pathRewrite: {
         '^/src': '/'
