@@ -1,6 +1,7 @@
 # [![sportiv](https://www.sportiv.app/_nuxt/img/sportiv-orange.fe73cc7.svg)](https://www.sportiv.app)
-## Frontend Core
-> this is the repository that runs sportiv homepage (core)
+
+## Frontend Organization
+> this is the repository that runs sportiv organization
 
 ## Preparation
 
@@ -21,16 +22,40 @@ npm install
 npm run dev
 ```
 
-## Build Setup
+## Local .env
+
+for running in your machine, please prepare your local .env
+```bash
+BASE_URL_API_TOURNAMENT=https://apitournament.quickplay.app
+BASE_URL_SPORTIV=https://quickplay.app/backend
+SRC_URL_SPORTIV=https://quickplay.app/src/
+```
+
+## Deployment Staging
 
 ```bash
+# pull production branch
+git pull staging
+
 # install dependency
 npm install
+
 # build for production and launch server
 $ npm run build
 
-# generate static project
-$ npm run generate
+```
+
+## Deployment Production
+
+```bash
+# pull staging branch
+git pull main
+
+# install dependency
+npm install
+
+# build for production and launch server
+$ npm run build
 ```
 
 ## Advanced
