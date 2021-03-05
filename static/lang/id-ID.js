@@ -34,7 +34,15 @@ export default () => {
         logout: 'Keluar',
         news: 'Berita',
         team: 'Tim',
-        tournament: 'Turnamen'
+        myTeam: 'My Team',
+        createTeam: 'Create Team',
+        tournament: 'Turnamen',
+        faq: 'FAQ',
+        dataNotAvailable: 'Data tidak tersedia',
+        day: 'hari',
+        month: 'bulan',
+        year: 'tahun',
+        description: 'Deskripsi'
       },
       loginPage: {
         login: 'Masuk',
@@ -131,7 +139,50 @@ export default () => {
         sportivTournament: 'Sportiv Turnamen',
         appBarSubtitle: 'Buat dan atur semua turnamen dengan mudah dalam satu tempat.',
         createTournament: 'Buat Turnamen',
-        manageTournament: 'Atur Turnamen'
+        manageTournament: 'Atur Turnamen',
+        emptyTitle: 'Ya, turnamen nya lagi kosong',
+        emptySubTitle: 'Cari yang lain aja dulu',
+        findTournament: 'Cari Turnamen',
+        finished: 'Selesai',
+        onGoing: 'Berlangsung',
+        upComing: 'Akan Datang',
+        openRegistration: 'Registrasi Dibuka',
+        team: 'Tim',
+        sort: 'Urutkan',
+        priceFree: 'Gratis',
+        sorts: [
+          {
+            id: 'OLDEST',
+            text: 'Terlama'
+          },
+          {
+            id: 'NEWEST',
+            text: 'Terbaru'
+          }
+        ],
+        selectFilter: 'Pilih Filter',
+        fee: [
+          {
+            id: 'ALL',
+            text: 'Semua'
+          },
+          {
+            id: 'FREE',
+            text: 'Gratis'
+          },
+          {
+            id: 'PAID',
+            text: 'Berbayar'
+          }
+        ],
+        registrationFee: 'Biaya Registrasi',
+        location: 'Lokasi',
+        tournamentDate: 'Tanggal Turnamen',
+        organizer: 'Penyelenggara',
+        readNow: 'Baca Sekarang',
+        emptyParticipants: 'Belum ada peserta yang terdaftar',
+        emptyParticipantsSub: 'Daftarkan tim Anda sekarang',
+        tournamentSeeAll: 'Lihat Semua Turnamen'
       },
       organization: {
         organizationPartner: 'Mitra Organisasi',
@@ -154,7 +205,9 @@ export default () => {
         followUs: 'Ikuti Kami',
         motto: 'Sport at Your Fingertips',
         termOfServices: 'Syarat dan ketentuan',
-        privacyPolicy: 'Kebijakan Privasi'
+        privacyPolicy: 'Kebijakan Privasi',
+        help: 'Bantuan',
+        faq: 'FAQ'
       },
       aboutUs: {
         title: 'Tentang Kami',
@@ -211,6 +264,37 @@ export default () => {
             subtitle: 'Wadah berdiskusi mengenai topik olahraga yang paling menarik untukmu.'
           }
         ]
+      },
+      contactUs: {
+        title: 'Hubungi Kami',
+        headings: 'Ada yang bisa kami bantu?',
+        subTitle: 'Kami akan bantu menjawab semua pertanyaan dan kebutuhan Anda. Hubungi kami sekarang.',
+        emailNow: 'Email Sekarang',
+        whatsAppNow: 'WhatsApp Sekarang',
+        callCenter: 'Pusat Panggilan'
+      },
+      home: {
+        trustedByTitle: 'Dipercayai oleh Organisasi Nasional',
+        trustedBySubTitle: 'Sportiv telah diberi kepercayaan oleh' +
+          ' organisasi-organisasi olahraga nasional untuk saling bekerja sama memperluas komunitas olahraga.'
+      },
+      cmsClass: {
+        classDetail: 'Detail Kelas',
+        classCategory: 'Kategori Kelas',
+        sportType: 'Tipe Olahraga',
+        participants: 'Peserta',
+        personInCharge: 'PIC',
+        personInChargePhone: 'No. Telp. PIC',
+        coach: 'Pelatih',
+        location: 'Lokasi',
+        showMore: 'Tampilkan banyak',
+        searchParticipants: 'Cari peserta',
+        classFee: 'Pendaftaran',
+        deleteModalTitle: 'Hapus Kelas',
+        deleteAction: 'Hapus',
+        deleteCancel: 'Batal',
+        deleteMessage: 'Kamu yakin untuk hapus kelas sekarang?',
+        deleteSuccess: 'Kelas berhasil dihapus'
       }
     })
   })

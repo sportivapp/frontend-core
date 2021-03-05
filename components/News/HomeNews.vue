@@ -3,6 +3,7 @@
     see-all-link="/news"
     :news-list="latestNews"
     :is-loading="isLoading"
+    enable-orange-dot
   />
 </template>
 

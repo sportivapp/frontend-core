@@ -29,13 +29,34 @@
                 <v-row no-gutters class="home-footer__banner__sub-title">
                   {{ $t('homeFooter.subTitle') }}
                 </v-row>
-                <v-row no-gutters class="home-footer__banner__download">
-                  <a
-                    href="https://play.google.com/store/apps/details?id=com.sportiv"
-                    target="_blank"
-                  >
-                    <img src="../../assets/images/icons/google_play.png">
-                  </a>
+                <v-row
+                  no-gutters
+                  justify="start"
+                  align="center"
+                  class="home-footer__banner__download"
+                >
+                  <v-col cols="auto" class="pa-0">
+                    <a
+                      href="https://play.google.com/store/apps/details?id=com.sportiv"
+                      target="_blank"
+                    >
+                      <img
+                        src="@/assets/images/icons/google_play.png"
+                        class="home-footer__banner__download__image"
+                      >
+                    </a>
+                  </v-col>
+                  <v-col cols="auto" class="py-0 pl-2">
+                    <a
+                      href="https://apps.apple.com/id/app/sportiv/id1548121802"
+                      target="_blank"
+                    >
+                      <img
+                        src="@/assets/images/icons/app_store.png"
+                        class="home-footer__banner__download__image"
+                      >
+                    </a>
+                  </v-col>
                 </v-row>
               </v-col>
               <v-col
@@ -68,68 +89,6 @@
           >
         </v-row>
         <v-row no-gutters justify="start" align="start">
-          <v-col cols="12" md="auto">
-            <v-row no-gutters class="home-footer__texts__header">
-              {{ $t('homeFooter.product') }}
-            </v-row>
-            <v-row no-gutters class="home-footer__texts__item">
-              <v-col>
-                <nuxt-link to="/organization">
-                  {{ $t('homeFooter.organization') }}
-                </nuxt-link>
-                <br>
-                <nuxt-link to="/team">
-                  {{ $t('homeFooter.team') }}
-                </nuxt-link>
-                <br>
-                <nuxt-link to="/forum">
-                  {{ $t('homeFooter.forum') }}
-                </nuxt-link>
-              </v-col>
-              <v-col class="pl-11">
-                <nuxt-link to="/class">
-                  {{ $t('homeFooter.class') }}
-                </nuxt-link>
-                <br>
-                <nuxt-link to="/tournament">
-                  {{ $t('homeFooter.tournament') }}
-                </nuxt-link>
-                <br>
-                <nuxt-link to="/booking">
-                  {{ $t('homeFooter.booking') }}
-                </nuxt-link>
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-spacer />
-          <v-col cols="12" md="auto">
-            <v-row
-              no-gutters
-              class="home-footer__texts__header"
-            >
-              {{ $t('homeFooter.company') }}
-            </v-row>
-            <v-row no-gutters class="home-footer__texts__item">
-              <v-col>
-                <nuxt-link to="/about">
-                  {{ $t('homeFooter.aboutUs') }}
-                </nuxt-link>
-                <br>
-                <nuxt-link to="/contact">
-                  {{ $t('homeFooter.contactUs') }}
-                </nuxt-link>
-                <br>
-                <nuxt-link to="/legal/term-of-services">
-                  {{ $t('homeFooter.termOfServices') }}
-                </nuxt-link>
-                <br>
-                <nuxt-link to="/legal/privacy-policy">
-                  {{ $t('homeFooter.privacyPolicy') }}
-                </nuxt-link>
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-spacer />
           <v-col cols="12" md="auto">
             <v-row no-gutters class="home-footer__texts__header">
               {{ $t('homeFooter.followUs') }}
@@ -179,18 +138,108 @@
               </v-col>
             </v-row>
             <v-row no-gutters class="home-footer__texts__motto">
-              {{ $t('homeFooter.motto') }}
+              <!-- {{ $t('homeFooter.motto') }} -->
+              <translate-box />
+            </v-row>
+          </v-col>
+          <v-spacer />
+          <v-col cols="12" md="auto">
+            <v-row no-gutters class="home-footer__texts__header">
+              {{ $t('homeFooter.product') }}
+            </v-row>
+            <v-row no-gutters class="home-footer__texts__item">
+              <v-col>
+                <nuxt-link to="/organization" class="home-footer__texts__item">
+                  {{ $t('homeFooter.organization') }}
+                </nuxt-link>
+                <br>
+                <nuxt-link to="/team" class="home-footer__texts__item">
+                  {{ $t('homeFooter.team') }}
+                </nuxt-link>
+                <br>
+                <nuxt-link to="/forum" class="home-footer__texts__item">
+                  {{ $t('homeFooter.forum') }}
+                </nuxt-link>
+              </v-col>
+              <v-col class="pl-11">
+                <nuxt-link to="/class" class="home-footer__texts__item">
+                  {{ $t('homeFooter.class') }}
+                </nuxt-link>
+                <br>
+                <nuxt-link to="/tournament" class="home-footer__texts__item">
+                  {{ $t('homeFooter.tournament') }}
+                </nuxt-link>
+                <br>
+                <nuxt-link to="/booking" class="home-footer__texts__item">
+                  {{ $t('homeFooter.booking') }}
+                </nuxt-link>
+              </v-col>
+            </v-row>
+          </v-col>
+          <v-spacer />
+          <v-col cols="12" md="auto">
+            <v-row
+              no-gutters
+              class="home-footer__texts__header"
+            >
+              {{ $t('homeFooter.company') }}
+            </v-row>
+            <v-row no-gutters class="home-footer__texts__item">
+              <v-col>
+                <nuxt-link to="/about">
+                  {{ $t('homeFooter.aboutUs') }}
+                </nuxt-link>
+                <br>
+                <nuxt-link to="/legal/term-of-services">
+                  {{ $t('homeFooter.termOfServices') }}
+                </nuxt-link>
+                <br>
+                <nuxt-link to="/legal/privacy-policy">
+                  {{ $t('homeFooter.privacyPolicy') }}
+                </nuxt-link>
+              </v-col>
+            </v-row>
+          </v-col>
+          <v-spacer />
+          <v-col cols="12" md="auto">
+            <v-row
+              no-gutters
+              class="home-footer__texts__header"
+            >
+              {{ $t('homeFooter.help') }}
+            </v-row>
+            <v-row no-gutters class="home-footer__texts__item">
+              <v-col>
+                <nuxt-link to="/contact">
+                  {{ $t('homeFooter.contactUs') }}
+                </nuxt-link>
+                <br>
+                <!-- <nuxt-link to="/faq">
+                  {{ $t('homeFooter.faq') }}
+                </nuxt-link> -->
+              </v-col>
             </v-row>
           </v-col>
         </v-row>
       </v-col>
     </v-row>
+    <v-divider class="home-footer__divider" />
+    <v-row justify="center">
+      <p class="home-footer__copyrightTxt">
+        &copy; 2021 PT Aplikasi Inovasi Solusindo
+      </p>
+    </v-row>
   </v-container>
 </template>
 
 <script>
+import TranslateBox from './TranslateBox.vue'
+
 export default {
-  name: 'HomeFooter'
+  name: 'HomeFooter',
+  components: {
+    TranslateBox
+  }
 }
 </script>
 
@@ -241,7 +290,7 @@ $ellipse-height: 200px;
       margin-top: 24px;
     }
 
-    &__download {
+    &__download__image {
       width: 147px;
       height: 44px;
       object-fit: contain;
@@ -261,7 +310,8 @@ $ellipse-height: 200px;
 
   &__texts {
     margin-top: 106px;
-    margin-bottom: 88px;
+    margin-bottom: 24px;
+
     &__sportiv-logo {
       width: 188px;
       height: 60px;
@@ -281,6 +331,7 @@ $ellipse-height: 200px;
       font-size: 16px;
       line-height: 2;
       color: $light-grey-1;
+      margin-bottom: 20px;
 
       a {
         text-decoration: none;
@@ -294,9 +345,10 @@ $ellipse-height: 200px;
           height: 40px;
           width: 40px;
           object-fit: contain;
-          margin-right: 6px;
+          margin-right: 16px;
         }
       }
+
     }
 
     &__motto {
@@ -305,6 +357,20 @@ $ellipse-height: 200px;
       font-weight: 700;
       color: $white-2;
     }
+  }
+
+  &__divider {
+    border: 1px solid $grey-neutral;
+    margin: 0 200px;
+  }
+
+  &__copyrightTxt {
+    color: $grey-neutral;
+    padding: 18px 0;
+
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 158%;
   }
 }
 </style>

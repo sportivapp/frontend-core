@@ -12,6 +12,7 @@
         <img :src="require('~/assets/images/logos/sportiv-orange.svg')">
       </nuxt-link>
       <v-row class="pl-3">
+        <!-- organization -->
         <v-menu
           bottom
           offset-y
@@ -52,49 +53,58 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <!--        <v-menu-->
-        <!--          bottom-->
-        <!--          offset-y-->
-        <!--          open-on-hover-->
-        <!--        >-->
-        <!--          <template v-slot:activator="{ on, attrs }">-->
-        <!--            <v-btn-->
-        <!--              v-bind="attrs"-->
-        <!--              class="app-bar__menu"-->
-        <!--              elevation="0"-->
-        <!--              text-->
-        <!--              v-on="on"-->
-        <!--            >-->
-        <!--              Tim-->
-        <!--              <v-icon right>-->
-        <!--                mdi-chevron-down-->
-        <!--              </v-icon>-->
-        <!--            </v-btn>-->
-        <!--          </template>-->
-        <!--          <v-list>-->
-        <!--            <v-list-item>-->
-        <!--              <v-list-item-title>List of Teams</v-list-item-title>-->
-        <!--            </v-list-item>-->
-        <!--          </v-list>-->
-        <!--        </v-menu>-->
-        <!--        <nuxt-link class="app-bar__menu&#45;&#45;link" to="/forum">-->
+        <!-- team -->
+        <!-- <v-menu
+          bottom
+          offset-y
+          open-on-hover
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              class="app-bar__menu"
+              elevation="0"
+              text
+              v-on="on"
+              @mouseover.native.stop="showOverlay"
+              @mouseleave.native.stop="hideOverlay"
+            >
+              {{ $t('common.team') }}
+              <v-icon right>
+                mdi-chevron-down
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-list
+            class="app-bar__menu__list"
+            @mouseover.native.stop="showOverlay"
+            @mouseleave.native.stop="hideOverlay"
+          >
+            <v-list-item
+              class="app-bar__menu__item"
+              @click="toggleShowMyTeam"
+            >
+              {{ $t('common.myTeam') }}
+            </v-list-item>
+            <v-list-item
+              class="app-bar__menu__item"
+              @click="toggleShowCreateTeam"
+            >
+              {{ $t('common.createTeam') }}
+            </v-list-item>
+          </v-list>
+        </v-menu> -->
+        <!-- class -->
+        <!--        <nuxt-link class="app-bar__menu" to="/class">-->
         <!--          <v-btn-->
         <!--            class="app-bar__menu"-->
         <!--            elevation="0"-->
         <!--            text-->
         <!--          >-->
-        <!--            Forum-->
+        <!--            {{ $t('common.class') }}-->
         <!--          </v-btn>-->
         <!--        </nuxt-link>-->
-        <!--        <nuxt-link class="app-bar__menu&#45;&#45;link" to="/class">-->
-        <!--          <v-btn-->
-        <!--            class="app-bar__menu"-->
-        <!--            elevation="0"-->
-        <!--            text-->
-        <!--          >-->
-        <!--            Kelas-->
-        <!--          </v-btn>-->
-        <!--        </nuxt-link>-->
+        <!-- tournament -->
         <v-menu
           bottom
           offset-y
@@ -123,16 +133,13 @@
           >
             <v-list-item class="pa-0">
               <v-row justify="space-between" align="center" no-gutters>
-                <v-col class="tournament-menu__title">
-                  {{ $t('tournament.title') }}
-                </v-col>
-                <v-col align="end">
-                  <a
-                    :href="$config.tournamentSeeAll"
+                <v-col align="start">
+                  <router-link
+                    to="/tournament"
                     class="tournament-menu__see-all"
                   >
-                    {{ $t('common.seeAll') }}
-                  </a>
+                    {{ $t('tournament.tournamentSeeAll') }}
+                  </router-link>
                 </v-col>
               </v-row>
             </v-list-item>
@@ -168,31 +175,55 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <!--        <nuxt-link class="app-bar__menu&#45;&#45;link" to="/booking">-->
+        <!-- booking -->
+        <!-- <v-menu
+          bottom
+          offset-y
+          open-on-hover
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              class="app-bar__menu"
+              elevation="0"
+              text
+              v-on="on"
+              @mouseover.native.stop="showOverlay"
+              @mouseleave.native.stop="hideOverlay"
+            >
+              {{ $t('common.booking') }}
+              <v-icon right>
+                mdi-chevron-down
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-list
+            class="app-bar__menu__list"
+            @mouseover.native.stop="showOverlay"
+            @mouseleave.native.stop="hideOverlay"
+          >
+            <v-list-item
+              class="app-bar__menu__item"
+              @click="toggleShowBooking"
+            >
+              Show Booking
+            </v-list-item>
+            <v-list-item
+              class="app-bar__menu__item"
+              @click="toggleShowCreateBooking"
+            >
+              Create Booking
+            </v-list-item>
+          </v-list>
+        </v-menu> -->
+        <!-- forum -->
+        <!--        <nuxt-link class="app-bar__menu" to="/forum">-->
         <!--          <v-btn-->
         <!--            class="app-bar__menu"-->
         <!--            elevation="0"-->
         <!--            text-->
         <!--          >-->
-        <!--            Booking Lapangan-->
-        <!--          </v-btn>-->
-        <!--        </nuxt-link>-->
-        <!--        <nuxt-link class="app-bar__menu&#45;&#45;link" to="/shop">-->
-        <!--          <v-btn-->
-        <!--            class="app-bar__menu"-->
-        <!--            elevation="0"-->
-        <!--            text-->
-        <!--          >-->
-        <!--            Shop-->
-        <!--          </v-btn>-->
-        <!--        </nuxt-link>-->
-        <!--        <nuxt-link class="app-bar__menu&#45;&#45;link" to="/coming-soon">-->
-        <!--          <v-btn-->
-        <!--            class="app-bar__menu"-->
-        <!--            elevation="0"-->
-        <!--            text-->
-        <!--          >-->
-        <!--            Coming Soon-->
+        <!--            {{ $t('common.forum') }}-->
         <!--          </v-btn>-->
         <!--        </nuxt-link>-->
       </v-row>
@@ -232,7 +263,7 @@
       <v-spacer />
     </v-app-bar>
     <v-app-bar
-      v-if="isSmallDevice"
+      v-else
       app
       color="white"
       elevation="0"
@@ -324,14 +355,9 @@
     </v-navigation-drawer>
     <v-main>
       <v-overlay v-model="overlay" z-index="4" absolute />
-      <nuxt />
+      <nuxt v-if="!$slots.default" />
+      <slot />
     </v-main>
-    <v-footer
-      class="footer__fixed justify-center align-center"
-      color="#F27045"
-    >
-      <span> Copyright &copy; 2020 Sportiv</span>
-    </v-footer>
 
     <view-my-organization
       v-if="isLoggedIn"
@@ -366,6 +392,10 @@ export default {
       fixed: true,
       showCreateOrganization: false,
       showMyOrganization: false,
+      showMyTeam: false,
+      showCreateTeam: false,
+      showBooking: false,
+      showCreateBooking: false,
       drawer: false,
       overlay: false
     }
@@ -403,6 +433,38 @@ export default {
         this.$router.push('/login')
       } else {
         this.showMyOrganization = !this.showMyOrganization
+      }
+    },
+    toggleShowMyTeam () {
+      this.drawer = false
+      if (!this.isLoggedIn) {
+        this.$router.push('/login')
+      } else {
+        this.showMyTeam = !this.showMyTeam
+      }
+    },
+    toggleShowCreateTeam () {
+      this.drawer = false
+      if (!this.isLoggedIn) {
+        this.$router.push('/login')
+      } else {
+        this.showCreateTeam = !this.showCreateTeam
+      }
+    },
+    toggleShowBooking () {
+      this.drawer = false
+      if (!this.isLoggedIn) {
+        this.$router.push('/login')
+      } else {
+        this.showBooking = !this.showBooking
+      }
+    },
+    toggleShowCreateBooking () {
+      this.drawer = false
+      if (!this.isLoggedIn) {
+        this.$router.push('/login')
+      } else {
+        this.showCreateBooking = !this.showCreateBooking
       }
     },
     handleClickCreateTournament () {
@@ -448,9 +510,9 @@ export default {
   }
 
   &__menu {
-    color: #4F4848;
+    color:$black-neutral;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 12px;
 
     &__list {
       padding: 0;
@@ -475,7 +537,7 @@ export default {
     font-size: 14px;
     margin-right: 8px;
     &--register {
-      color: white;
+      color: white !important;
       border-radius: 8px;
     }
   }
@@ -515,12 +577,6 @@ export default {
   max-width: 260px;
   overflow: hidden;
   border-radius: 20px;
-
-  &__title {
-    font-size: 16px;
-    font-weight: 600;
-    color: $black-neutral;
-  }
 
   &__see-all {
     text-decoration: none;
