@@ -1,6 +1,5 @@
 import languages from './static/lang/languages'
 
-
 export default {
   ssr: false,
   publicRuntimeConfig: {
