@@ -310,13 +310,12 @@ export default {
     rawFiles: [],
     fileIds: []
   }),
-  created () {
-
-  },
+  // eslint-disable-next-line vue/order-in-components
   computed: {
     ...mapGetters(['industries', 'provinces', 'cities']),
     ...mapGetters('class', ['classUsers', 'userCurrentCompany'])
   },
+  // eslint-disable-next-line vue/order-in-components
   watch: {
     searchText: {
       handler (value) {
@@ -324,6 +323,11 @@ export default {
       }
     }
   },
+
+  created () {
+
+  },
+
   async mounted () {
     await this.getIndustries()
     const params = {
@@ -333,6 +337,7 @@ export default {
     this.getProvinces({ params })
     await this.getUserCurrentCompany({ successCallback: this.handleGetUsers })
     if (this.$route.params.classId) {
+      // eslint-disable-next-line no-console
       console.log('edit')
       this.initClassData()
     }
@@ -401,6 +406,7 @@ export default {
       })
     },
     async setClassData (classDetail) {
+      // eslint-disable-next-line no-console
       console.log(classDetail)
       if (classDetail) {
         this.classData = {
@@ -415,6 +421,7 @@ export default {
       }
     },
     getClassCoachUserIds (coaches) {
+      // eslint-disable-next-line no-console
       console.log(coaches.map((user) => { return user.userId }))
       return coaches.map((user) => { return user.userId })
     }
