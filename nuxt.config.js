@@ -93,7 +93,7 @@ export default {
   proxy: {
     '/backend-tournament': {
       target: dev()
-        ? 'http://apitournament.quickplay.app'
+        ? 'https://api.quickplay.app/tournament'
         : '/',
       pathRewrite: {
         '^/backend-tournament': '/'
@@ -101,18 +101,10 @@ export default {
     },
     '/backend': {
       target: dev()
-        ? 'https://api.quickplay.app/api/v1'
+        ? 'https://api.quickplay.app/core/api/v1'
         : '/',
       pathRewrite: {
         '^/backend': '/'
-      }
-    },
-    '/src': {
-      target: dev()
-        ? 'https://api.quickplay.app/'
-        : '/src/',
-      pathRewrite: {
-        '^/src': '/'
       }
     }
   },
