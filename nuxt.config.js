@@ -1,6 +1,5 @@
 import languages from './static/lang/languages'
 
-const dev = () => process.env.NODE_ENV !== 'production'
 
 export default {
   ssr: false,
