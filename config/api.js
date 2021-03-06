@@ -75,5 +75,3 @@ export {
   staticUrl,
   getUrlTournament
 }
-
-// test commend
