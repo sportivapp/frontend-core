@@ -1,10 +1,10 @@
 <template>
-  <v-container class="empty-news ma-0 pa-0">
+  <v-container class="empty-news">
     <v-row no-gutters class="empty-news__image" justify="center" align="center">
-      <img src="../../assets/images/empty/empty-news.png" alt="">
+      <img :src="emptyImage" alt="">
     </v-row>
     <v-row no-gutters class="empty-news__title pt-9" justify="center" align="center">
-      {{ $t('news.emptyTitle') }}
+      {{ title }}
     </v-row>
     <v-row
       no-gutters
@@ -12,14 +12,28 @@
       justify="center"
       align="center"
     >
-      {{ $t('news.emptySubTitle') }}
+      {{ subTitle }}
     </v-row>
   </v-container>
 </template>
 
 <script>
 export default {
-  name: 'EmptyNews'
+  name: 'EmptyTemplate',
+  props: {
+    emptyImage: {
+      type: String,
+      default: require('../../assets/images/empty/empty-news.png')
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    subTitle: {
+      type: String,
+      default: ''
+    }
+  }
 }
 </script>
 

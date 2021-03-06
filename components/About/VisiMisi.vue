@@ -7,6 +7,7 @@
     <img
       :src="img"
       :alt="alt"
+      width="95%"
     >
 
     <v-card-title class="pa-0 icon__title">
@@ -47,6 +48,7 @@ export default {
   margin: 100px 30px 40px 40px;
 
   &__title {
+    color: $black-neutral;
     font-weight: 600;
     font-size: 16px;
     line-height: 24px;
@@ -54,7 +56,6 @@ export default {
   }
 
   &__subtitle {
-    color: $black-neutral;
     font-weight: 700;
     font-size: 17px;
     line-height: 28.8px;

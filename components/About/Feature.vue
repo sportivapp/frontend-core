@@ -1,17 +1,17 @@
 <template>
   <v-container class="feature" fluid>
-    <h1 class="feature__title">
+    <h1 class="feature__title text-center">
       {{ $t('aboutUs.featureTitle') }}
     </h1>
 
-    <h3 class="feature__subtitle pb-5">
+    <h3 class="feature__subtitle pb-5 text-center">
       {{ $t('aboutUs.featureSubtitle') }}
     </h3>
 
-    <v-row>
+    <v-row justify="center">
       <left-icon-card
-        v-for="icon in $t('aboutUs.cardList')"
-        :key="icon.id"
+        v-for="(icon, index) in $t('aboutUs.cardList')"
+        :key="index"
         :img="icon.img"
         :alt="icon.alt"
         :title="icon.title"
@@ -38,7 +38,7 @@ export default {
 
 <style lang="scss" scoped>
 .feature {
-  padding: 60px 14% 80px 18%;
+  padding: 60px 10%;
   background-color: $orange-4;
 
   &__title {
@@ -64,6 +64,13 @@ export default {
     line-height: 300px;
     color: #FFF4F0;
     opacity: 0.4;
+  }
+}
+@media only screen and (max-width: 769px) {
+  .feature {
+    &__text {
+      display: none;
+    }
   }
 }
 </style>

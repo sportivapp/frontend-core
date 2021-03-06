@@ -10,17 +10,13 @@
         >
         <v-divider v-else />
       </v-row>
-      <!--      <v-row align="center" justify="center">-->
-      <!--        <span class="news-content__image-source pt-2">-->
-      <!--          Sumber:-->
-      <!--          https://upload.wikimedia.org/wikipedia/commons/9/92/Youth-soccer-indiana.jpg-->
-      <!--        </span>-->
-      <!--      </v-row>-->
       <v-row class="news-content__content pt-6">
+        <!-- eslint-disable vue/no-v-html -->
         <div
-          class="news-content__content__text"
+          class="news-content__content__text tiptap"
           v-html="newsDetail.enewscontent || ''"
         />
+        <!--eslint-enable-->
       </v-row>
       <v-row>
         <v-col>

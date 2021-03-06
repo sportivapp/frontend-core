@@ -1,5 +1,5 @@
 <template>
-  <v-card class="icon" max-width="430px" max-height="120px">
+  <v-card class="icon" max-width="450px" max-height="120px">
     <v-row dense justify="center">
       <v-col cols="3">
         <img
@@ -62,6 +62,18 @@ export default {
   &__subtitle {
     font-size: 12px;
     line-height: 210%;
+  }
+}
+@media only screen and (max-width: 500px) {
+  .icon {
+    &__img {
+    padding: 16px 10px;
+    }
+
+    &__subtitle {
+    font-size: 10px;
+    line-height: 210%;
+   }
   }
 }
 </style>
