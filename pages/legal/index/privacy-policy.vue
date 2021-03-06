@@ -8,6 +8,7 @@
 import { privacyPolicy } from '@/assets/docs/privacyPolicy.json'
 export default {
   name: 'TermOfServices',
+  scrollToTop: true,
   mounted () {
     this.fetchContent()
   },
