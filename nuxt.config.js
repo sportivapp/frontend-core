@@ -1,7 +1,5 @@
 import languages from './static/lang/languages'
 
-const dev = () => process.env.NODE_ENV !== 'production'
-
 export default {
   ssr: false,
   publicRuntimeConfig: {
@@ -81,34 +79,6 @@ export default {
     'vue-sweetalert2/nuxt',
     '@nuxtjs/style-resources'
   ],
-
-  // Axios module configuration (https://go.nuxtjs.dev/config-axios)
-  axios: {
-    proxy: true,
-    validateStatus: (code) => {
-      return code >= 200 && code <= 302
-    }
-  },
-
-  proxy: {
-    '/backend-tournament': {
-      target: dev()
-        ? 'https://api.quickplay.app/tournament'
-        : '/',
-      pathRewrite: {
-        '^/backend-tournament': '/'
-      }
-    },
-    '/backend': {
-      target: dev()
-        ? 'https://api.quickplay.app/core/api/v1'
-        : '/',
-      pathRewrite: {
-        '^/backend': '/'
-      }
-    }
-  },
-
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
   vuetify: {
     theme: {
