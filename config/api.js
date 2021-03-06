@@ -1,7 +1,12 @@
 import { serializeQueryParams } from '@/utils/query'
 
+<<<<<<< HEAD
 const baseUrl = 'https://api.quickplay.app/core/api/v1'
 const baseUrlTournament = 'https://api.quickplay.app/tournament'
+=======
+const baseUrl = '/backend'
+const baseUrlTournament = '/backend-tournament'
+>>>>>>> Staging Update  Class 6/3/21 (#12)
 
 const staticUrl = 'https://api.quickplay.app/core/'
 

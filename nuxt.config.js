@@ -79,7 +79,6 @@ export default {
     'vue-sweetalert2/nuxt',
     '@nuxtjs/style-resources'
   ],
-
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
   vuetify: {
     theme: {
