@@ -36,7 +36,6 @@ export default {
   padding: 45px 0 0 0;
 
   img {
-    // position: absolute;
     object-fit: cover;
     max-width: 100%;
   }
@@ -46,6 +45,19 @@ export default {
     bottom: 0;
     width: 450px;
     height: auto;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .about-bg {
+
+    img {
+      object-fit: cover;
+      max-width: 100%;
+    }
+
+    &__sportiv-activ2 {
+      width: 95%;
+    }
   }
 }
 </style>

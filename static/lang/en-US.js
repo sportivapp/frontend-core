@@ -33,7 +33,15 @@ export default () => {
         logout: 'Logout',
         news: 'News',
         team: 'Team',
-        tournament: 'Tournament'
+        myTeam: 'My Team',
+        createTeam: 'Create Team',
+        tournament: 'Tournament',
+        faq: 'FAQ',
+        dataNotAvailable: 'Data not available',
+        day: 'day',
+        month: 'month',
+        year: 'year',
+        description: 'Description'
       },
       loginPage: {
         login: 'Log In',
@@ -130,7 +138,50 @@ export default () => {
         sportivTournament: 'Sportiv Tournament',
         appBarSubtitle: 'Create and organize all tournaments easily in one place.',
         createTournament: 'Create Tournament',
-        manageTournament: 'Manage Tournament'
+        manageTournament: 'Manage Tournament',
+        emptyTitle: 'Oops, there\'s no tournament',
+        emptySubTitle: 'Look for the others first',
+        findTournament: 'Find Tournament',
+        finished: 'Finished',
+        onGoing: 'On Going',
+        upComing: 'Up Coming',
+        openRegistration: 'Open Registration',
+        team: 'Team',
+        sort: 'Sort',
+        priceFree: 'Free',
+        sorts: [
+          {
+            id: 'OLDEST',
+            text: 'Oldest'
+          },
+          {
+            id: 'NEWEST',
+            text: 'Newest'
+          }
+        ],
+        selectFilter: 'Select Filter',
+        fee: [
+          {
+            id: 'ALL',
+            text: 'All'
+          },
+          {
+            id: 'FREE',
+            text: 'Free'
+          },
+          {
+            id: 'PAID',
+            text: 'Paid'
+          }
+        ],
+        registrationFee: 'Registration Fee',
+        location: 'Location',
+        tournamentDate: 'Tournament Date',
+        organizer: 'Organizer',
+        readNow: 'Read Now',
+        emptyParticipants: 'There are no registered participants yet',
+        emptyParticipantsSub: 'Register your team now',
+        tournamentSeeAll: 'See All Tournaments'
       },
       organization: {
         organizationPartner: 'Organization Partner',
@@ -153,31 +204,33 @@ export default () => {
         followUs: 'Follow Us',
         motto: 'Sport at Your Fingertips',
         termOfServices: 'Term of Services',
-        privacyPolicy: 'Privacy Policy'
+        privacyPolicy: 'Privacy Policy',
+        help: 'Help',
+        faq: 'FAQ'
       },
       aboutUs: {
         title: 'About Us',
         headings: 'Sport at your fingertips',
-        subtitle: 'Sportiv is the easiest way to do sports activities and increase them.',
-        aboutInfoLeftParagraph: 'Sportiv is a platform that integrates players, communities, coaches, and sports fields as an ecosystem that will help the process of sports activities to improve a healthy lifestyle starting from habits to becoming excellent athletes.',
-        aboutInfoRightParagraph: 'We can improve the way we see what we can do through exercise using Sportiv. This will not only make you healthier, but will also improve your lifestyle through the community and make other achievements globally.',
+        subtitle: 'Sportiv is the simplest way to do sports activities happened and improved.',
+        aboutInfoLeftParagraph: 'Sportiv is a platform that integrated sports players, communities, coaches, and courts as an ecosystem that will help the process of sports activities to improve a healthy lifestyle that starts from a habit until becoming an excellent athlete.',
+        aboutInfoRightParagraph: 'We can improve the way we see what we can do through sport by using Sportiv. It’s not just to make you healthier, but it will improve your life style through communities and create another accomplishment globally.',
         featureText: 'Features',
         featureTitle: 'Our Features',
-        featureSubtitle: 'Various interesting features to make it easier for you to exercise',
+        featureSubtitle: 'Various interesting features to make you easier to do exercise',
         visiMisiList: [
           {
             id: 1,
             img: require('@/assets/images/bg/visi.png'),
             alt: 'vision',
             title: 'Vision',
-            subtitle: 'Creating a new sports lifestyle.'
+            subtitle: 'Create a new lifestyle of sports.'
           },
           {
             id: 2,
             img: require('@/assets/images/bg/misi.png'),
             alt: 'mission',
             title: 'Mission',
-            subtitle: 'Creating media and sports assessment standards through technology.'
+            subtitle: 'Create a medium and assessment standards of sports activities through technology.'
           }
         ],
         cardList: [
@@ -193,23 +246,53 @@ export default () => {
             img: require('@/assets/images/icons/turnamen.png'),
             alt: 'Tournament',
             title: 'Tournament',
-            subtitle: 'Register and participate in sports events easily only in Tournaments.'
+            subtitle: 'Register and participate in sports competition easily only in Tournaments.'
           },
           {
             id: 3,
             img: require('@/assets/images/icons/tim.png'),
             alt: 'Team',
             title: 'Team',
-            subtitle: 'Join a sports team according to your interests.'
+            subtitle: "Let's join a sports team according to your interests."
           },
           {
             id: 4,
             img: require('@/assets/images/icons/forum.png'),
             alt: 'Forum',
             title: 'Forum',
-            subtitle: 'A place to discuss the most interesting sports topics for you.'
+            subtitle: 'A place to discuss the most interesting sports topics just for you.'
           }
         ]
+      },
+      contactUs: {
+        title: 'Contact Us',
+        headings: 'How can we help you?',
+        subTitle: 'We will help answer all your questions and needs. Contact us now.',
+        emailNow: 'Email Now',
+        whatsAppNow: 'WhatsApp Now',
+        callCenter: 'Call Center'
+      },
+      home: {
+        trustedByTitle: 'Trusted by National Organizations',
+        trustedBySubTitle: 'National sports organizations trust Sportiv to collaborate to broaden the sports community.'
+      },
+      cmsClass: {
+        classDetail: 'Class Detail',
+        classCategory: 'Class Category',
+        sportType: 'Sport Type',
+        participants: 'Participants',
+        personInCharge: 'PIC',
+        personInChargePhone: 'PIC Contact',
+        coach: 'Coach',
+        location: 'Location',
+        showMore: 'Show more',
+        searchParticipants: 'Search participants',
+        classFee: 'Fee',
+        deleteModalTitle: 'Delete Class',
+        deleteAction: 'Delete',
+        deleteCancel: 'Cancel',
+        deleteMessage: 'Are you sure you want to delete this class now?',
+        deleteSuccess: 'Success delete class'
       }
     })
   })

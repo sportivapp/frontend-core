@@ -8,7 +8,9 @@ export const state = () => ({
   user: { init: false },
   countries: [],
   provinces: [],
-  industries: []
+  cities: [],
+  industries: [],
+  homeBanners: []
 })
 
 export const getters = {
@@ -16,7 +18,9 @@ export const getters = {
   user: state => state.user,
   countries: state => state.countries,
   provinces: state => state.provinces,
-  industries: state => state.industries
+  cities: state => state.cities,
+  industries: state => state.industries,
+  homeBanners: state => state.homeBanners
 }
 
 export const mutations = {
@@ -32,8 +36,14 @@ export const mutations = {
   setProvinces (state, provinces) {
     state.provinces = provinces
   },
+  setCities (state, cities) {
+    state.cities = cities
+  },
   setIndustries (state, industries) {
     state.industries = industries
+  },
+  setHomeBanners (state, values) {
+    state.homeBanners = values
   }
 }
 
@@ -51,6 +61,7 @@ export const actions = {
     commit('setToken', token)
   },
   setToken ({ commit }, token) {
+    Cookie.set('token', token)
     commit('setToken', token)
   },
   sendOtp (_, { data, successCallback, errHandler } = {}) {
@@ -133,6 +144,14 @@ export const actions = {
       errHandler && errHandler(e)
     })
   },
+  getCities ({ commit }, { params, successCallback, errHandler } = {}) {
+    this.$axios.get(getUrl(api.city(params))).then((res) => {
+      commit('setCities', res.data.data)
+      successCallback && successCallback(res)
+    }).catch((e) => {
+      errHandler && errHandler(e)
+    })
+  },
   getIndustries ({ commit }, { successCallback, errHandler } = {}) {
     this.$axios.get(getUrl(api.industries)).then((res) => {
       commit('setIndustries', res.data.data)
@@ -140,5 +159,14 @@ export const actions = {
     }).catch((e) => {
       errHandler && errHandler(e)
     })
+  },
+  getHomeBanners ({ commit }, { successCallback, errHandler } = {}) {
+    this.$axios.get(getUrl(api.homeBanner))
+      .then((res) => {
+        commit('setHomeBanners', res.data.data)
+        successCallback && successCallback(res)
+      }).catch((e) => {
+        errHandler && errHandler(e)
+      })
   }
 }

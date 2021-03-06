@@ -10,16 +10,19 @@
         vertical
         height="auto"
         left
+        :value="value"
       >
         <v-tab
+          link
+          to="/legal/term-of-services"
           class="legal-tabs__item"
-          @click="$router.push('/legal/term-of-services')"
         >
           Ketentuan Pengguna
         </v-tab>
         <v-tab
+          link
+          to="/legal/privacy-policy"
           class="legal-tabs__item"
-          @click="$router.push('/legal/privacy-policy')"
         >
           Kebijakan Privasi
         </v-tab>
@@ -89,6 +92,7 @@ export default {
 
   ::v-deep .v-tab {
     text-transform: none !important;
+
     @media #{map-get($display-breakpoints, 'md-and-up')} {
       display: flex;
       justify-content: flex-start;

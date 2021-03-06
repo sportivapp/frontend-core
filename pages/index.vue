@@ -11,8 +11,13 @@
       </v-col>
     </v-row>
     <v-row no-gutters justify="center" align="center">
+      <v-col class="home__news" cols="11" md="8">
+        <home-tournament />
+      </v-col>
+    </v-row>
+    <v-row no-gutters justify="center" align="center">
       <v-col cols="11" md="8">
-        <home-organization />
+        <home-organization-v2 />
       </v-col>
     </v-row>
     <home-footer />
@@ -21,8 +26,9 @@
 
 <script>
 import HomeNews from '@/components/News/HomeNews'
-import HomeOrganization from '@/components/Organization/HomeOrganizationV2'
+import HomeOrganizationV2 from '@/components/Organization/HomeOrganizationV2'
 import HomeFooter from '@/components/Footer/HomeFooter'
+import HomeTournament from '@/components/Tournament/HomeTournament'
 import HomeTopBanner from '~/components/Banners/HomeTopBanner/HomeTopBanner'
 
 export default {
@@ -31,7 +37,8 @@ export default {
     HomeFooter,
     HomeNews,
     HomeTopBanner,
-    HomeOrganization
+    HomeOrganizationV2,
+    HomeTournament
   },
   head () {
     return {

@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="380px" flat>
+  <v-card class="textInfoHeader" flat>
     <v-card-title class="textInfoHeader__title">
       {{ $t(title) }}
     </v-card-title>
@@ -47,6 +47,8 @@ export default {
 
 <style lang="scss" scoped>
 .textInfoHeader {
+  background-color: transparent;
+  max-width: 380px;
   padding-bottom: 0;
 
   &__title {

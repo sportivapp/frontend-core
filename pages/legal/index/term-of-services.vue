@@ -8,6 +8,7 @@
 import { termOfServices } from '@/assets/docs/termOfServices.json'
 export default {
   name: 'TermOfServices',
+  scrollToTop: true,
   mounted () {
     this.fetchContent()
   },

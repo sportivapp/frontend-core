@@ -1,56 +1,55 @@
 <template>
   <section class="home-top-banner">
     <v-row no-gutters justify="center" class="pa-0 ma-0">
-      <v-col cols="12" md="10">
-        <v-carousel
-          cycle
-          interval="4000"
-          height="auto"
-          hide-delimiter-background
-          :show-arrows="$vuetify.breakpoint.mdAndUp"
-        >
-          <v-carousel-item
-            v-for="(banner, index) in banners"
-            :key="index"
-            eager
-          >
-            <v-row
-              no-gutters
-              class="home-top-banner__container"
-              justify="center"
-              align="start"
-            >
-              <v-col cols="11" md="10" class="px-3">
-                <img
-                  class="home-top-banner__item elevation-2"
-                  :src="banner"
-                  alt="banner"
-                >
-              </v-col>
-            </v-row>
-          </v-carousel-item>
-        </v-carousel>
+      <v-col class="pb-12">
+        <banner-carousel-v1
+          v-if="$vuetify.breakpoint.smAndDown"
+          :banners="bannersToShow"
+        />
+        <banner-carousel-v2
+          v-else
+          :banners="bannersToShow"
+        />
       </v-col>
     </v-row>
   </section>
 </template>
 
 <script>
+import BannerCarouselV1 from '@/components/Banners/HomeTopBanner/BannerCarouselV1'
+import BannerCarouselV2 from '@/components/Banners/HomeTopBanner/BannerCarouselV2'
+import { mapActions, mapGetters } from 'vuex'
+import { staticUrl } from '@/config/api'
+
 export default {
   name: 'HomeTopBanner',
-  data () {
-    return {
-      banners: [
-        require('../../../assets/images/banners/banner2.png'),
-        require('../../../assets/images/banners/banner3.png'),
-        require('../../../assets/images/banners/banner4.png')
-      ]
+  components: {
+    BannerCarouselV1,
+    BannerCarouselV2
+  },
+  computed: {
+    ...mapGetters([
+      'homeBanners'
+    ]),
+    bannersToShow () {
+      return this.homeBanners
+        .filter(ban => ban.banner && ban.banner.efilename)
+        .map(ban => staticUrl + ban.banner.efilename)
     }
+  },
+  created () {
+    this.getHomeBanners()
+  },
+  methods: {
+    ...mapActions([
+      'getHomeBanners'
+    ])
   }
 }
 </script>
 
 <style lang="scss">
+@import '~vuetify/src/styles/settings/_variables';
 
 .home-top-banner {
   width: 100%;
@@ -61,15 +60,26 @@ export default {
     overflow: hidden;
     margin-bottom: 50px;
     width: 100%;
-    height: 100%;
   }
 
   &__item {
     border-radius: 20px;
     object-fit: contain;
-    width: 100%;
-    max-width: 100%;
-    height: auto;
+    width: auto;
+
+    @media #{map-get($display-breakpoints, 'md-and-up')} {
+      height: 240px;
+    }
+
+    @media #{map-get($display-breakpoints, 'sm-and-down')} {
+      height: 112px;
+    }
+
+    &__wrapper {
+      display: flex;
+      justify-content: center;
+      padding: 0 20px;
+    }
   }
 
   .v-carousel__controls__item.v-btn {
