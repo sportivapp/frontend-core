@@ -108,7 +108,7 @@ export default {
     },
     successLoginOrganization (res) {
       this.isSendingRequest = true
-      window.location.href = res.data.data
+      window.location.href = 'https://' + res.data.data
     },
     failLoginOrganization (error) {
       this.isSendingRequest = false
