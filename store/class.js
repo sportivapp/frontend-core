@@ -133,8 +133,8 @@ export const actions = {
   },
   getUsers ({ commit }, { params, companyId, successCallback, errHandler } = {}) {
     this.$axios.get(getUrl(api.class.users({ companyId, params })))
-      .then((response) => {
-        commit('setClassUsers', response.data.data)
+      .then(async (response) => {
+        await commit('setClassUsers', response.data.data)
         successCallback && successCallback()
       })
       .catch((e) => {
@@ -145,7 +145,7 @@ export const actions = {
     this.$axios.get(getUrl(api.class.currentCompany))
       .then(async (response) => {
         await commit('setUserCurrentCompany', response.data.data)
-        successCallback && successCallback()
+        successCallback && await successCallback()
       })
       .catch((e) => {
         errHandler && errHandler(e)
@@ -201,5 +201,14 @@ export const actions = {
   },
   setSnackBar ({ commit }, data) {
     commit('setSnackBarData', data)
+  },
+  updateClass ({ _ }, { id, body, successCallback, errHandler } = {}) {
+    this.$axios.put(getUrl(api.class.updateClass(id)), body)
+      .then((res) => {
+        successCallback && successCallback(res)
+      })
+      .catch((err) => {
+        errHandler && errHandler(err)
+      })
   }
 }

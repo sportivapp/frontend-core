@@ -76,11 +76,23 @@ export default {
     updatedFiles () {
       this.updateExistFiles(this.selectedFiles)
       const notNullFiles = this.existFiles.filter(file => file.file !== null)
+      console.log(this.existFiles)
       this.$emit('input', notNullFiles)
       return this.existFiles
     }
   },
+  watch: {
+    value: {
+      handler (arr) {
+        this.initFile(arr)
+      }
+    }
+  },
   methods: {
+    initFile (arr) {
+      this.updateExistFiles(arr)
+      this.selectedFiles = []
+    },
     handleFileFromBrowse (e) {
       this.selectedFiles = []
       const filesFromBrowse = [...e.target.files]

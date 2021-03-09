@@ -160,7 +160,7 @@
             Info Pelatih
           </v-row>
           <v-row class="spv-body--1 grey--text">
-            Daftar Pelatih <span class="red--text">*</span>
+            Ketua Pelatih <span class="red--text">*</span>
           </v-row>
           <v-row>
             <div class="outlined-container">
@@ -223,10 +223,10 @@
           </v-row>
         </div>
         <div>
-          <v-row class="spv-heading--3 pt-7">
+          <v-row v-if="!isEdit" class="spv-heading--3 pt-7">
             Kategori Kelas
           </v-row>
-          <v-row>
+          <v-row v-if="!isEdit">
             <class-category-table
               v-model="classData.categories"
               :class-coach-user-ids="classData.classCoachUserIds"
@@ -272,7 +272,7 @@
         Batal
       </v-btn>
       <v-btn class="ml-4 save-button" outlined="" width="200" @click="createNewClass">
-        Tambah Kelas
+        {{ isEdit?'Simpan':'Tambah Kelas' }}
       </v-btn>
     </v-row>
     <update-schedule-modal />
@@ -298,6 +298,12 @@ export default {
     UpdateScheduleModal
   },
   mixins: [validationMixin],
+  props: {
+    isEdit: {
+      type: Boolean,
+      default: false
+    }
+  },
   data: () => ({
     feeSwitchOn: false,
     selectedProvince: null,
@@ -330,21 +336,21 @@ export default {
 
   async mounted () {
     await this.getIndustries()
+    await this.getUserCurrentCompany({ successCallback: this.handleGetUsers })
     const params = {
       countryId: 1,
       size: 9999
     }
     this.getProvinces({ params })
-    await this.getUserCurrentCompany({ successCallback: this.handleGetUsers })
     if (this.$route.params.classId) {
       // eslint-disable-next-line no-console
-      console.log('edit')
       this.initClassData()
     }
   },
   methods: {
     ...mapActions('class', [
       'createClass',
+      'updateClass',
       'getUsers',
       'getUserCurrentCompany',
       'uploadFile',
@@ -390,7 +396,11 @@ export default {
           fileIds: this.fileIds,
           administrationFee: this.feeSwitchOn ? this.classData.administrationFee || 0 : 0
         }
-        this.createClass({ body: this.classData, successCallback: this.successSaveClass })
+        if (this.isEdit) {
+          this.updateClass({ id: this.$route.params.classId, body: this.classData, successCallback: this.successSaveClass })
+        } else {
+          this.createClass({ body: this.classData, successCallback: this.successSaveClass })
+        }
       }
     },
     cancelCreateClass () {
@@ -407,14 +417,14 @@ export default {
     },
     async setClassData (classDetail) {
       // eslint-disable-next-line no-console
-      console.log(classDetail)
       if (classDetail) {
         this.classData = {
           ...classDetail,
           industryId: classDetail.industry.eindustryid,
           classCoachUserIds: this.getClassCoachUserIds(classDetail.coaches),
           picId: classDetail.pic.euserid,
-          stateId: classDetail.state.estateid
+          stateId: classDetail.state.estateid,
+          rawFiles: this.generateRawFiles(classDetail.classMedia)
         }
         await this.updateCities()
         this.classData.cityId = classDetail.city.ecityid
@@ -422,8 +432,23 @@ export default {
     },
     getClassCoachUserIds (coaches) {
       // eslint-disable-next-line no-console
-      console.log(coaches.map((user) => { return user.userId }))
       return coaches.map((user) => { return user.userId })
+    },
+    generateRawFiles (classMedia) {
+      const generatedRawFiles = classMedia.map((media) => {
+        return {
+          file: {
+            name: media.file && media.file.efilename,
+            size: media.file && media.file.efilesize,
+            type: media.file && media.file.efiletype,
+            path: media.file && media.file.efilepath
+          },
+          id: Object.keys(media),
+          key: Object.keys(media),
+          fileId: media.fileId
+        }
+      })
+      return generatedRawFiles
     }
   }
 }
