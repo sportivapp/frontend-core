@@ -80,7 +80,6 @@ export default {
     updatedFiles () {
       this.updateExistFiles(this.selectedFiles)
       const notNullFiles = this.existFiles.filter(file => file.file !== null)
-      console.log(this.existFiles)
       this.$emit('input', notNullFiles)
       return this.existFiles
     }
