@@ -56,6 +56,7 @@
           <v-row class="mb-5">
             <upload-file
               v-model="rawFiles"
+              :init-files="classData.initFiles"
             />
             <small v-if="$v.rawFiles.$error" class="red--text pl-2">
               {{ rawFilesErrors[rawFilesErrors.length-1] }}
@@ -287,6 +288,7 @@ import ClassCategoryTable from '@/components/Class/Category/ClassCategoryTable'
 import { mapGetters, mapActions } from 'vuex'
 import UpdateScheduleModal from '@/components/Class/ClassDetail/Modal/UpdateScheduleModal'
 import validationMixin from '@/components/Class/validation.mixin'
+import { staticUrl } from '@/config/api'
 
 export default {
   name: 'ClassForm',
@@ -357,7 +359,7 @@ export default {
       'getClassDetail']),
     ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
     getUserAvatar (file) {
-      return file ? '/src/' + file.efilename : require('@/assets/images/logos/sportiv-logo-small.png')
+      return file ? staticUrl + file.efilename : require('@/assets/images/logos/sportiv-logo-small.png')
     },
     async updateCities () {
       const params = {
@@ -377,12 +379,16 @@ export default {
     },
     async doUploadFiles (files) {
       for (const idx in files) {
-        const fileFormData = new FormData()
-        fileFormData.append('file', files[idx].file)
-        await this.uploadFile({
-          data: fileFormData,
-          successCallback: await this.successUploadFile
-        })
+        if (files[idx].file.fileId) {
+          this.fileIds.push(files[idx].file.fileId)
+        } else {
+          const fileFormData = new FormData()
+          fileFormData.append('file', files[idx].file)
+          await this.uploadFile({
+            data: fileFormData,
+            successCallback: await this.successUploadFile
+          })
+        }
       }
     },
     successUploadFile (uploadedFile) {
@@ -424,7 +430,7 @@ export default {
           classCoachUserIds: this.getClassCoachUserIds(classDetail.coaches),
           picId: classDetail.pic.euserid,
           stateId: classDetail.state.estateid,
-          rawFiles: this.generateRawFiles(classDetail.classMedia)
+          initFiles: this.generateRawFiles(classDetail.classMedia)
         }
         await this.updateCities()
         this.classData.cityId = classDetail.city.ecityid
@@ -437,14 +443,10 @@ export default {
     generateRawFiles (classMedia) {
       const generatedRawFiles = classMedia.map((media) => {
         return {
-          file: {
-            name: media.file && media.file.efilename,
-            size: media.file && media.file.efilesize,
-            type: media.file && media.file.efiletype,
-            path: media.file && media.file.efilepath
-          },
-          id: Object.keys(media),
-          key: Object.keys(media),
+          name: media.file && media.file.efilename,
+          size: media.file && media.file.efilesize,
+          type: media.file && media.file.efiletype,
+          path: media.file && media.file.efilepath,
           fileId: media.fileId
         }
       })

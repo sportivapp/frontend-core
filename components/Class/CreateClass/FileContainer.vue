@@ -71,6 +71,7 @@
 </template>
 
 <script>
+import { staticUrl } from '@/config/api'
 export default {
   name: 'FileContainer',
   props: {
@@ -124,15 +125,25 @@ export default {
     async readURL (file) {
       const reader = new FileReader()
       const img = document.getElementById('galleryFile' + this.file.key)
-      if (file.type.includes('image')) {
-        reader.onload = () => {
-          img.src = reader.result
+      const vid = document.getElementById('galleryVid' + this.file.key)
+
+      if (file.fileId) {
+        if (file.type.includes('image')) {
+          img.src = staticUrl + file.name
+        } else if (file.type.includes('video')) {
+          vid.src = staticUrl + file.name
+          vid.type = file.type
         }
-        await reader.readAsDataURL(file)
-      } else if (file.type.includes('video')) {
-        const vid = document.getElementById('galleryVid' + this.file.key)
-        vid.src = await URL.createObjectURL(file)
-        vid.type = file.type
+      } else if (!file.fileId) {
+        if (file.type.includes('image')) {
+          reader.onload = () => {
+            img.src = reader.result
+          }
+          await reader.readAsDataURL(file)
+        } else if (file.type.includes('video')) {
+          vid.src = await URL.createObjectURL(file)
+          vid.type = file.type
+        }
       }
     }
   }

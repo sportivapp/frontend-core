@@ -43,6 +43,10 @@ export default {
     value: {
       type: Array,
       default: () => []
+    },
+    initFiles: {
+      type: Array,
+      default: () => []
     }
   },
   data: () => ({
@@ -82,16 +86,17 @@ export default {
     }
   },
   watch: {
-    value: {
+    initFiles: {
       handler (arr) {
         this.initFile(arr)
-      }
+      },
+      deep: true,
+      immediate: true
     }
   },
   methods: {
     initFile (arr) {
-      this.updateExistFiles(arr)
-      this.selectedFiles = []
+      this.selectedFiles = [...arr]
     },
     handleFileFromBrowse (e) {
       this.selectedFiles = []
