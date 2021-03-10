@@ -5,7 +5,9 @@
         :items="breadcrumbs"
       />
     </div>
-    <class-form />
+    <class-form
+      :is-edit="true"
+    />
   </v-container>
 </template>
 

@@ -71,6 +71,7 @@
 </template>
 
 <script>
+import { staticUrl } from '@/config/api'
 export default {
   name: 'FileContainer',
   props: {
@@ -91,7 +92,7 @@ export default {
   }),
   computed: {
     bannerPreview () {
-      return this.file.file ? this.readURL(this.file.file) : require('@/assets/images/empty/empty-banner.png')
+      return this.file.file ? this.getFilePreview(this.file.file) : require('@/assets/images/empty/empty-banner.png')
     },
     isVideo () {
       if (this.file.file && this.file.file.type.includes('video')) {
@@ -121,20 +122,28 @@ export default {
         this.$emit('replaceFile', { id: this.file.id, newFile: this.selectedFile })
       }
     },
-    async readURL (file) {
+    getFilePreview (fileMedia) {
+      if (fileMedia.fileId) {
+        return staticUrl + fileMedia.name
+      } else if (!fileMedia.fileId) {
+        this.readURL(fileMedia)
+      }
+    },
+    async readURL (fileMedia) {
       const reader = new FileReader()
       const img = document.getElementById('galleryFile' + this.file.key)
-      if (file.type.includes('image')) {
+      const vid = document.getElementById('galleryVid' + this.file.key)
+      if (fileMedia.type.includes('image')) {
         reader.onload = () => {
           img.src = reader.result
         }
-        await reader.readAsDataURL(file)
-      } else if (file.type.includes('video')) {
-        const vid = document.getElementById('galleryVid' + this.file.key)
-        vid.src = await URL.createObjectURL(file)
-        vid.type = file.type
+        await reader.readAsDataURL(fileMedia)
+      } else if (fileMedia.type.includes('video')) {
+        vid.src = await URL.createObjectURL(fileMedia)
+        vid.type = fileMedia.type
       }
     }
+
   }
 }
 </script>
