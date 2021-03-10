@@ -157,7 +157,6 @@
     </v-row>
     <class-category-modal
       :show="showAddCategoryModal"
-      :class-coach-user-ids="coachesId"
       @close="handleCloseCategoryModal"
       @save="handleAddClassCategory"
     />
@@ -180,8 +179,6 @@ export default {
       staticUrl,
       showMoreCoach: false,
       showAddCategoryModal: false,
-      coachesId: [],
-      coachesDetail: [],
       selectedIndex: 0
     }
   },
@@ -240,22 +237,13 @@ export default {
     ]),
     initPage () {
       this.getClassDetail({
-        id: this.$route.params.classId,
-        successCallback: this.getClassCoachesDetail
+        id: this.$route.params.classId
       })
     },
     getClassCategoryPrice (originalPrice) {
       return originalPrice === '0'
         ? this.$t('tournament.priceFree')
         : convertToPrice(originalPrice) + `/${this.$t('common.month')}`
-    },
-    getClassCoachesDetail () {
-      if (!this.classDetail.coaches) { return this.coachesDetail }
-      for (let i = 0; i < this.classDetail.coaches.length; i++) {
-        this.coachesDetail.push(this.classDetail.coaches[i].user)
-        this.coachesId.push(this.classDetail.coaches[i].user.euserid)
-      }
-      this.updateSelectedCoaches(this.coachesDetail)
     },
     handleClickAddCategory () {
       this.showAddCategoryModal = true

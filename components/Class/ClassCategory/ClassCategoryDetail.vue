@@ -4,9 +4,28 @@
     <v-row justify="center" align="center" no-gutters>
       <v-col cols="10">
         <v-card flat class="mt-5 pt-3 pb-16 class-category__card">
-          <v-card-title class="class-category__card__title">
-            Detail Kategori Kelas
-          </v-card-title>
+          <v-row class="mr-5 ml-0 py-5">
+            <span class="px-17 class-category__card__title">
+              Detail Kategori Kelas
+            </span>
+            <v-spacer />
+            <v-btn
+              icon=""
+              @click="handleClickEdit"
+            >
+              <v-icon>
+                mdi-pencil
+              </v-icon>
+            </v-btn>
+            <v-btn
+              class="ml-5"
+              icon=""
+            >
+              <v-icon>
+                mdi-delete
+              </v-icon>
+            </v-btn>
+          </v-row>
           <v-divider />
           <v-card-subtitle class="class-category__card__subtitle pt-7">
             {{ category.title }}
@@ -66,16 +85,25 @@
         </v-card>
       </v-col>
     </v-row>
+    <class-category-modal
+      :show="showEditCategoryModal"
+      :initial-data="category"
+      :is-edit-category="true"
+      @close="handleCloseCategoryModal"
+      @save="handleEdit"
+    />
   </v-container>
 </template>
 <script>
+import ClassCategoryModal from '@/components/Class/Category/ClassCategoryModal'
 import ClassCategoryInfo from '@/components/Class/ClassCategory/ClassCategoryInfo'
 import ClassCategorySession from '@/components/Class/ClassCategory/ClassCategorySession'
 import ClassCategoryHistory from '@/components/Class/ClassCategory/ClassCategoryHistory'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'ClassCategoryDetail',
-  components: { ClassCategoryInfo, ClassCategorySession, ClassCategoryHistory },
+  components: { ClassCategoryModal, ClassCategoryInfo, ClassCategorySession, ClassCategoryHistory },
   props: {
     category: {
       type: Object,
@@ -84,8 +112,44 @@ export default {
   },
   data () {
     return {
+      showEditCategoryModal: false,
+      isEditCategory: false,
       tab: null,
-      isTableLoading: false
+      isTableLoading: false,
+      coachesId: []
+    }
+  },
+  // created () {
+  //   this.getClassCoachesDetail()
+  // },
+  methods: {
+    ...mapActions('class', [
+      'updateClassCategory'
+    ]),
+    // getClassCoachesDetail () {
+    //   if (!this.category.coaches) {
+    //     for (let i = 0; i < this.category.coaches.length; i++) {
+    //       this.coachesId.push(this.category.coaches[i].user.euserid)
+    //     }
+    //     // this.updateSelectedCoaches(this.coachesDetail)
+    //   }
+    // },
+    handleEdit (newCategory) {
+      this.showEditCategoryModal = false
+      this.updateClassCategory({
+        classId: this.$route.params.classId,
+        classCategoryId: this.$route.params.classCategoryId,
+        body: newCategory,
+        successCallback: location.reload()
+      })
+    },
+    handleClickEdit () {
+      console.log(this.category)
+      this.isEditCategory = true
+      this.showEditCategoryModal = true
+    },
+    handleCloseCategoryModal () {
+      this.showEditCategoryModal = false
     }
   }
 }

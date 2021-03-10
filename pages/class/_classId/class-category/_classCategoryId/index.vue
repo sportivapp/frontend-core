@@ -1,7 +1,7 @@
 <template>
   <v-container v-if="hasReadPermission" class="ma-0 pa-0 class-category-detail" fluid>
     <v-row align-content="center" justify="center" align="center" no-gutters>
-      <v-col align-items="center" class="class-category-detail__width">
+      <v-col align-items="center" class="class-category-detail__width pl-5">
         <simple-breadcrumb class="pb-0" :items="breadcrumbs" />
       </v-col>
     </v-row>

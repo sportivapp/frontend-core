@@ -199,6 +199,15 @@ export const actions = {
         errHandler && errHandler(err)
       })
   },
+  updateClassCategory ({ commit }, { classId, classCategoryId, body, successCallback, errHandler } = {}) {
+    this.$axios.put(getUrl(api.class.updateClassCategory(classId, classCategoryId)), body)
+      .then((res) => {
+        successCallback && successCallback(res)
+      })
+      .catch((err) => {
+        errHandler && errHandler(err)
+      })
+  },
   setSnackBar ({ commit }, data) {
     commit('setSnackBarData', data)
   }

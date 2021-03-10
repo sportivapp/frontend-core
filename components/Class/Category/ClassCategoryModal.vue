@@ -57,6 +57,7 @@
               />
             </v-row>
             <v-row
+              v-if="!isEditCategory"
               class="class-category-modal__form__section"
             >
               <span class="class-category-modal__form__section__title spv-body--1">
@@ -70,6 +71,7 @@
               </small>
             </v-row>
             <v-row
+              v-if="!isEditCategory"
               class="class-category-modal__form__section class-category-modal__form__section--date"
             >
               <span class="class-category-modal__form__section__title spv-body--1">
@@ -297,6 +299,10 @@ export default {
       type: Object,
       default: null
     },
+    isEditCategory: {
+      type: Boolean,
+      default: false
+    },
     show: {
       type: Boolean,
       default: false
@@ -409,13 +415,14 @@ export default {
       }
     },
     initDataFromProps () {
+      // const classUsersIds = this.classUsers.map((user) => { return user.euserid })
       this.categoryTitle = this.initialData.title
       this.categoryDescription = this.initialData.description
       this.priceOption = this.initialData.price > 0 ? 2 : 1
       this.categoryPrice = this.initialData.price
       this.categoryRequirement = this.initialData.requirements
-      this.categorySchedules = duplicateObject(this.initialData.schedules)
-      this.categoryCoachUserIds = [...this.initialData.categoryCoachUserIds]
+      this.categorySchedules = this.isEditCategory ? '' : duplicateObject(this.initialData.schedules)
+      // this.categoryCoachUserIds = this.isEditCategory ? [] : [...this.initialData.categoryCoachUserIds]
 
       if (this.initialData.startMonth && this.initialData.endMonth) {
         this.categoryPeriod = [
