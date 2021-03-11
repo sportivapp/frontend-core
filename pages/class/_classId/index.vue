@@ -57,6 +57,10 @@
       </v-col>
     </v-row>
     <home-footer />
+    <simple-snack-bar
+      v-model="showSuccessSnackBar"
+      :message="snackBarData && snackBarData.message"
+    />
   </v-container>
 </template>
 
@@ -67,12 +71,13 @@ import ClassInfo from '@/components/Class/ClassDetail/ClassInfo'
 import ClassParticipants from '@/components/Class/ClassDetail/ClassParticipants'
 import HomeFooter from '@/components/Footer/HomeFooter.vue'
 import SimplePrompt from '@/components/Modal/SimplePrompt'
+import SimpleSnackBar from '@/components/SnackBar/SimpleSnackBar'
 import SimpleBreadcrumb from '../../../components/Breadcrumb/SimpleBreadcrumb.vue'
 
 export default {
   name: 'ClassDetail',
   layout: 'class',
-  components: { ClassInfo, ClassParticipants, SimpleBreadcrumb, HomeFooter, SimplePrompt },
+  components: { ClassInfo, ClassParticipants, SimpleBreadcrumb, HomeFooter, SimplePrompt, SimpleSnackBar },
   data () {
     return {
       tab: null,
@@ -82,7 +87,8 @@ export default {
   computed: {
     ...mapGetters('class', [
       'hasClassPermission',
-      'classDetail'
+      'classDetail',
+      'snackBarData'
     ]),
     hasReadPermission () {
       return this.hasClassPermission(permissions.read)
@@ -100,6 +106,12 @@ export default {
           to: '/class/' + this.$route.params.classId
         }
       ]
+    },
+    showSuccessSnackBar: {
+      get () {
+        return this.snackBarData.value
+      },
+      set () {}
     }
   },
   methods: {

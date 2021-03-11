@@ -20,6 +20,7 @@
             <v-btn
               class="ml-5"
               icon=""
+              @click="show = true"
             >
               <v-icon>
                 mdi-delete
@@ -92,6 +93,17 @@
       @close="handleCloseCategoryModal"
       @save="handleEdit"
     />
+    <simple-prompt
+      :show="show"
+      :title="$t('cmsClass.categoryDeleteModalTitle')"
+      :message="$t('cmsClass.categoryDeleteMessage')"
+      action-color="#FF3333"
+      :cancel-text="$t('cmsClass.deleteCancel')"
+      :action-text="$t('cmsClass.deleteAction')"
+      @update:show="show = false"
+      @click:cancel="show = false"
+      @click:action="handleDeleteClassCategory"
+    />
   </v-container>
 </template>
 <script>
@@ -99,11 +111,12 @@ import ClassCategoryModal from '@/components/Class/Category/ClassCategoryModal'
 import ClassCategoryInfo from '@/components/Class/ClassCategory/ClassCategoryInfo'
 import ClassCategorySession from '@/components/Class/ClassCategory/ClassCategorySession'
 import ClassCategoryHistory from '@/components/Class/ClassCategory/ClassCategoryHistory'
+import SimplePrompt from '@/components/Modal/SimplePrompt'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ClassCategoryDetail',
-  components: { ClassCategoryModal, ClassCategoryInfo, ClassCategorySession, ClassCategoryHistory },
+  components: { ClassCategoryModal, ClassCategoryInfo, ClassCategorySession, ClassCategoryHistory, SimplePrompt },
   props: {
     category: {
       type: Object,
@@ -116,7 +129,7 @@ export default {
       isEditCategory: false,
       tab: null,
       isTableLoading: false,
-      categoryData: null
+      show: false
     }
   },
   computed: {
@@ -132,17 +145,8 @@ export default {
     this.getProvinces({ params })
     await this.getUserCurrentCompany({ successCallback: this.handleGetUsers })
   },
-  // created () {
-  //   console.log(this.category)
-  //   console.log('-----------------------')
-  //   console.log('-----------------------')
-  //   console.log(this.categoryData)
-  //   console.log('-----------------------')
-  //   this.categoryData = this.category
-  //   console.log(this.categoryData)
-  // },
   methods: {
-    ...mapActions('class', ['updateClassCategory', 'getUserCurrentCompany', 'getUsers']),
+    ...mapActions('class', ['updateClassCategory', 'deleteClassCategory', 'getUserCurrentCompany', 'getUsers', 'setSnackBar']),
     ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
     async handleGetUsers (keyword = '') {
       const params = {
@@ -152,7 +156,7 @@ export default {
       }
       await this.getUsers({ params, companyId: this.userCurrentCompany.companyId })
     },
-    handleEdit (newCategory) {
+    async handleEdit (newCategory) {
       const body = {
         categoryCoachUserIds: newCategory.categoryCoachUserIds,
         description: newCategory.description,
@@ -160,13 +164,21 @@ export default {
         requirements: newCategory.requirements,
         title: newCategory.title
       }
-      this.showEditCategoryModal = false
-      this.updateClassCategory({
+      await this.updateClassCategory({
         classId: this.$route.params.classId,
         classCategoryId: this.$route.params.classCategoryId,
         body,
-        successCallback: location.reload()
+        successCallback: this.successCallbackEdit
       })
+      this.showEditCategoryModal = false
+    },
+    successCallbackEdit () {
+      const data = {
+        value: true,
+        message: 'Kategori kelas berhasil diedit'
+      }
+      this.setSnackBar(data)
+      setTimeout(function () { location.reload() }, 2000)
     },
     handleClickEdit () {
       this.isEditCategory = true
@@ -174,6 +186,29 @@ export default {
     },
     handleCloseCategoryModal () {
       this.showEditCategoryModal = false
+    },
+    async handleDeleteClassCategory () {
+      await this.deleteClassCategory({
+        classId: this.$route.params.classId,
+        classCategoryId: this.$route.params.classCategoryId,
+        successCallback: this.successCallbackDelete,
+        errHandler: this.errHandlerDelete
+      })
+    },
+    successCallbackDelete () {
+      const data = {
+        value: true,
+        message: this.$t('cmsClass.categoryDeleteSuccess')
+      }
+      this.setSnackBar(data)
+      this.$router.push('/class/' + this.$route.params.classId)
+    },
+    errHandlerDelete () {
+      const data = {
+        value: true,
+        message: 'Participant Existed'
+      }
+      this.setSnackBar(data)
     }
   }
 }

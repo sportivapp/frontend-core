@@ -294,7 +294,10 @@ export default () => {
         deleteAction: 'Hapus',
         deleteCancel: 'Batal',
         deleteMessage: 'Kamu yakin untuk hapus kelas sekarang?',
-        deleteSuccess: 'Kelas berhasil dihapus'
+        deleteSuccess: 'Kelas berhasil dihapus',
+        categoryDeleteModalTitle: 'Hapus Kategori Kelas',
+        categoryDeleteMessage: 'Kamu yakin untuk menghapus kategori kelas sekarang?',
+        categoryDeleteSuccess: 'Kategori Kelas berhasil dihapus'
       }
     })
   })

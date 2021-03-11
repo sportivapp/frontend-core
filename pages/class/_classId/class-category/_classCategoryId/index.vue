@@ -12,6 +12,10 @@
         :category="classCategoryDetail"
         class="ma-auto"
       />
+      <simple-snack-bar
+        v-model="showSuccessSnackBar"
+        :message="snackBarData && snackBarData.message"
+      />
       <home-footer />
     </div>
   </v-container>
@@ -22,19 +26,27 @@ import { mapGetters, mapActions } from 'vuex'
 import { permissions } from '@/config/permission'
 import ClassCategoryDetail from '@/components/Class/ClassCategory/ClassCategoryDetail'
 import SimpleBreadcrumb from '@/components/Breadcrumb/SimpleBreadcrumb.vue'
+import SimpleSnackBar from '@/components/SnackBar/SimpleSnackBar'
 import HomeFooter from '@/components/Footer/HomeFooter.vue'
 
 export default {
   name: 'ClassCategoryDetailPage',
   layout: 'class',
-  components: { ClassCategoryDetail, HomeFooter, SimpleBreadcrumb },
+  components: { ClassCategoryDetail, HomeFooter, SimpleBreadcrumb, SimpleSnackBar },
   computed: {
     ...mapGetters('class', [
       'hasClassPermission',
-      'classCategoryDetail'
+      'classCategoryDetail',
+      'snackBarData'
     ]),
     hasReadPermission () {
       return this.hasClassPermission(permissions.read)
+    },
+    showSuccessSnackBar: {
+      get () {
+        return this.snackBarData.value
+      },
+      set () {}
     },
     breadcrumbs () {
       return [
