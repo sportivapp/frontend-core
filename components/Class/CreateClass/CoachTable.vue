@@ -86,9 +86,10 @@ export default {
     value: {
       handler (data) {
         // eslint-disable-next-line no-console
-        console.log(data)
         this.initSelectedCoach(data)
-      }
+      },
+      deep: true,
+      immediate: true
     }
   },
   methods: {
@@ -97,7 +98,6 @@ export default {
       this.initSelectedCoach(data)
       this.showModal = false
       // eslint-disable-next-line no-console
-      console.log(this.selectedCoach)
       this.updateSelectedCoaches(this.selectedCoach)
       this.$emit('input', this.selectedCoach)
     },
