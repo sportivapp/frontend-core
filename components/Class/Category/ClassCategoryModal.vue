@@ -13,10 +13,18 @@
           align="center"
         >
           <v-col
+            v-if="!isEditCategory"
             cols="auto"
             class="class-category-modal__top__item class-category-modal__title spv-heading--2"
           >
             Tambah Kategori
+          </v-col>
+          <v-col
+            v-else
+            cols="auto"
+            class="class-category-modal__top__item class-category-modal__title spv-heading--2"
+          >
+            Ubah Kategori
           </v-col>
           <v-col class="class-category-modal__top__item" cols="auto">
             <v-btn
@@ -415,20 +423,43 @@ export default {
       }
     },
     initDataFromProps () {
-      // const classUsersIds = this.classUsers.map((user) => { return user.euserid })
       this.categoryTitle = this.initialData.title
       this.categoryDescription = this.initialData.description
       this.priceOption = this.initialData.price > 0 ? 2 : 1
       this.categoryPrice = this.initialData.price
       this.categoryRequirement = this.initialData.requirements
-      this.categorySchedules = this.isEditCategory ? '' : duplicateObject(this.initialData.schedules)
-      // this.categoryCoachUserIds = this.isEditCategory ? [] : [...this.initialData.categoryCoachUserIds]
 
-      if (this.initialData.startMonth && this.initialData.endMonth) {
+      if (this.isEditCategory) {
+        const schedule = []
+        schedule.push({
+          day: 'MONDAY',
+          endHour: 12,
+          endMinute: 0,
+          startHour: 10,
+          startMinute: 0
+        })
+        this.categorySchedules = duplicateObject(schedule)
+        const coachUserId = []
+        if (this.initialData && this.initialData.coaches) {
+          for (let i = 0; i < this.initialData.coaches.length; i++) {
+            coachUserId.push(this.initialData.coaches[i].userId)
+          }
+        }
+        this.categoryCoachUserIds = [...coachUserId]
         this.categoryPeriod = [
-          new Date(this.initialData.startMonth).toISOString(),
-          new Date(this.initialData.endMonth).toISOString()
+          new Date().toISOString(),
+          new Date().toISOString()
         ]
+      } else {
+        this.categorySchedules = duplicateObject(this.initialData.schedules)
+        this.categoryCoachUserIds = [...this.initialData.categoryCoachUserIds]
+
+        if (this.initialData.startMonth && this.initialData.endMonth) {
+          this.categoryPeriod = [
+            new Date(this.initialData.startMonth).toISOString(),
+            new Date(this.initialData.endMonth).toISOString()
+          ]
+        }
       }
     },
     handleClickResetPeriod () {

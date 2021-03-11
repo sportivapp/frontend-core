@@ -200,6 +200,7 @@ export const actions = {
       })
   },
   updateClassCategory ({ commit }, { classId, classCategoryId, body, successCallback, errHandler } = {}) {
+    console.log(body)
     this.$axios.put(getUrl(api.class.updateClassCategory(classId, classCategoryId)), body)
       .then((res) => {
         successCallback && successCallback(res)

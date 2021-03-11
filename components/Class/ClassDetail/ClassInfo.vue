@@ -183,9 +183,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('class', [
-      'classDetail'
-    ]),
+    ...mapGetters(['industries', 'provinces', 'cities']),
+    ...mapGetters('class', ['classDetail', 'userCurrentCompany']),
     isSingleBanner () {
       return this.classDetail.classMedia && this.classDetail.classMedia.length === 1
     },
@@ -228,17 +227,39 @@ export default {
       return this.classDetail && this.classDetail.coaches && this.classDetail.coaches.length > 3
     }
   },
+  async mounted () {
+    await this.getIndustries()
+    const params = {
+      countryId: 1,
+      size: 9999
+    }
+    this.getProvinces({ params })
+    await this.getUserCurrentCompany({ successCallback: this.handleGetUsers })
+  },
   created () {
     this.initPage()
   },
   methods: {
     ...mapActions('class', [
-      'getClassDetail', 'updateSelectedCoaches', 'addClassCategory'
+      'getClassDetail',
+      'updateSelectedCoaches',
+      'addClassCategory',
+      'getUserCurrentCompany',
+      'getUsers'
     ]),
+    ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
     initPage () {
       this.getClassDetail({
         id: this.$route.params.classId
       })
+    },
+    async handleGetUsers (keyword = '') {
+      const params = {
+        page: 0,
+        size: 9999,
+        keyword
+      }
+      await this.getUsers({ params, companyId: this.userCurrentCompany.companyId })
     },
     getClassCategoryPrice (originalPrice) {
       return originalPrice === '0'

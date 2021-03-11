@@ -99,7 +99,7 @@ import ClassCategoryModal from '@/components/Class/Category/ClassCategoryModal'
 import ClassCategoryInfo from '@/components/Class/ClassCategory/ClassCategoryInfo'
 import ClassCategorySession from '@/components/Class/ClassCategory/ClassCategorySession'
 import ClassCategoryHistory from '@/components/Class/ClassCategory/ClassCategoryHistory'
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ClassCategoryDetail',
@@ -116,35 +116,59 @@ export default {
       isEditCategory: false,
       tab: null,
       isTableLoading: false,
-      coachesId: []
+      categoryData: null
     }
   },
+  computed: {
+    ...mapGetters(['industries', 'provinces', 'cities']),
+    ...mapGetters('class', ['userCurrentCompany', 'classCategoryDetail'])
+  },
+  async mounted () {
+    await this.getIndustries()
+    const params = {
+      countryId: 1,
+      size: 9999
+    }
+    this.getProvinces({ params })
+    await this.getUserCurrentCompany({ successCallback: this.handleGetUsers })
+  },
   // created () {
-  //   this.getClassCoachesDetail()
+  //   console.log(this.category)
+  //   console.log('-----------------------')
+  //   console.log('-----------------------')
+  //   console.log(this.categoryData)
+  //   console.log('-----------------------')
+  //   this.categoryData = this.category
+  //   console.log(this.categoryData)
   // },
   methods: {
-    ...mapActions('class', [
-      'updateClassCategory'
-    ]),
-    // getClassCoachesDetail () {
-    //   if (!this.category.coaches) {
-    //     for (let i = 0; i < this.category.coaches.length; i++) {
-    //       this.coachesId.push(this.category.coaches[i].user.euserid)
-    //     }
-    //     // this.updateSelectedCoaches(this.coachesDetail)
-    //   }
-    // },
+    ...mapActions('class', ['updateClassCategory', 'getUserCurrentCompany', 'getUsers']),
+    ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
+    async handleGetUsers (keyword = '') {
+      const params = {
+        page: 0,
+        size: 9999,
+        keyword
+      }
+      await this.getUsers({ params, companyId: this.userCurrentCompany.companyId })
+    },
     handleEdit (newCategory) {
+      const body = {
+        categoryCoachUserIds: newCategory.categoryCoachUserIds,
+        description: newCategory.description,
+        price: newCategory.price,
+        requirements: newCategory.requirements,
+        title: newCategory.title
+      }
       this.showEditCategoryModal = false
       this.updateClassCategory({
         classId: this.$route.params.classId,
         classCategoryId: this.$route.params.classCategoryId,
-        body: newCategory,
+        body,
         successCallback: location.reload()
       })
     },
     handleClickEdit () {
-      console.log(this.category)
       this.isEditCategory = true
       this.showEditCategoryModal = true
     },
