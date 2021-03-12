@@ -1,4 +1,4 @@
-import { required, maxLength, minLength, numeric } from 'vuelidate/lib/validators'
+import { required, maxLength, minLength, numeric, requiredIf } from 'vuelidate/lib/validators'
 import { isValidPhoneNumber } from '@/utils/validation.js'
 export default {
   validations () {
@@ -18,7 +18,7 @@ export default {
           numeric,
           isValid: v => isValidPhoneNumber(v)
         },
-        categories: { required }
+        categories: { required: requiredIf(!this.isEdit) }
       },
       rawFiles: { required }
     }

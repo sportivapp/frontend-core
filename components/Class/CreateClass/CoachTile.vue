@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import { staticUrl } from '@/config/api'
+
 export default {
   name: 'CoachTile',
   props: {
@@ -36,7 +38,7 @@ export default {
   }),
   computed: {
     coachLogo () {
-      return this.coachData.file ? '/src/' + this.coachData.file.efilename : require('@/assets/images/logos/sportiv-logo-small.png')
+      return this.coachData.file ? staticUrl + this.coachData.file.efilename : require('@/assets/images/logos/sportiv-logo-small.png')
     }
   }
 }

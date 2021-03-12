@@ -157,7 +157,7 @@
     </v-row>
     <class-category-modal
       :show="showAddCategoryModal"
-      :class-coach-user-ids="coachesId"
+      :title-text="'Tambah Kategori'"
       @close="handleCloseCategoryModal"
       @save="handleAddClassCategory"
     />
@@ -180,15 +180,12 @@ export default {
       staticUrl,
       showMoreCoach: false,
       showAddCategoryModal: false,
-      coachesId: [],
-      coachesDetail: [],
       selectedIndex: 0
     }
   },
   computed: {
-    ...mapGetters('class', [
-      'classDetail'
-    ]),
+    ...mapGetters(['industries', 'provinces', 'cities']),
+    ...mapGetters('class', ['classDetail', 'userCurrentCompany']),
     isSingleBanner () {
       return this.classDetail.classMedia && this.classDetail.classMedia.length === 1
     },
@@ -231,31 +228,44 @@ export default {
       return this.classDetail && this.classDetail.coaches && this.classDetail.coaches.length > 3
     }
   },
+  async mounted () {
+    await this.getIndustries()
+    const params = {
+      countryId: 1,
+      size: 9999
+    }
+    this.getProvinces({ params })
+    await this.getUserCurrentCompany({ successCallback: this.handleGetUsers })
+  },
   created () {
     this.initPage()
   },
   methods: {
     ...mapActions('class', [
-      'getClassDetail', 'updateSelectedCoaches', 'addClassCategory'
+      'getClassDetail',
+      'updateSelectedCoaches',
+      'addClassCategory',
+      'getUserCurrentCompany',
+      'getUsers'
     ]),
+    ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
     initPage () {
       this.getClassDetail({
-        id: this.$route.params.classId,
-        successCallback: this.getClassCoachesDetail
+        id: this.$route.params.classId
       })
+    },
+    async handleGetUsers (keyword = '') {
+      const params = {
+        page: 0,
+        size: 9999,
+        keyword
+      }
+      await this.getUsers({ params, companyId: this.userCurrentCompany.companyId })
     },
     getClassCategoryPrice (originalPrice) {
       return originalPrice === '0'
         ? this.$t('tournament.priceFree')
         : convertToPrice(originalPrice) + `/${this.$t('common.month')}`
-    },
-    getClassCoachesDetail () {
-      if (!this.classDetail.coaches) { return this.coachesDetail }
-      for (let i = 0; i < this.classDetail.coaches.length; i++) {
-        this.coachesDetail.push(this.classDetail.coaches[i].user)
-        this.coachesId.push(this.classDetail.coaches[i].user.euserid)
-      }
-      this.updateSelectedCoaches(this.coachesDetail)
     },
     handleClickAddCategory () {
       this.showAddCategoryModal = true
