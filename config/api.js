@@ -40,6 +40,7 @@ const api = {
     classParticipants: id => `/class-v2/${id}/participants`,
     deleteClass: id => `/class-v2/${id}`,
     insertClassCategory: id => `/class-v2/${id}/class-category`,
+    updateClassCategory: (classId, classCategoryId) => `/class-v2/${classId}/class-category/${classCategoryId}`,
     updateClass: id => `/class-v2/${id}`
   }
 }

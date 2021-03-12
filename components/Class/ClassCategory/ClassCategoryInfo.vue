@@ -77,12 +77,19 @@
             </label>
           </v-col>
           <v-col class="class-category-info__black spv-body--2" cols="auto" md="8">
-            <span
-              v-for="c in info.coaches"
-              :key="c.userId"
-            >
-              {{ c.user.eusername }}
-            </span>
+            <td class="text-capitalize">
+              {{ classCoaches }}
+              <p
+                v-if="!showMoreCoach && haveManyCoach"
+                class="class-category-info__show-more"
+                @click="showMoreCoach = true"
+              >
+                {{ $t('cmsClass.showMore') }}
+                <v-icon size="15" color="#FF7041">
+                  mdi-chevron-down
+                </v-icon>
+              </p>
+            </td>
           </v-col>
         </v-row>
         <v-divider class="pa-0" />
@@ -103,10 +110,31 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      showMoreCoach: false
+    }
+  },
   computed: {
     handlePrice () {
       if (!this.info.price || this.info.price === '0') { return 'Gratis' }
       return convertToPrice(this.info.price) + '/bulan'
+    },
+    classCoaches () {
+      let coaches = ''
+      if (this.info.coaches) {
+        for (let i = 0; i < this.info.coaches.length; i++) {
+          if (coaches) { coaches += ', ' }
+          coaches = coaches + this.info.coaches[i].user.eusername
+          if (!this.showMoreCoach && i === 2) {
+            break
+          }
+        }
+      }
+      return coaches
+    },
+    haveManyCoach () {
+      return this.info && this.info.coaches && this.info.coaches.length > 3
     }
   }
 }
@@ -136,5 +164,12 @@ export default {
   &__schedule {
     font-size: 14px;
   }
+
+  &__show-more {
+      color: $orange-4;
+      font-size: 12px;
+      line-height: 18px;
+      cursor: pointer;
+    }
 }
 </style>
