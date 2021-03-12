@@ -90,12 +90,6 @@
                 </v-icon>
               </p>
             </td>
-            <!-- <span
-              v-for="c in info.coaches"
-              :key="c.userId"
-            >
-              {{ c.user.eusername }}
-            </span> -->
           </v-col>
         </v-row>
         <v-divider class="pa-0" />

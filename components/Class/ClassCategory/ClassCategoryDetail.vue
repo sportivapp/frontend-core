@@ -88,6 +88,7 @@
     </v-row>
     <class-category-modal
       :show="showEditCategoryModal"
+      :title-text="'Ubah Kategori'"
       :initial-data="category"
       :is-edit-category="true"
       @close="handleCloseCategoryModal"

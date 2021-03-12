@@ -61,6 +61,7 @@
 
     <class-category-modal
       v-if="showAddCategoryModal"
+      :title-text="'Tambah Kategori'"
       :show="showAddCategoryModal"
       :is-edit="isEditing"
       :index="selectedIndex"

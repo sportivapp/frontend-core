@@ -13,18 +13,10 @@
           align="center"
         >
           <v-col
-            v-if="!isEditCategory"
             cols="auto"
             class="class-category-modal__top__item class-category-modal__title spv-heading--2"
           >
-            Tambah Kategori
-          </v-col>
-          <v-col
-            v-else
-            cols="auto"
-            class="class-category-modal__top__item class-category-modal__title spv-heading--2"
-          >
-            Ubah Kategori
+            {{ titleText }}
           </v-col>
           <v-col class="class-category-modal__top__item" cols="auto">
             <v-btn
@@ -322,6 +314,10 @@ export default {
     index: {
       type: Number,
       default: 0
+    },
+    titleText: {
+      type: String,
+      required: true
     }
     // classCoachUserIds: {
     //   type: Array,

@@ -157,6 +157,7 @@
     </v-row>
     <class-category-modal
       :show="showAddCategoryModal"
+      :title-text="'Tambah Kategori'"
       @close="handleCloseCategoryModal"
       @save="handleAddClassCategory"
     />
