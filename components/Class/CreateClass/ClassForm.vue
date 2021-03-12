@@ -276,7 +276,6 @@
         {{ isEdit?'Simpan':'Tambah Kelas' }}
       </v-btn>
     </v-row>
-    <update-schedule-modal />
   </v-container>
 </template>
 
@@ -286,7 +285,6 @@ import CoachTable from '@/components/Class/CreateClass/CoachTable'
 import UploadFile from '@/components/Class/CreateClass/UploadFileNew'
 import ClassCategoryTable from '@/components/Class/Category/ClassCategoryTable'
 import { mapGetters, mapActions } from 'vuex'
-import UpdateScheduleModal from '@/components/Class/ClassDetail/Modal/UpdateScheduleModal'
 import validationMixin from '@/components/Class/validation.mixin'
 import { staticUrl } from '@/config/api'
 
@@ -296,8 +294,8 @@ export default {
     Editor,
     CoachTable,
     UploadFile,
-    ClassCategoryTable,
-    UpdateScheduleModal
+    ClassCategoryTable
+
   },
   mixins: [validationMixin],
   props: {

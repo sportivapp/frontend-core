@@ -1,5 +1,9 @@
 <template>
   <v-container class="ma-0 pa-0 class-category" fluid>
+    <update-schedule-modal
+      v-model="showModal"
+      :category-sessions="category.categorySessions"
+    />
     <v-spacer />
     <v-row justify="center" align="center" no-gutters>
       <v-col cols="10">
@@ -47,6 +51,17 @@
                   value="session"
                   class="pt-3"
                 >
+                  <v-row class="border-bottom mx-0">
+                    <v-col class="text-right pr-10 ma-0 pt-0">
+                      <v-btn
+                        class="white--text"
+                        color="#FF7041"
+                        @click="showModal = true"
+                      >
+                        Perbarui Jadwal
+                      </v-btn>
+                    </v-col>
+                  </v-row>
                   <class-category-session
                     :session="category"
                   />
@@ -72,10 +87,11 @@
 import ClassCategoryInfo from '@/components/Class/ClassCategory/ClassCategoryInfo'
 import ClassCategorySession from '@/components/Class/ClassCategory/ClassCategorySession'
 import ClassCategoryHistory from '@/components/Class/ClassCategory/ClassCategoryHistory'
+import UpdateScheduleModal from '@/components/Class/ClassDetail/Modal/UpdateScheduleModal'
 
 export default {
   name: 'ClassCategoryDetail',
-  components: { ClassCategoryInfo, ClassCategorySession, ClassCategoryHistory },
+  components: { ClassCategoryInfo, ClassCategorySession, ClassCategoryHistory, UpdateScheduleModal },
   props: {
     category: {
       type: Object,
@@ -85,7 +101,15 @@ export default {
   data () {
     return {
       tab: null,
-      isTableLoading: false
+      isTableLoading: false,
+      showModal: false
+    }
+  },
+  watch: {
+    category: {
+      handler (value) {
+        console.log(value)
+      }
     }
   }
 }
@@ -95,6 +119,9 @@ export default {
 
 .v-tabs {
   width: 50% !important;
+}
+.border-bottom{
+  border-bottom: 1px solid #D5D5D5;
 }
 
 .class-category {

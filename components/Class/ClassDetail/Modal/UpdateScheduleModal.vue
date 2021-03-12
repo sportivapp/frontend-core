@@ -12,9 +12,11 @@
         </v-card-title>
         <v-spacer />
         <v-card-actions>
-          <v-icon>
-            mdi-close
-          </v-icon>
+          <v-btn icon @click="$emit('input', false)">
+            <v-icon>
+              mdi-close
+            </v-icon>
+          </v-btn>
         </v-card-actions>
       </v-row>
       <v-row>
@@ -98,6 +100,10 @@ export default {
     value: {
       type: Boolean,
       default: false
+    },
+    categorySessions: {
+      type: Array,
+      default: () => []
     }
   },
   data: () => ({
@@ -136,11 +142,22 @@ export default {
       return this.categoryPeriod.length > 1
         ? this.periodTextMonth
         : ''
+    },
+    categorySchedules: {
+      get () {
+        return this.generateCategorySessions()
+      },
+      set () {
+
+      }
     }
   },
   methods: {
     handleClickResetPeriod () {
       this.categoryPeriod = []
+    },
+    generateCategorySessions () {
+
     }
   }
 }
