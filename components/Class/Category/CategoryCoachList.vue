@@ -14,6 +14,7 @@
           :category-coach-ids="value"
           :coach="value[index]"
           :index="index"
+          :total-data="value.length"
           @delete="handleDeleteCoach"
           @change="handleChangeCoach"
         />

@@ -65,7 +65,10 @@
                 <span class="class-category-modal__form__section__title__red">*
                 </span>
               </span>
-              <category-schedule-list v-model="categorySchedules" />
+              <category-schedule-list
+                v-model="categorySchedules"
+                @input="$v.categorySchedules.$touch()"
+              />
               <small v-if="$v.categorySchedules.$error" class="red--text pl-2">
                 {{ categorySchedulesErrors[categorySchedulesErrors.length-1] }}
               </small>

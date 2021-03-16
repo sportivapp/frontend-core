@@ -160,6 +160,7 @@
     <v-col cols="auto" class="category-schedule-item__delete">
       <v-btn
         icon
+        :disabled="totalData<=1"
         @click="handleClickDelete"
       >
         <v-icon>
@@ -203,12 +204,18 @@ export default {
     index: {
       type: Number,
       default: 0
+    },
+    totalData: {
+      type: Number,
+      default: 0
     }
   },
   data () {
     return {
       dayValues,
-      dayText
+      dayText,
+      startTimeVal: '',
+      endTimeVal: ''
     }
   },
   computed: {
