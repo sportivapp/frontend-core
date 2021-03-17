@@ -42,7 +42,8 @@ const api = {
     insertClassCategory: id => `/class-v2/${id}/class-category`,
     updateClass: id => `/class-v2/${id}`,
     getCategorySchedule: categoryId => `/class-category/${categoryId}/schedule`,
-    extendCategorySession: categoryId => `/class-category/${categoryId}/extend`
+    extendCategorySession: categoryId => `/class-category/${categoryId}/extend`,
+    updateClassCategory: (classId, classCategoryId) => `/class-v2/${classId}/class-category/${classCategoryId}`
   }
 }
 
