@@ -4,7 +4,21 @@ export default {
     return {
       categoryTitle: { required },
       categoryDescription: { required },
-      categorySchedules: { required },
+      categorySchedules: {
+        required,
+        timeValid: (v) => {
+          for (let i = 1; i < v.length; i++) {
+            if (v[i].day === v[i - 1].day) {
+              if (!((v[i].startHour < v[i - 1].startHour &&
+                v[i].endHour > v[i - 1].startHour)) && (v[i].startHour < v[i - 1].endHour ||
+                  v[i].endHour > v[i - 1].endHour)) {
+                return false
+              }
+            }
+          }
+          return true
+        }
+      },
       categoryPeriod: {
         required,
         validPeriodRange: (v) => {
@@ -41,6 +55,7 @@ export default {
       const errors = []
       if (!this.$v.categorySchedules.$dirty) { return errors }
       !this.$v.categorySchedules.required && errors.push('Jadwal Kategori harus di isi minimal 1')
+      !this.$v.categorySchedules.timeValid && errors.push('Jadwal tidak boleh berlangsung bersamaan')
       return errors
     },
     categoryPeriodErrors () {
