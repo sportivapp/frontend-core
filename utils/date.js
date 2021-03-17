@@ -68,11 +68,27 @@ const toFullDateWeekdayHourMinute = (timestamp) => {
   return date
 }
 
+const toShortDateHourMinute = (timestamp) => {
+  let date = new Date(parseInt(timestamp, 10))
+  const options = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  }
+  date = date.toLocaleDateString('id-ID', options)
+  date = date.replace(/\./g, ':')
+
+  return date
+}
+
 export {
   milisecondToFullDate,
   milisecondToFullDateShortMonth,
   toFullDateHourMinute,
   dateToMonthAndYear,
   dateToHourAndMinute,
-  toFullDateWeekdayHourMinute
+  toFullDateWeekdayHourMinute,
+  toShortDateHourMinute
 }

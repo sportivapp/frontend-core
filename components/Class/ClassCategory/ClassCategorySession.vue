@@ -69,7 +69,7 @@ export default {
     padding: 0;
 
     &--left {
-      width: 160px;
+      width: 150px;
     }
 
     &--date {

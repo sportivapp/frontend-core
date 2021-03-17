@@ -44,8 +44,16 @@
     <td class="class-category-session-row__right pr-10">
       <v-btn
         v-show="showHide"
+        :sync="showReschedule"
+        class="class-category-session-row__button--orange mr-10"
+        @click="toggleShowReschedule"
+      >
+        Ganti Waktu
+      </v-btn>
+      <v-btn
+        v-show="showHide"
         :sync="showParticipantList"
-        class="class-category-session-row__button mr-10"
+        class="class-category-session-row__button--green mr-5"
         @click="toggleShowParticipantList"
       >
         Lihat Peserta
@@ -58,16 +66,24 @@
       keep-alive
       @clickOutside="toggleShowParticipantList"
     />
+    <class-category-reschedule
+      :sync="showReschedule"
+      :category="category"
+      :session="session ? session : ''"
+      keep-alive
+      @clickOutside="toggleShowReschedule"
+    />
   </tr>
 </template>
 
 <script>
 import { toFullDateWeekdayHourMinute } from '@/utils/date'
 import ClassCategorySessionDialog from '@/components/Class/ClassCategory/ClassCategorySessionDialog'
+import ClassCategoryReschedule from '@/components/Class/ClassCategory/ClassCategoryReschedule'
 
 export default {
   name: 'ClassCategorySessionRow',
-  components: { ClassCategorySessionDialog },
+  components: { ClassCategorySessionDialog, ClassCategoryReschedule },
   props: {
     session: {
       type: Object,
@@ -81,6 +97,7 @@ export default {
   data () {
     return {
       showParticipantList: false,
+      showReschedule: false,
       participantList: [],
       dateStart: '',
       dateEnd: '',
@@ -113,6 +130,9 @@ export default {
     },
     toggleShowParticipantList () {
       this.showParticipantList = !this.showParticipantList
+    },
+    toggleShowReschedule () {
+      this.showReschedule = !this.showReschedule
     },
     showButton () {
       this.showHide = true
@@ -157,15 +177,30 @@ export default {
   }
 
   &__button {
-    box-shadow: none !important;
-    background-color: $neutral-white !important;
-    height: 32px !important;
-    font-size: 12px;
-    line-height: 28px;
-    font-weight: 600;
-    color: $green-100 !important;
-    border-radius: 8px;
-    border: 1px solid $green-100;
+
+    &--green {
+      box-shadow: none !important;
+      background-color: $neutral-white !important;
+      height: 32px !important;
+      font-size: 12px;
+      line-height: 28px;
+      font-weight: 600;
+      color: $green-100 !important;
+      border-radius: 8px;
+      border: 1px solid $green-100;
+    }
+
+    &--orange {
+      box-shadow: none !important;
+      background-color: $neutral-white !important;
+      height: 32px !important;
+      font-size: 12px;
+      line-height: 28px;
+      font-weight: 600;
+      color: $orange-100 !important;
+      border-radius: 8px;
+      border: 1px solid $orange-100;
+    }
   }
 }
 </style>
