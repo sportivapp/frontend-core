@@ -23,7 +23,7 @@
         <v-col>
           <v-row class="mx-1 spv-body--1 grey--text">
             Jadwal (Maks. 7 Jadwal)<span class="red--text">*</span>
-            <category-schedule-list v-model="categorySchedules" />
+            <category-schedule-list v-model="categorySchedulesLocal" />
           </v-row>
           <v-row class="mx-1 spv-body--1 grey--text">
             Masa Berlangsung Jadwal (Maks. 3 bulan)<span class="red--text">*</span>
@@ -81,6 +81,34 @@
               </v-card>
             </v-menu>
           </v-row>
+          <v-row
+            justify="end"
+            align="center"
+            class="class-category-modal__actions"
+          >
+            <v-col class="pa-0" cols="auto">
+              <v-btn
+                outlined
+                class="class-category-modal__actions__btn class-category-modal__actions--cancel"
+                @click="handleCloseModal"
+              >
+                <span>
+                  Batal
+                </span>
+              </v-btn>
+            </v-col>
+            <v-col class="pa-0" cols="auto">
+              <v-btn
+                text
+                class="class-category-modal__actions__btn class-category-modal__actions--save"
+                @click="handleClickSave"
+              >
+                <span>
+                  Simpan
+                </span>
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-card>
@@ -90,6 +118,7 @@
 <script>
 import CategoryScheduleList from '@/components/Class/Category/CategoryScheduleList'
 import { dateToMonthAndYear } from '@/utils/date'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'UpdateScheduleModal',
@@ -104,12 +133,16 @@ export default {
     categorySessions: {
       type: Array,
       default: () => []
+    },
+    schedules: {
+      type: Array,
+      default: () => []
     }
   },
   data: () => ({
     periodMenu: null,
     categoryPeriod: [],
-    categorySchedules: [
+    categorySchedulesLocal: [
       {
         day: 'MONDAY',
         startHour: 10,
@@ -152,13 +185,44 @@ export default {
       }
     }
   },
+  // watch: {
+  //   categorySessions: {
+  //     handler (value) {
+  //       if (value.length > 0) {
+  //         this.setCategoryPeriod(value[0].startDate, value[value.length - 1].startDate)
+  //       }
+  //     }
+  //   }
+  // },
   methods: {
+    ...mapActions('class', ['extendCategorySession']),
     handleClickResetPeriod () {
       this.categoryPeriod = []
     },
     generateCategorySessions () {
-
+      if (this.schedules) {
+        this.categorySchedulesLocal = [...this.schedules]
+      }
+      return this.categorySchedulesLocal
+    },
+    handleClickSave () {
+      const body = {
+        startMonth: this.startMonthDate.getTime(),
+        endMonth: this.endMonthDate.getTime(),
+        schedules: [...this.categorySchedulesLocal]
+      }
+      this.extendCategorySession({ categoryId: this.$route.params.classCategoryId, body })
+    },
+    handleCloseModal () {
+      this.$emit('input', false)
+    },
+    setCategoryPeriod (startms, endms) {
+      const startDate = new Date(startms * 1000)
+      const endDate = new Date(endms * 1000)
+      this.categoryPeriod = [startDate, endDate]
+      console.log(this.categoryPeriod)
     }
+
   }
 }
 </script>
@@ -173,6 +237,7 @@ export default {
 }
 
 .class-category-modal {
+  color: white;
   background-color: white;
   &__container {
     padding: 0 40px;
@@ -270,7 +335,7 @@ export default {
     padding: 16px 28px;
     margin: 8px -40px 0 !important;
     box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
-
+    bottom: 0;
     &__btn {
       width: 120px;
       height: 40px;

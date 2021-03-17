@@ -3,6 +3,7 @@
     <update-schedule-modal
       v-model="showModal"
       :category-sessions="category.categorySessions"
+      :schedules="categorySchedules"
     />
     <v-spacer />
     <v-row justify="center" align="center" no-gutters>
@@ -87,7 +88,8 @@
 import ClassCategoryInfo from '@/components/Class/ClassCategory/ClassCategoryInfo'
 import ClassCategorySession from '@/components/Class/ClassCategory/ClassCategorySession'
 import ClassCategoryHistory from '@/components/Class/ClassCategory/ClassCategoryHistory'
-import UpdateScheduleModal from '@/components/Class/ClassDetail/Modal/UpdateScheduleModal'
+import UpdateScheduleModal from '@/components/Class/ClassCategory/Modal/UpdateScheduleModal'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ClassCategoryDetail',
@@ -105,12 +107,21 @@ export default {
       showModal: false
     }
   },
+  mounted () {
+    this.getSchedule({ categoryId: this.$route.params.classCategoryId })
+  },
+  computed: {
+    ...mapGetters('class', ['categorySchedules'])
+  },
   watch: {
     category: {
       handler (value) {
         console.log(value)
       }
     }
+  },
+  methods: {
+    ...mapActions('class', ['getSchedule'])
   }
 }
 </script>
