@@ -41,7 +41,8 @@ const api = {
     deleteClass: id => `/class-v2/${id}`,
     insertClassCategory: id => `/class-v2/${id}/class-category`,
     updateClassCategory: (classId, classCategoryId) => `/class-v2/${classId}/class-category/${classCategoryId}`,
-    updateClass: id => `/class-v2/${id}`
+    updateClass: id => `/class-v2/${id}`,
+    categorySessionReschedule: (classId, classCategoryId, sessionId, params) => `/class-v2/${classId}/class-category/${classCategoryId}/class-category-session/${sessionId}/reschedule${serializeQueryParams(params)}`
   }
 }
 

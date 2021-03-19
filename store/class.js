@@ -208,8 +208,17 @@ export const actions = {
         errHandler && errHandler(err)
       })
   },
-  deleteClassCategory ({ commit }, { classId, classCategoryId, body, successCallback, errHandler } = {}) {
+  deleteClassCategory ({ commit }, { classId, classCategoryId, successCallback, errHandler } = {}) {
     this.$axios.delete(getUrl(api.class.updateClassCategory(classId, classCategoryId)))
+      .then((res) => {
+        successCallback && successCallback(res)
+      })
+      .catch((err) => {
+        errHandler && errHandler(err)
+      })
+  },
+  categorySessionReschedule ({ commit }, { classId, classCategoryId, sessionId, params, body, successCallback, errHandler } = {}) {
+    this.$axios.put(getUrl(api.class.categorySessionReschedule(classId, classCategoryId, sessionId, params)), body)
       .then((res) => {
         successCallback && successCallback(res)
       })
