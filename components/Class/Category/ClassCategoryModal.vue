@@ -398,7 +398,8 @@ export default {
         price: this.priceOption === 1 ? 0 : parseInt(this.categoryPrice, 10),
         requirements: this.categoryRequirement,
         categoryCoachUserIds: [...this.categoryCoachUserIds],
-        schedules: duplicateObject(this.categorySchedules)
+        schedules: duplicateObject(this.categorySchedules),
+        isRecurring: true
       }
     },
     handleCloseModal () {
