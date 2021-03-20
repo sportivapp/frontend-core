@@ -246,11 +246,12 @@ export const actions = {
   },
   extendCategorySession ({ _ }, { categoryId, body, successCallback, errHandler } = {}) {
     this.$axios.post(getUrl(api.class.extendCategorySession(categoryId)), body)
-      .then((_) => {
+      .then((res) => {
         successCallback && successCallback()
       })
       .catch((err) => {
-        errHandler && errHandler(err)
+        console.log(err.response.data.errorMessage)
+        errHandler && errHandler(err.response.data.errorMessage)
       })
   }
 }

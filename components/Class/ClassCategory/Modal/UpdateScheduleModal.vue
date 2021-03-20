@@ -32,7 +32,6 @@
             <v-menu
               v-model="periodMenu"
               content-class="class-category-modal__form__section--date__menu-content"
-              attach=".class-category-modal__form__section--date"
               open-on-click
               offset-y
               min-width="300"
@@ -86,6 +85,9 @@
             align="center"
             class="class-category-modal__actions"
           >
+            <v-col>
+              <small class="red--text">{{ errorMessage }}</small>
+            </v-col>
             <v-col class="pa-0" cols="auto">
               <v-btn
                 outlined
@@ -150,7 +152,8 @@ export default {
         endHour: 12,
         endMinute: 0
       }
-    ]
+    ],
+    errorMessage: ''
   }),
   computed: {
     startMonthDate () {
@@ -175,25 +178,15 @@ export default {
       return this.categoryPeriod.length > 1
         ? this.periodTextMonth
         : ''
-    },
-    categorySchedules: {
-      get () {
-        return this.generateCategorySessions()
-      },
-      set () {
-
+    }
+  },
+  watch: {
+    schedules: {
+      handler (value) {
+        this.generateCategorySessions()
       }
     }
   },
-  // watch: {
-  //   categorySessions: {
-  //     handler (value) {
-  //       if (value.length > 0) {
-  //         this.setCategoryPeriod(value[0].startDate, value[value.length - 1].startDate)
-  //       }
-  //     }
-  //   }
-  // },
   methods: {
     ...mapActions('class', ['extendCategorySession']),
     handleClickResetPeriod () {
@@ -203,7 +196,6 @@ export default {
       if (this.schedules) {
         this.categorySchedulesLocal = [...this.schedules]
       }
-      return this.categorySchedulesLocal
     },
     handleClickSave () {
       const body = {
@@ -211,7 +203,22 @@ export default {
         endMonth: this.endMonthDate.getTime(),
         schedules: [...this.categorySchedulesLocal]
       }
-      this.extendCategorySession({ categoryId: this.$route.params.classCategoryId, body })
+      this.extendCategorySession({
+        categoryId: this.$route.params.classCategoryId,
+        body,
+        successCallback: this.updateScheduleSuccess,
+        errHandler: this.updateScheduleFail
+      })
+    },
+    updateScheduleSuccess () {
+      this.$emit('input', false)
+    },
+    updateScheduleFail (err) {
+      if (err === 'NO_SESSIONS') {
+        this.errorMessage = '*Sesi tidak tersedia'
+      } else if (err === 'SCHEDULE_CONFLICT') {
+        this.errorMessage = '*Terdapat sesi yang konflik'
+      }
     },
     handleCloseModal () {
       this.$emit('input', false)
@@ -220,7 +227,6 @@ export default {
       const startDate = new Date(startms * 1000)
       const endDate = new Date(endms * 1000)
       this.categoryPeriod = [startDate, endDate]
-      console.log(this.categoryPeriod)
     }
 
   }
