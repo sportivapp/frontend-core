@@ -68,6 +68,7 @@
               <category-schedule-list
                 v-model="categorySchedules"
                 @input="$v.categorySchedules.$touch()"
+                @validate="$v.categorySchedules.$touch()"
               />
               <small v-if="$v.categorySchedules.$error" class="red--text pl-2">
                 {{ categorySchedulesErrors[categorySchedulesErrors.length-1] }}

@@ -14,6 +14,7 @@
           :index="index"
           :total-data="value.length"
           @delete="handleDeleteSchedule"
+          @validate="$emit('validate')"
         />
       </td>
     </tr>
@@ -81,10 +82,6 @@ export default {
       newArray.push({ ...defaultAddNewSchedule })
       this.$emit('input', newArray)
       this.$emit('change')
-    },
-    handleCheckValidation (v) {
-      const newArray = duplicateObject(this.value)
-      this.$emit('input', newArray)
     }
   }
 }
