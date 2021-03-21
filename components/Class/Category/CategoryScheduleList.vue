@@ -81,6 +81,11 @@ export default {
       newArray.push({ ...defaultAddNewSchedule })
       this.$emit('input', newArray)
       this.$emit('change')
+    },
+    handleCheckValidation (v) {
+      console.log(v)
+      const newArray = duplicateObject(this.value)
+      this.$emit('input', newArray)
     }
   }
 }
