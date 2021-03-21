@@ -83,7 +83,6 @@ export default {
       this.$emit('change')
     },
     handleCheckValidation (v) {
-      console.log(v)
       const newArray = duplicateObject(this.value)
       this.$emit('input', newArray)
     }

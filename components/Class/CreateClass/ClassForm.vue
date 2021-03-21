@@ -403,16 +403,16 @@ export default {
     async createNewClass () {
       if (this.validateForm()) {
         await this.doUploadFiles(this.rawFiles)
-        this.classData = {
+        const classDataBody = {
           ...this.classData,
           picMobileNumber: '+62' + this.classData.picMobileNumber,
           fileIds: this.fileIds,
           administrationFee: this.feeSwitchOn ? this.classData.administrationFee || 0 : 0
         }
         if (this.isEdit) {
-          this.updateClass({ id: this.$route.params.classId, body: this.classData, successCallback: this.successSaveClass })
+          this.updateClass({ id: this.$route.params.classId, body: classDataBody, successCallback: this.successSaveClass })
         } else {
-          this.createClass({ body: this.classData, successCallback: this.successSaveClass })
+          this.createClass({ body: classDataBody, successCallback: this.successSaveClass })
         }
       }
     },
