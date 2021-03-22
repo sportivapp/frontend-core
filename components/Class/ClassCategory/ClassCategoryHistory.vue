@@ -4,12 +4,12 @@
       <v-col cols="auto" md="4" class="pl-1">
         <v-select
           v-model="sessionId"
-          :items="sessionList"
+          :items="categorySessions"
           outlined
           dense
           placeholder="Pilih Sesi"
           item-value="uuid"
-          item-text="dateTime"
+          item-text="theDate"
           :menu-props="{ bottom: true, offsetY: true }"
           class="spv-body--2"
           @input="handleSessionParticipant()"
@@ -59,6 +59,14 @@
               <span class="class-category-history__header--action">
                 Kehadiran
               </span>
+            </th>
+            <th class="class-category-history__header--action">
+              <span class="class-category-history__header--action">
+                Penilaian
+              </span>
+            </th>
+            <th class="class-category-history__header--action">
+              <span class="class-category-history__header--action" />
             </th>
           </tr>
         </thead>
@@ -134,21 +142,34 @@ export default {
   computed: {
     ...mapGetters('class', [
       'sessionHistoryParticipant'
-    ])
+    ]),
+    categorySessions () {
+      const sessions = this.history.categorySessions.map((session) => {
+        return {
+          ...session,
+          theDate: toFullDateWeekdayHourMinute(session.startDate)
+        }
+      })
+      return sessions
+    }
   },
   created () {
+    console.log(this.history)
     this.init()
+    this.getSessionParticipantList()
   },
   methods: {
     ...mapActions('class', [
       'getSessionParticipant'
     ]),
     init () {
+      this.sessionId = this.history.categorySessions[0].uuid
       this.handleSessionList()
     },
     constructParams () {
       return {
-        isCheckIn: this.isCheckIn
+        // isCheckIn: this.isCheckIn
+        isCheckIn: true
       }
     },
     getSessionParticipantList (init = false) {
@@ -156,7 +177,7 @@ export default {
       this.getSessionParticipant({
         init,
         classCategoryId: this.history.uuid,
-        sessionId: this.sessionid,
+        sessionId: this.sessionId,
         params: this.constructParams()
       })
     },
@@ -178,15 +199,15 @@ export default {
           this.dateStart.pop()
           this.dateStart = this.dateStart.join(' ')
 
-          this.sessionList.push({
-            uuid: this.history.categorySessions[i].uuid,
-            classCategoryUuid: this.history.categorySessions[i].classCategoryUuid,
-            month: this.history.categorySessions[i].month,
-            startDate: this.history.categorySessions[i].startDate,
-            endDate: this.history.categorySessions[i].endDate,
-            status: this.history.categorySessions[i].status,
-            dateTime: this.dateStart + ' (' + this.timeStart + ' - ' + this.timeEnd + ')'
-          })
+          // this.sessionList.push({
+          //   uuid: this.history.categorySessions[i].uuid,
+          //   classCategoryUuid: this.history.categorySessions[i].classCategoryUuid,
+          //   month: this.history.categorySessions[i].month,
+          //   startDate: this.history.categorySessions[i].startDate,
+          //   endDate: this.history.categorySessions[i].endDate,
+          //   status: this.history.categorySessions[i].status,
+          //   dateTime: this.dateStart + ' (' + this.timeStart + ' - ' + this.timeEnd + ')'
+          // })
         }
       }
     },
