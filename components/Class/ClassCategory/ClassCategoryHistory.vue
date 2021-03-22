@@ -109,6 +109,7 @@
         </tr>
       </template>
     </v-data-table>
+    <view-review-modal v-model="showReviewModal" :is-attend="true" />
   </v-container>
 </template>
 
@@ -116,9 +117,13 @@
 import { toFullDateWeekdayHourMinute } from '@/utils/date'
 import { mapGetters, mapActions } from 'vuex'
 import { staticUrl } from '@/config/api'
+import ViewReviewModal from '@/components/Class/ClassCategory/Modal/ViewReviewModal'
 
 export default {
   name: 'ClassCategorySession',
+  components: {
+    ViewReviewModal
+  },
   props: {
     history: {
       type: Object,
@@ -136,7 +141,8 @@ export default {
       timeStart: '',
       timeEnd: '',
       checkIn: 0,
-      participantCount: 0
+      participantCount: 0,
+      showReviewModal: true
     }
   },
   computed: {
