@@ -371,7 +371,6 @@ export default {
         endIndex = 0
       }
       const date = new Date(this.categoryPeriod[endIndex])
-      console.log(new Date(date.getFullYear(), date.getMonth() + 1, 0))
       return new Date(date.getFullYear(), date.getMonth() + 1, 0)
     },
     periodTextMonth () {

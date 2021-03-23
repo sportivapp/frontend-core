@@ -4,14 +4,14 @@
     max-width="544"
   >
     <v-card class="px-3">
-      <v-row justify="middle" class="bottom-border">
+      <v-row justify="center" class="bottom-border">
         <v-col md="10">
           <v-card-title class="spv-subtitle--1 ma-0 pt-2">
             {{ review.categoryTitle }} &nbsp; <span class="grey--text">&bull; {{ review.startTime }}</span>
           </v-card-title>
         </v-col>
         <v-col md="2">
-          <v-btn icon="" class="float-right" @click="value = false">
+          <v-btn icon="" class="float-right" @click="$emit('input',false)">
             <v-icon>
               mdi-close
             </v-icon>
@@ -21,16 +21,22 @@
       <v-row class="spv-body--1 px-5">
         <v-col v-if="!isAttend">
           <p>
-            {{ review.reason }}
+            {{ review.classReason }}
           </p>
         </v-col>
         <v-col v-else>
           <v-sheet color="#F4F4F4" rounded="" max-width="480">
-            <v-row justify="center" align="middle" class="spv-special--2 pt-5">
+            <v-row justify="center" align="center" class="spv-special--2 pt-5">
               <p>{{ rateText }}</p>
             </v-row>
             <v-row justify="center">
-              <v-rating :value="review.rating" size="34" color="primary" background-color="primary" readonly="" />
+              <v-rating
+                :value="review.rating"
+                size="34"
+                color="#F4B718"
+                background-color="#D5D5D5"
+                readonly=""
+              />
             </v-row>
           </v-sheet>
           <p class="mt-3">
@@ -38,16 +44,18 @@
           </p>
         </v-col>
       </v-row>
-      <v-row>
+      <v-row class="pb-2">
         <v-col class="mx-4" md="1">
-          <v-avatar size="45" class="grey" />
+          <v-avatar size="45" class="grey">
+            <img :src="profilePic" alt="">
+          </v-avatar>
         </v-col>
         <v-col class="pl-5">
           <v-row class="spv-subtitle--1">
-            {{ review.user.name }}
+            {{ review.user && review.user.eusername }}
           </v-row>
           <v-row class="spv-body--1 grey--text">
-            {{ review.reviewTime }}
+            tgl review
           </v-row>
         </v-col>
       </v-row>
@@ -56,6 +64,8 @@
 </template>
 
 <script>
+import { staticUrl } from '@/config/api'
+
 export default {
   name: 'ViewReviewModal',
   props: {
@@ -69,20 +79,13 @@ export default {
     },
     review: {
       type: Object,
-      default: () => ({
-        categoryTitle: 'Hello World',
-        startTime: 'Sabtu, 12 Desember 2020',
-        review: 'Keren tapi baik lsjhdfvjlasdvfhjs bfjdbjf vasdjhgvjasd vjhasvfljhas jasd gjhsad j sjgh sjgdgjsgjsj',
-        reason: 'Karna bangun kesiangan',
-        reviewTime: 'Senin, 4 Oktober 2021',
-        rating: 3,
-        user: {
-          name: 'Bambang'
-        }
-      })
+      default: () => {}
     }
   },
   computed: {
+    profilePic () {
+      return this.review.user && this.review.user.file ? staticUrl + this.review.user.file.efilename : require('@/assets/images/logos/sportiv-logo-small.png')
+    },
     rateText () {
       let rate = ''
       if (this.review.rating <= 1) {

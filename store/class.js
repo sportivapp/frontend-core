@@ -103,16 +103,73 @@ export const actions = {
     })
   },
   getSessionParticipant ({ commit }, { init, classCategoryId, sessionId, params, successCallback, errHandler } = {}) {
-    this.$axios.get(getUrl(api.class.classSessionParticipant(classCategoryId, sessionId, params))).then((response) => {
-      if (init) {
-        commit('setSessionParticipant', response.data.data)
-      } else {
-        commit('setSessionHistoryParticipant', response.data.data)
+    const data = [
+      {
+        uuid: 'fcaf8116-ae74-45b3-882c-51d77f49f8c8',
+        userId: 4,
+        classUuid: '845cb84d-907e-44d4-94d7-197b7ae138e8',
+        classCategoryUuid: 'c9f5d372-096c-4195-a57b-9983c78dd3b2',
+        isCheckIn: true,
+        user: {
+          euserid: 4,
+          eusername: 'nawakarauser1',
+          euseremail: 'nawakarauser1@nawakara.com',
+          eusermobilenumber: '11111111',
+          file: null
+        },
+        classReason: null,
+        classRating: {
+          uuid: '1fbb3758-655f-4ad1-b28f-daaa93b5ace5',
+          rating: 3,
+          review: 'Jelek'
+        }
+      },
+      {
+        uuid: 'fcaf8116-ae74-45b3-882c-51d77f49f8c8',
+        userId: 4,
+        classUuid: '845cb84d-907e-44d4-94d7-197b7ae138e8',
+        classCategoryUuid: 'c9f5d372-096c-4195-a57b-9983c78dd3b2',
+        isCheckIn: false,
+        user: {
+          euserid: 4,
+          eusername: 'nawakarauser1',
+          euseremail: 'nawakarauser1@nawakara.com',
+          eusermobilenumber: '11111111',
+          file: null
+        },
+        classReason: 'Telattt',
+        classRating: null
+      },
+      {
+        uuid: 'fcaf8116-ae74-45b3-882c-51d77f49f8c8',
+        userId: 4,
+        classUuid: '845cb84d-907e-44d4-94d7-197b7ae138e8',
+        classCategoryUuid: 'c9f5d372-096c-4195-a57b-9983c78dd3b2',
+        isCheckIn: false,
+        user: {
+          euserid: 4,
+          eusername: 'nawakarauser1',
+          euseremail: 'nawakarauser1@nawakara.com',
+          eusermobilenumber: '11111111',
+          file: null
+        },
+        classReason: null,
+        classRating: null
       }
-      successCallback && successCallback(response)
-    }).catch((error) => {
-      errHandler && errHandler(error)
-    })
+    ]
+    commit('setSessionParticipant', data)
+    commit('setSessionHistoryParticipant', data)
+
+    // this.$axios.get(getUrl(api.class.classSessionParticipant(classCategoryId, sessionId, params))).then((response) => {
+    //   if (init) {
+    //     commit('setSessionParticipant', response.data.data)
+    //   } else {
+    //     commit('setSessionHistoryParticipant', response.data.data)
+    //   }
+    //   successCallback && successCallback(response)
+    // }).catch((error) => {
+    //   errHandler && errHandler(error)
+    // })
   },
   getClassCategoryDetail ({ commit }, { classId, classCategoryId, successCallback, errHandler } = {}) {
     this.$axios.get(getUrl(api.class.classCategoryDetail(classId, classCategoryId))).then((response) => {

@@ -106,15 +106,51 @@
               </v-icon>
             </span>
           </td>
+          <td
+            class="class-category-history__item--center"
+          >
+            <v-rating
+              v-if="item.isCheckIn"
+              readonly=""
+              :value="item.classRating.rating"
+              color="#F4B718"
+              background-color="#D5D5D5"
+              dense=""
+            />
+          </td>
+          <td
+            class="class-category-history__item--center"
+          >
+            <v-btn
+              v-if="item.isCheckIn && item.classRating!==null"
+              class="spv-subtitle--3"
+              rounded=""
+              color="primary"
+              outlined=""
+              @click="handlePreviewModal(item.classCategoryUuid, item.isCheckIn,item.classRating, item.user)"
+            >
+              lihat review
+            </v-btn>
+            <v-btn
+              v-if="!item.isCheckIn && item.classReason!==null"
+              class="spv-subtitle--3"
+              rounded=""
+              color="primary"
+              outlined=""
+              @click="handlePreviewModal(item.classCategoryUuid, item.isCheckIn,item.classReason, item.user)"
+            >
+              lihat alasan
+            </v-btn>
+          </td>
         </tr>
       </template>
     </v-data-table>
-    <view-review-modal v-model="showReviewModal" :is-attend="true" />
+    <view-review-modal v-model="showReviewModal" :is-attend="isAttend" :review="reviewObject" />
   </v-container>
 </template>
 
 <script>
-import { toFullDateWeekdayHourMinute } from '@/utils/date'
+import { toFullDateWeekdayHourMinute, milisecondToFullDate } from '@/utils/date'
 import { mapGetters, mapActions } from 'vuex'
 import { staticUrl } from '@/config/api'
 import ViewReviewModal from '@/components/Class/ClassCategory/Modal/ViewReviewModal'
@@ -142,7 +178,9 @@ export default {
       timeEnd: '',
       checkIn: 0,
       participantCount: 0,
-      showReviewModal: true
+      showReviewModal: false,
+      isAttend: false,
+      reviewObject: {}
     }
   },
   computed: {
@@ -160,7 +198,6 @@ export default {
     }
   },
   created () {
-    console.log(this.history)
     this.init()
     this.getSessionParticipantList()
   },
@@ -216,6 +253,27 @@ export default {
           // })
         }
       }
+    },
+    handlePreviewModal (id, isAttend, review, user) {
+      const selectedSession = this.categorySessions.filter(session => session.uuid === id)
+      this.isAttend = isAttend
+      if (isAttend) {
+        this.reviewObject = {
+          ...review,
+          categoryTitle: this.history.title,
+          startTime: milisecondToFullDate(selectedSession[0].startDate) || 'tgl Sesi',
+          user
+        }
+      } else {
+        this.reviewObject = {
+          classReason: review,
+          categoryTitle: this.history.title,
+          startTime: milisecondToFullDate(selectedSession[0].startDate) || 'tgl Sesi',
+          user
+        }
+      }
+
+      this.showReviewModal = true
     },
     getParticipantImageUrl (participant) {
       return participant && participant.user &&
