@@ -28,15 +28,13 @@ for running in your machine, please prepare your .env
 
 Development
 ```bash
-tournamentUrl=https://tournament.quickplay.app
-tournamentCreateUrl=https://tournament.quickplay.app/tournament/form/step-1 
+TOURNAMENT_URL=https://tournament.quickplay.app
+TOURNAMENT_CREATE_URL=https://tournament.quickplay.app/tournament/form/step-1
 ```
 Production
 ```bash
-tournamentUrl=https://tournament.sportiv.app
-tournamentSeeAll=https://tournament.sportiv.app/tournament
-tournamentCreateUrl=https://tournament.sportiv.app/tournament/form/step-1
-
+TOURNAMENT_URL=https://tournament.sportiv.app
+TOURNAMENT_CREATE_URL=https://tournament.sportiv.app/tournament/form/step-1
 ```
 
 ## Deployment Staging

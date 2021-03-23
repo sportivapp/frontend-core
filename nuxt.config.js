@@ -3,8 +3,8 @@ import languages from './static/lang/languages'
 export default {
   ssr: false,
   publicRuntimeConfig: {
-    tournamentUrl: process.env.tournamentUrl || 'https://tournament.sportiv.app',
-    tournamentCreateUrl: process.env.tournamentCreateUrl || 'https://tournament.sportiv.app/tournament/form/step-1'
+    tournamentUrl: process.env.TOURNAMENT_URL || 'https://tournament.sportiv.app',
+    tournamentCreateUrl: process.env.TOURNAMENT_CREATE_URL || 'https://tournament.sportiv.app/tournament/form/step-1'
   },
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
