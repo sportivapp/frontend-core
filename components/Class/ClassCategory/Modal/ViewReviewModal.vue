@@ -30,7 +30,7 @@
               <p>{{ rateText }}</p>
             </v-row>
             <v-row justify="center">
-              <v-rating :value="review.rating" size="34" color="primary" background-color="primary" />
+              <v-rating :value="review.rating" size="34" color="primary" background-color="primary" readonly="" />
             </v-row>
           </v-sheet>
           <p class="mt-3">
