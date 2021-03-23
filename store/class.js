@@ -160,16 +160,16 @@ export const actions = {
     commit('setSessionParticipant', data)
     commit('setSessionHistoryParticipant', data)
 
-    // this.$axios.get(getUrl(api.class.classSessionParticipant(classCategoryId, sessionId, params))).then((response) => {
-    //   if (init) {
-    //     commit('setSessionParticipant', response.data.data)
-    //   } else {
-    //     commit('setSessionHistoryParticipant', response.data.data)
-    //   }
-    //   successCallback && successCallback(response)
-    // }).catch((error) => {
-    //   errHandler && errHandler(error)
-    // })
+    this.$axios.get(getUrl(api.class.classSessionParticipant(classCategoryId, sessionId, params))).then((response) => {
+      if (init) {
+        commit('setSessionParticipant', response.data.data)
+      } else {
+        commit('setSessionHistoryParticipant', response.data.data)
+      }
+      successCallback && successCallback(response)
+    }).catch((error) => {
+      errHandler && errHandler(error)
+    })
   },
   getClassCategoryDetail ({ commit }, { classId, classCategoryId, successCallback, errHandler } = {}) {
     this.$axios.get(getUrl(api.class.classCategoryDetail(classId, classCategoryId))).then((response) => {

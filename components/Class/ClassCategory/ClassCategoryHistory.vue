@@ -12,7 +12,7 @@
           item-text="theDate"
           :menu-props="{ bottom: true, offsetY: true }"
           class="spv-body--2"
-          @input="handleSessionParticipant()"
+          @change="getSessionParticipantList"
         />
       </v-col>
       <v-col
@@ -221,7 +221,8 @@ export default {
         init,
         classCategoryId: this.history.uuid,
         sessionId: this.sessionId,
-        params: this.constructParams()
+        params: this.constructParams(),
+        successCallback: this.handleParticipantCount
       })
     },
     handleSessionList () {
@@ -283,20 +284,12 @@ export default {
     },
     handleParticipantCount () {
       this.participantCount = this.sessionHistoryParticipant.length
+      this.checkIn = 0
       for (let i = 0; i < this.participantCount; i++) {
-        if (this.sessionHistoryParticipant[i].isCheckIn !== null) {
+        if (this.sessionHistoryParticipant[i].isCheckIn) {
           this.checkIn++
         }
       }
-    },
-    handleSessionParticipant () {
-      this.isTableLoading = true
-      this.getSessionParticipant({
-        classCategoryId: this.history.uuid,
-        sessionId: this.sessionId,
-        params: this.constructParams(),
-        successCallback: this.handleParticipantCount
-      })
     }
   }
 }
