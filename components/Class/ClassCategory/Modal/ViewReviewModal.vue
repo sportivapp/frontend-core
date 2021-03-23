@@ -21,11 +21,11 @@
       <v-row class="spv-body--1 px-5">
         <v-col v-if="!isAttend">
           <p>
-            {{ review.classReason }}
+            {{ review.reason }}
           </p>
         </v-col>
         <v-col v-else>
-          <v-sheet color="#F4F4F4" rounded="" max-width="480">
+          <v-sheet color="#F4F4F4" rounded max-width="480">
             <v-row justify="center" align="center" class="spv-special--2 pt-5">
               <p>{{ rateText }}</p>
             </v-row>
@@ -39,12 +39,19 @@
               />
             </v-row>
           </v-sheet>
-          <p class="mt-3">
-            {{ review.review }}
-          </p>
+          <v-row class="px-2">
+            <p class="spv-body--1 mt-3">
+              {{ review.review }}
+            </p>
+          </v-row>
+          <v-row class="px-2">
+            <p class="spv-body--1 mt-3">
+              Yang perlu ditingkatkan: <span class="spv-subtitle--1">{{ improvementWord }}</span>
+            </p>
+          </v-row>
         </v-col>
       </v-row>
-      <v-row class="pb-2">
+      <v-row class="pb-4">
         <v-col class="mx-4" md="1">
           <v-avatar size="45" class="grey">
             <img :src="profilePic" alt="">
@@ -55,7 +62,7 @@
             {{ review.user && review.user.eusername }}
           </v-row>
           <v-row class="spv-body--1 grey--text">
-            tgl review
+            {{ review.createTime }}
           </v-row>
         </v-col>
       </v-row>
@@ -65,6 +72,13 @@
 
 <script>
 import { staticUrl } from '@/config/api'
+
+const improvementStatus = {
+  learnTime: 'LEARN_TIME',
+  coach: 'COACH',
+  learnMaterial: 'LEARN_MATERIAL',
+  location: 'LOCATION'
+}
 
 export default {
   name: 'ViewReviewModal',
@@ -83,6 +97,31 @@ export default {
     }
   },
   computed: {
+    improvementWord () {
+      let improvement = ''
+      for (let i = 0; i < this.review.improvements.length; i++) {
+        switch (this.review.improvements[i].code) {
+          case improvementStatus.learnTime:
+            improvement += 'Waktu Belajar'
+            if (i !== this.review.improvements.length - 1) { improvement += ', ' }
+            break
+          case improvementStatus.coach:
+            improvement += 'Pengajar'
+            if (i !== this.review.improvements.length - 1) { improvement += ', ' }
+            break
+          case improvementStatus.learnMaterial:
+            improvement += 'Bahan Pembelajaran'
+            if (i !== this.review.improvements.length - 1) { improvement += ', ' }
+            break
+          case improvementStatus.location:
+            improvement += 'Lokasi'
+            if (i !== this.review.improvements.length - 1) { improvement += ', ' }
+            break
+          default: break
+        }
+      }
+      return improvement
+    },
     profilePic () {
       return this.review.user && this.review.user.file ? staticUrl + this.review.user.file.efilename : require('@/assets/images/logos/sportiv-logo-small.png')
     },

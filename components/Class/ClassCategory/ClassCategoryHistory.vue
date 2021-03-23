@@ -242,36 +242,18 @@ export default {
           // delete time from dateStart
           this.dateStart.pop()
           this.dateStart = this.dateStart.join(' ')
-
-          // this.sessionList.push({
-          //   uuid: this.history.categorySessions[i].uuid,
-          //   classCategoryUuid: this.history.categorySessions[i].classCategoryUuid,
-          //   month: this.history.categorySessions[i].month,
-          //   startDate: this.history.categorySessions[i].startDate,
-          //   endDate: this.history.categorySessions[i].endDate,
-          //   status: this.history.categorySessions[i].status,
-          //   dateTime: this.dateStart + ' (' + this.timeStart + ' - ' + this.timeEnd + ')'
-          // })
         }
       }
     },
     handlePreviewModal (id, isAttend, review, user) {
       const selectedSession = this.categorySessions.filter(session => session.uuid === id)
       this.isAttend = isAttend
-      if (isAttend) {
-        this.reviewObject = {
-          ...review,
-          categoryTitle: this.history.title,
-          startTime: milisecondToFullDate(selectedSession[0].startDate) || 'tgl Sesi',
-          user
-        }
-      } else {
-        this.reviewObject = {
-          classReason: review,
-          categoryTitle: this.history.title,
-          startTime: milisecondToFullDate(selectedSession[0].startDate) || 'tgl Sesi',
-          user
-        }
+      this.reviewObject = {
+        ...review,
+        categoryTitle: this.history.title,
+        startTime: milisecondToFullDate(selectedSession[0].startDate) || 'tgl Sesi',
+        createTime: milisecondToFullDate(review.createTime) || 'tgl review',
+        user
       }
 
       this.showReviewModal = true
