@@ -309,6 +309,7 @@ export default {
     color: #000000;
     margin: 0;
     padding: 0;
+    height: 60px;
 
     &--center {
       text-align: center;
