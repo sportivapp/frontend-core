@@ -24,6 +24,7 @@
                   hint="nama kelas minimal 3-50 karakter."
                   dense=""
                   persistent-hint=""
+                  :disabled="isEdit"
                   :error-messages="titleErrors"
                   @input="$v.classData.title.$touch()"
                   @blur="$v.classData.title.$touch()"
@@ -43,6 +44,7 @@
                   :items="industries"
                   item-value="eindustryid"
                   item-text="eindustryname"
+                  :disabled="isEdit"
                   :error-messages="industryIdErrors"
                   @input="$v.classData.industryId.$touch()"
                   @blur="$v.classData.industryId.$touch()"
@@ -95,6 +97,7 @@
                   item-value="estateid"
                   item-text="estatename"
                   :error-messages="stateIdErrors"
+                  :disabled="isEdit"
                   @change="updateCities"
                   @input="$v.classData.stateId.$touch()"
                   @blur="$v.classData.stateId.$touch()"
@@ -114,6 +117,7 @@
                   :items="cities"
                   item-value="ecityid"
                   item-text="ecityname"
+                  :disabled="isEdit"
                   :error-messages="cityIdErrors"
                   @input="$v.classData.cityId.$touch()"
                   @blur="$v.classData.cityId.$touch()"
@@ -445,6 +449,9 @@ export default {
         }
         await this.updateCities()
         this.classData.cityId = classDetail.city.ecityid
+        delete this.classData.city
+        delete this.classData.industry
+        delete this.classData.state
       }
     },
     getClassCoachUserIds (coaches) {
