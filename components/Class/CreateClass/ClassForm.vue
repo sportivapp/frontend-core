@@ -211,14 +211,20 @@
               <v-row>
                 <v-text-field
                   v-model="classData.picMobileNumber"
-                  type="number"
                   outlined=""
                   placeholder="No Telp"
                   dense=""
                   :error-messages="picMobileNumberErrors"
+                  @change="checkFrontZero"
                   @input="$v.classData.picMobileNumber.$touch()"
                   @blur="$v.classData.picMobileNumber.$touch()"
-                />
+                >
+                  <template v-slot:prepend-inner>
+                    <span class="spv-subtitle--2 text-field--custom__prepend">
+                      +62
+                    </span>
+                  </template>
+                </v-text-field>
               </v-row>
             </v-col>
           </v-row>
@@ -397,15 +403,16 @@ export default {
     async createNewClass () {
       if (this.validateForm()) {
         await this.doUploadFiles(this.rawFiles)
-        this.classData = {
+        const classDataBody = {
           ...this.classData,
+          picMobileNumber: '+62' + this.classData.picMobileNumber,
           fileIds: this.fileIds,
           administrationFee: this.feeSwitchOn ? this.classData.administrationFee || 0 : 0
         }
         if (this.isEdit) {
-          this.updateClass({ id: this.$route.params.classId, body: this.classData, successCallback: this.successSaveClass })
+          this.updateClass({ id: this.$route.params.classId, body: classDataBody, successCallback: this.successSaveClass })
         } else {
-          this.createClass({ body: this.classData, successCallback: this.successSaveClass })
+          this.createClass({ body: classDataBody, successCallback: this.successSaveClass })
         }
       }
     },
@@ -430,7 +437,11 @@ export default {
           classCoachUserIds: this.getClassCoachUserIds(classDetail.coaches),
           picId: classDetail.pic.euserid,
           stateId: classDetail.state.estateid,
-          initFiles: this.generateRawFiles(classDetail.classMedia)
+          initFiles: this.generateRawFiles(classDetail.classMedia),
+          picMobileNumber: classDetail.picMobileNumber.slice(3, classDetail.picMobileNumber.length)
+        }
+        if (classDetail.administrationFee) {
+          this.feeSwitchOn = true
         }
         await this.updateCities()
         this.classData.cityId = classDetail.city.ecityid
@@ -451,6 +462,11 @@ export default {
         }
       })
       return generatedRawFiles
+    },
+    checkFrontZero (value) {
+      if (value[0] === '0') {
+        this.classData.picMobileNumber = value.slice(1, value.length)
+      }
     }
   }
 }

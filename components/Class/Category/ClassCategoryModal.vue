@@ -65,7 +65,11 @@
                 <span class="class-category-modal__form__section__title__red">*
                 </span>
               </span>
-              <category-schedule-list v-model="categorySchedules" />
+              <category-schedule-list
+                v-model="categorySchedules"
+                @input="$v.categorySchedules.$touch()"
+                @validate="$v.categorySchedules.$touch()"
+              />
               <small v-if="$v.categorySchedules.$error" class="red--text pl-2">
                 {{ categorySchedulesErrors[categorySchedulesErrors.length-1] }}
               </small>
@@ -366,7 +370,8 @@ export default {
       if (new Date(this.categoryPeriod[0]) > new Date(this.categoryPeriod[1])) {
         endIndex = 0
       }
-      return new Date(this.categoryPeriod[endIndex])
+      const date = new Date(this.categoryPeriod[endIndex])
+      return new Date(date.getFullYear(), date.getMonth() + 1, 0)
     },
     periodTextMonth () {
       return dateToMonthAndYear(this.startMonthDate) + ' - ' +
@@ -395,7 +400,8 @@ export default {
         price: this.priceOption === 1 ? 0 : parseInt(this.categoryPrice, 10),
         requirements: this.categoryRequirement,
         categoryCoachUserIds: [...this.categoryCoachUserIds],
-        schedules: duplicateObject(this.categorySchedules)
+        schedules: duplicateObject(this.categorySchedules),
+        isRecurring: true
       }
     },
     handleCloseModal () {

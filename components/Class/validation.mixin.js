@@ -18,7 +18,7 @@ export default {
           numeric,
           isValid: v => isValidPhoneNumber(v)
         },
-        categories: { required: requiredIf(!this.isEdit) }
+        categories: { required: requiredIf(() => { return !this.isEdit }) }
       },
       rawFiles: { required }
     }
