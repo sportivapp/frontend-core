@@ -278,8 +278,11 @@ export default {
       this.addClassCategory({
         id: this.$route.params.classId,
         body: newCategory,
-        successCallback: location.reload()
+        successCallback: this.successAddCategory()
       })
+    },
+    successAddCategory () {
+      setTimeout(function () { location.reload() }, 2000)
     }
   }
 }
