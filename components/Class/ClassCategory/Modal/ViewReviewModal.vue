@@ -18,8 +18,8 @@
           </v-btn>
         </v-col>
       </v-row>
-      <v-row class="spv-body--1 px-5">
-        <v-col v-if="!isAttend">
+      <v-row class="spv-body--1 px-4">
+        <v-col v-if="!isAttend" class="ma-0 mt-4">
           <p>
             {{ review.reason }}
           </p>
@@ -128,15 +128,15 @@ export default {
     rateText () {
       let rate = ''
       if (this.review.rating <= 1) {
-        rate = 'Yuk Tingkatkan Lagi!'
+        rate = 'Mengecewakan'
       } else if (this.review.rating <= 2) {
-        rate = 'Yuk Tingkatkan Lagi!'
+        rate = 'Kurang Memuaskan'
       } else if (this.review.rating <= 3) {
-        rate = 'Keren!'
+        rate = 'Cukup Baik'
       } else if (this.review.rating <= 4) {
-        rate = 'Anda Hebat!'
+        rate = 'Memuaskan'
       } else if (this.review.rating <= 5) {
-        rate = 'Luar Biasa!'
+        rate = 'Sangat Memuaskan'
       }
       return rate
     }
