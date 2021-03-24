@@ -160,6 +160,7 @@
     <v-col cols="auto" class="category-schedule-item__delete">
       <v-btn
         icon
+        :disabled="totalData<=1"
         @click="handleClickDelete"
       >
         <v-icon>
@@ -203,12 +204,18 @@ export default {
     index: {
       type: Number,
       default: 0
+    },
+    totalData: {
+      type: Number,
+      default: 0
     }
   },
   data () {
     return {
       dayValues,
-      dayText
+      dayText,
+      startTimeVal: '',
+      endTimeVal: ''
     }
   },
   computed: {
@@ -228,6 +235,7 @@ export default {
         ...this.value,
         day
       })
+      this.$emit('validate')
     },
     handleClickDelete () {
       this.$emit('delete', this.index)
@@ -246,6 +254,7 @@ export default {
         startHour: time.split(':')[0],
         startMinute: time.split(':')[1]
       })
+      this.$emit('validate')
     },
     handleChangeEndTime (time) {
       this.$emit('input', {
@@ -253,6 +262,7 @@ export default {
         endHour: time.split(':')[0],
         endMinute: time.split(':')[1]
       })
+      this.$emit('validate')
     }
   }
 }

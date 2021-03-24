@@ -4,15 +4,15 @@
       <v-col cols="auto" md="4" class="pl-1">
         <v-select
           v-model="sessionId"
-          :items="sessionList"
+          :items="categorySessions"
           outlined
           dense
           placeholder="Pilih Sesi"
           item-value="uuid"
-          item-text="dateTime"
+          item-text="theDate"
           :menu-props="{ bottom: true, offsetY: true }"
           class="spv-body--2"
-          @input="handleSessionParticipant()"
+          @change="getSessionParticipantList"
         />
       </v-col>
       <v-col
@@ -60,6 +60,14 @@
                 Kehadiran
               </span>
             </th>
+            <th class="class-category-history__header--action">
+              <span class="class-category-history__header--action">
+                Penilaian
+              </span>
+            </th>
+            <th class="class-category-history__header--action">
+              <span class="class-category-history__header--action" />
+            </th>
           </tr>
         </thead>
       </template>
@@ -98,19 +106,60 @@
               </v-icon>
             </span>
           </td>
+          <td
+            class="class-category-history__item--center"
+          >
+            <v-rating
+              v-if="item.isCheckIn"
+              readonly=""
+              :value="item.classRating.rating"
+              color="#F4B718"
+              background-color="#D5D5D5"
+              dense=""
+            />
+          </td>
+          <td
+            class="class-category-history__item--center"
+          >
+            <v-btn
+              v-if="item.isCheckIn && item.classRating!==null"
+              class="spv-subtitle--3"
+              rounded=""
+              color="primary"
+              outlined=""
+              @click="handlePreviewModal(item.classCategoryUuid, item.isCheckIn,item.classRating, item.user)"
+            >
+              lihat review
+            </v-btn>
+            <v-btn
+              v-if="!item.isCheckIn && item.classReason!==null"
+              class="spv-subtitle--3"
+              rounded=""
+              color="primary"
+              outlined=""
+              @click="handlePreviewModal(item.classCategoryUuid, item.isCheckIn,item.classReason, item.user)"
+            >
+              lihat alasan
+            </v-btn>
+          </td>
         </tr>
       </template>
     </v-data-table>
+    <view-review-modal v-model="showReviewModal" :is-attend="isAttend" :review="reviewObject" />
   </v-container>
 </template>
 
 <script>
-import { toFullDateWeekdayHourMinute } from '@/utils/date'
+import { toFullDateWeekdayHourMinute, milisecondToFullDate } from '@/utils/date'
 import { mapGetters, mapActions } from 'vuex'
 import { staticUrl } from '@/config/api'
+import ViewReviewModal from '@/components/Class/ClassCategory/Modal/ViewReviewModal'
 
 export default {
   name: 'ClassCategorySession',
+  components: {
+    ViewReviewModal
+  },
   props: {
     history: {
       type: Object,
@@ -128,27 +177,42 @@ export default {
       timeStart: '',
       timeEnd: '',
       checkIn: 0,
-      participantCount: 0
+      participantCount: 0,
+      showReviewModal: false,
+      isAttend: false,
+      reviewObject: {}
     }
   },
   computed: {
     ...mapGetters('class', [
       'sessionHistoryParticipant'
-    ])
+    ]),
+    categorySessions () {
+      const sessions = this.history.categorySessions.map((session) => {
+        return {
+          ...session,
+          theDate: toFullDateWeekdayHourMinute(session.startDate)
+        }
+      })
+      return sessions
+    }
   },
   created () {
     this.init()
+    this.getSessionParticipantList()
   },
   methods: {
     ...mapActions('class', [
       'getSessionParticipant'
     ]),
     init () {
+      this.sessionId = this.history.categorySessions[0].uuid
       this.handleSessionList()
     },
     constructParams () {
       return {
-        isCheckIn: this.isCheckIn
+        // isCheckIn: this.isCheckIn
+        isCheckIn: true
       }
     },
     getSessionParticipantList (init = false) {
@@ -156,8 +220,9 @@ export default {
       this.getSessionParticipant({
         init,
         classCategoryId: this.history.uuid,
-        sessionId: this.sessionid,
-        params: this.constructParams()
+        sessionId: this.sessionId,
+        params: this.constructParams(),
+        successCallback: this.handleParticipantCount
       })
     },
     handleSessionList () {
@@ -177,18 +242,21 @@ export default {
           // delete time from dateStart
           this.dateStart.pop()
           this.dateStart = this.dateStart.join(' ')
-
-          this.sessionList.push({
-            uuid: this.history.categorySessions[i].uuid,
-            classCategoryUuid: this.history.categorySessions[i].classCategoryUuid,
-            month: this.history.categorySessions[i].month,
-            startDate: this.history.categorySessions[i].startDate,
-            endDate: this.history.categorySessions[i].endDate,
-            status: this.history.categorySessions[i].status,
-            dateTime: this.dateStart + ' (' + this.timeStart + ' - ' + this.timeEnd + ')'
-          })
         }
       }
+    },
+    handlePreviewModal (id, isAttend, review, user) {
+      const selectedSession = this.categorySessions.filter(session => session.uuid === id)
+      this.isAttend = isAttend
+      this.reviewObject = {
+        ...review,
+        categoryTitle: this.history.title,
+        startTime: milisecondToFullDate(selectedSession[0].startDate) || 'tgl Sesi',
+        createTime: milisecondToFullDate(review.createTime) || 'tgl review',
+        user
+      }
+
+      this.showReviewModal = true
     },
     getParticipantImageUrl (participant) {
       return participant && participant.user &&
@@ -198,20 +266,12 @@ export default {
     },
     handleParticipantCount () {
       this.participantCount = this.sessionHistoryParticipant.length
+      this.checkIn = 0
       for (let i = 0; i < this.participantCount; i++) {
-        if (this.sessionHistoryParticipant[i].isCheckIn !== null) {
+        if (this.sessionHistoryParticipant[i].isCheckIn) {
           this.checkIn++
         }
       }
-    },
-    handleSessionParticipant () {
-      this.isTableLoading = true
-      this.getSessionParticipant({
-        classCategoryId: this.history.uuid,
-        sessionId: this.sessionId,
-        params: this.constructParams(),
-        successCallback: this.handleParticipantCount
-      })
     }
   }
 }
@@ -249,6 +309,7 @@ export default {
     color: #000000;
     margin: 0;
     padding: 0;
+    height: 60px;
 
     &--center {
       text-align: center;

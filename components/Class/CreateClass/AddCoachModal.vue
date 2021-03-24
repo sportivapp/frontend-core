@@ -71,6 +71,8 @@
 </template>
 
 <script>
+import { staticUrl } from '@/config/api'
+
 export default {
   name: 'AddCoachModal',
   props: {
@@ -114,7 +116,7 @@ export default {
   },
   methods: {
     getUserAvatar (file) {
-      return file ? '/src/' + file.efilename : require('@/assets/images/logos/sportiv-logo-small.png')
+      return file ? staticUrl + file.efilename : require('@/assets/images/logos/sportiv-logo-small.png')
     },
     remove (item) {
       const index = this.selectedList.indexOf(item.euserid)

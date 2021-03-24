@@ -91,6 +91,7 @@
     <v-col cols="auto" class="category-coach-item__delete">
       <v-btn
         icon
+        :disabled="totalData<=1"
         @click="handleClickDelete"
       >
         <v-icon>
@@ -121,6 +122,10 @@ export default {
       default: () => ([])
     },
     index: {
+      type: Number,
+      default: 0
+    },
+    totalData: {
       type: Number,
       default: 0
     }

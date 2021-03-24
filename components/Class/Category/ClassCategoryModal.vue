@@ -16,7 +16,7 @@
             cols="auto"
             class="class-category-modal__top__item class-category-modal__title spv-heading--2"
           >
-            Tambah Kategori
+            {{ titleText }}
           </v-col>
           <v-col class="class-category-modal__top__item" cols="auto">
             <v-btn
@@ -57,6 +57,7 @@
               />
             </v-row>
             <v-row
+              v-if="!isEditCategory"
               class="class-category-modal__form__section"
             >
               <span class="class-category-modal__form__section__title spv-body--1">
@@ -64,12 +65,17 @@
                 <span class="class-category-modal__form__section__title__red">*
                 </span>
               </span>
-              <category-schedule-list v-model="categorySchedules" />
+              <category-schedule-list
+                v-model="categorySchedules"
+                @input="$v.categorySchedules.$touch()"
+                @validate="$v.categorySchedules.$touch()"
+              />
               <small v-if="$v.categorySchedules.$error" class="red--text pl-2">
                 {{ categorySchedulesErrors[categorySchedulesErrors.length-1] }}
               </small>
             </v-row>
             <v-row
+              v-if="!isEditCategory"
               class="class-category-modal__form__section class-category-modal__form__section--date"
             >
               <span class="class-category-modal__form__section__title spv-body--1">
@@ -297,6 +303,10 @@ export default {
       type: Object,
       default: null
     },
+    isEditCategory: {
+      type: Boolean,
+      default: false
+    },
     show: {
       type: Boolean,
       default: false
@@ -308,6 +318,10 @@ export default {
     index: {
       type: Number,
       default: 0
+    },
+    titleText: {
+      type: String,
+      required: true
     }
     // classCoachUserIds: {
     //   type: Array,
@@ -356,7 +370,8 @@ export default {
       if (new Date(this.categoryPeriod[0]) > new Date(this.categoryPeriod[1])) {
         endIndex = 0
       }
-      return new Date(this.categoryPeriod[endIndex])
+      const date = new Date(this.categoryPeriod[endIndex])
+      return new Date(date.getFullYear(), date.getMonth() + 1, 0)
     },
     periodTextMonth () {
       return dateToMonthAndYear(this.startMonthDate) + ' - ' +
@@ -385,7 +400,8 @@ export default {
         price: this.priceOption === 1 ? 0 : parseInt(this.categoryPrice, 10),
         requirements: this.categoryRequirement,
         categoryCoachUserIds: [...this.categoryCoachUserIds],
-        schedules: duplicateObject(this.categorySchedules)
+        schedules: duplicateObject(this.categorySchedules),
+        isRecurring: true
       }
     },
     handleCloseModal () {
@@ -414,14 +430,38 @@ export default {
       this.priceOption = this.initialData.price > 0 ? 2 : 1
       this.categoryPrice = this.initialData.price
       this.categoryRequirement = this.initialData.requirements
-      this.categorySchedules = duplicateObject(this.initialData.schedules)
-      this.categoryCoachUserIds = [...this.initialData.categoryCoachUserIds]
 
-      if (this.initialData.startMonth && this.initialData.endMonth) {
+      if (this.isEditCategory) {
+        const schedule = []
+        schedule.push({
+          day: 'MONDAY',
+          endHour: 12,
+          endMinute: 0,
+          startHour: 10,
+          startMinute: 0
+        })
+        this.categorySchedules = duplicateObject(schedule)
+        const coachUserId = []
+        if (this.initialData && this.initialData.coaches) {
+          for (let i = 0; i < this.initialData.coaches.length; i++) {
+            coachUserId.push(this.initialData.coaches[i].userId)
+          }
+        }
+        this.categoryCoachUserIds = [...coachUserId]
         this.categoryPeriod = [
-          new Date(this.initialData.startMonth).toISOString(),
-          new Date(this.initialData.endMonth).toISOString()
+          new Date().toISOString(),
+          new Date().toISOString()
         ]
+      } else {
+        this.categorySchedules = duplicateObject(this.initialData.schedules)
+        this.categoryCoachUserIds = [...this.initialData.categoryCoachUserIds]
+
+        if (this.initialData.startMonth && this.initialData.endMonth) {
+          this.categoryPeriod = [
+            new Date(this.initialData.startMonth).toISOString(),
+            new Date(this.initialData.endMonth).toISOString()
+          ]
+        }
       }
     },
     handleClickResetPeriod () {

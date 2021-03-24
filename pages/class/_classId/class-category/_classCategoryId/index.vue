@@ -1,7 +1,7 @@
 <template>
   <v-container v-if="hasReadPermission" class="ma-0 pa-0 class-category-detail" fluid>
     <v-row align-content="center" justify="center" align="center" no-gutters>
-      <v-col align-items="center" class="class-category-detail__width">
+      <v-col align-items="center" class="class-category-detail__width pl-5">
         <simple-breadcrumb class="pb-0" :items="breadcrumbs" />
       </v-col>
     </v-row>
@@ -11,6 +11,10 @@
       <class-category-detail
         :category="classCategoryDetail"
         class="ma-auto"
+      />
+      <simple-snack-bar
+        v-model="showSuccessSnackBar"
+        :message="snackBarData && snackBarData.message"
       />
       <home-footer />
     </div>
@@ -22,19 +26,27 @@ import { mapGetters, mapActions } from 'vuex'
 import { permissions } from '@/config/permission'
 import ClassCategoryDetail from '@/components/Class/ClassCategory/ClassCategoryDetail'
 import SimpleBreadcrumb from '@/components/Breadcrumb/SimpleBreadcrumb.vue'
+import SimpleSnackBar from '@/components/SnackBar/SimpleSnackBar'
 import HomeFooter from '@/components/Footer/HomeFooter.vue'
 
 export default {
   name: 'ClassCategoryDetailPage',
   layout: 'class',
-  components: { ClassCategoryDetail, HomeFooter, SimpleBreadcrumb },
+  components: { ClassCategoryDetail, HomeFooter, SimpleBreadcrumb, SimpleSnackBar },
   computed: {
     ...mapGetters('class', [
       'hasClassPermission',
-      'classCategoryDetail'
+      'classCategoryDetail',
+      'snackBarData'
     ]),
     hasReadPermission () {
       return this.hasClassPermission(permissions.read)
+    },
+    showSuccessSnackBar: {
+      get () {
+        return this.snackBarData.value
+      },
+      set () {}
     },
     breadcrumbs () {
       return [

@@ -56,6 +56,7 @@
           <v-row class="mb-5">
             <upload-file
               v-model="rawFiles"
+              :init-files="classData.initFiles"
             />
             <small v-if="$v.rawFiles.$error" class="red--text pl-2">
               {{ rawFilesErrors[rawFilesErrors.length-1] }}
@@ -160,7 +161,7 @@
             Info Pelatih
           </v-row>
           <v-row class="spv-body--1 grey--text">
-            Daftar Pelatih <span class="red--text">*</span>
+            Ketua Pelatih <span class="red--text">*</span>
           </v-row>
           <v-row>
             <div class="outlined-container">
@@ -210,23 +211,29 @@
               <v-row>
                 <v-text-field
                   v-model="classData.picMobileNumber"
-                  type="number"
                   outlined=""
                   placeholder="No Telp"
                   dense=""
                   :error-messages="picMobileNumberErrors"
+                  @change="checkFrontZero"
                   @input="$v.classData.picMobileNumber.$touch()"
                   @blur="$v.classData.picMobileNumber.$touch()"
-                />
+                >
+                  <template v-slot:prepend-inner>
+                    <span class="spv-subtitle--2 text-field--custom__prepend">
+                      +62
+                    </span>
+                  </template>
+                </v-text-field>
               </v-row>
             </v-col>
           </v-row>
         </div>
         <div>
-          <v-row class="spv-heading--3 pt-7">
+          <v-row v-if="!isEdit" class="spv-heading--3 pt-7">
             Kategori Kelas
           </v-row>
-          <v-row>
+          <v-row v-if="!isEdit">
             <class-category-table
               v-model="classData.categories"
               :class-coach-user-ids="classData.classCoachUserIds"
@@ -272,7 +279,7 @@
         Batal
       </v-btn>
       <v-btn class="ml-4 save-button" outlined="" width="200" @click="createNewClass">
-        Tambah Kelas
+        {{ isEdit?'Simpan':'Tambah Kelas' }}
       </v-btn>
     </v-row>
     <update-schedule-modal />
@@ -287,6 +294,7 @@ import ClassCategoryTable from '@/components/Class/Category/ClassCategoryTable'
 import { mapGetters, mapActions } from 'vuex'
 import UpdateScheduleModal from '@/components/Class/ClassDetail/Modal/UpdateScheduleModal'
 import validationMixin from '@/components/Class/validation.mixin'
+import { staticUrl } from '@/config/api'
 
 export default {
   name: 'ClassForm',
@@ -298,6 +306,12 @@ export default {
     UpdateScheduleModal
   },
   mixins: [validationMixin],
+  props: {
+    isEdit: {
+      type: Boolean,
+      default: false
+    }
+  },
   data: () => ({
     feeSwitchOn: false,
     selectedProvince: null,
@@ -330,28 +344,28 @@ export default {
 
   async mounted () {
     await this.getIndustries()
+    await this.getUserCurrentCompany({ successCallback: this.handleGetUsers })
     const params = {
       countryId: 1,
       size: 9999
     }
     this.getProvinces({ params })
-    await this.getUserCurrentCompany({ successCallback: this.handleGetUsers })
     if (this.$route.params.classId) {
       // eslint-disable-next-line no-console
-      console.log('edit')
       this.initClassData()
     }
   },
   methods: {
     ...mapActions('class', [
       'createClass',
+      'updateClass',
       'getUsers',
       'getUserCurrentCompany',
       'uploadFile',
       'getClassDetail']),
     ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
     getUserAvatar (file) {
-      return file ? '/src/' + file.efilename : require('@/assets/images/logos/sportiv-logo-small.png')
+      return file ? staticUrl + file.efilename : require('@/assets/images/logos/sportiv-logo-small.png')
     },
     async updateCities () {
       const params = {
@@ -371,12 +385,16 @@ export default {
     },
     async doUploadFiles (files) {
       for (const idx in files) {
-        const fileFormData = new FormData()
-        fileFormData.append('file', files[idx].file)
-        await this.uploadFile({
-          data: fileFormData,
-          successCallback: await this.successUploadFile
-        })
+        if (files[idx].file.fileId) {
+          this.fileIds.push(files[idx].file.fileId)
+        } else {
+          const fileFormData = new FormData()
+          fileFormData.append('file', files[idx].file)
+          await this.uploadFile({
+            data: fileFormData,
+            successCallback: await this.successUploadFile
+          })
+        }
       }
     },
     successUploadFile (uploadedFile) {
@@ -385,12 +403,17 @@ export default {
     async createNewClass () {
       if (this.validateForm()) {
         await this.doUploadFiles(this.rawFiles)
-        this.classData = {
+        const classDataBody = {
           ...this.classData,
+          picMobileNumber: '+62' + this.classData.picMobileNumber,
           fileIds: this.fileIds,
           administrationFee: this.feeSwitchOn ? this.classData.administrationFee || 0 : 0
         }
-        this.createClass({ body: this.classData, successCallback: this.successSaveClass })
+        if (this.isEdit) {
+          this.updateClass({ id: this.$route.params.classId, body: classDataBody, successCallback: this.successSaveClass })
+        } else {
+          this.createClass({ body: classDataBody, successCallback: this.successSaveClass })
+        }
       }
     },
     cancelCreateClass () {
@@ -407,14 +430,18 @@ export default {
     },
     async setClassData (classDetail) {
       // eslint-disable-next-line no-console
-      console.log(classDetail)
       if (classDetail) {
         this.classData = {
           ...classDetail,
           industryId: classDetail.industry.eindustryid,
           classCoachUserIds: this.getClassCoachUserIds(classDetail.coaches),
           picId: classDetail.pic.euserid,
-          stateId: classDetail.state.estateid
+          stateId: classDetail.state.estateid,
+          initFiles: this.generateRawFiles(classDetail.classMedia),
+          picMobileNumber: classDetail.picMobileNumber.slice(3, classDetail.picMobileNumber.length)
+        }
+        if (classDetail.administrationFee) {
+          this.feeSwitchOn = true
         }
         await this.updateCities()
         this.classData.cityId = classDetail.city.ecityid
@@ -422,8 +449,24 @@ export default {
     },
     getClassCoachUserIds (coaches) {
       // eslint-disable-next-line no-console
-      console.log(coaches.map((user) => { return user.userId }))
       return coaches.map((user) => { return user.userId })
+    },
+    generateRawFiles (classMedia) {
+      const generatedRawFiles = classMedia.map((media) => {
+        return {
+          name: media.file && media.file.efilename,
+          size: media.file && media.file.efilesize,
+          type: media.file && media.file.efiletype,
+          path: media.file && media.file.efilepath,
+          fileId: media.fileId
+        }
+      })
+      return generatedRawFiles
+    },
+    checkFrontZero (value) {
+      if (value[0] === '0') {
+        this.classData.picMobileNumber = value.slice(1, value.length)
+      }
     }
   }
 }

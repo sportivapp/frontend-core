@@ -12,7 +12,9 @@
         <category-schedule-list-item
           v-model="value[index]"
           :index="index"
+          :total-data="value.length"
           @delete="handleDeleteSchedule"
+          @validate="$emit('validate')"
         />
       </td>
     </tr>
@@ -79,6 +81,7 @@ export default {
       const newArray = duplicateObject(this.value)
       newArray.push({ ...defaultAddNewSchedule })
       this.$emit('input', newArray)
+      this.$emit('change')
     }
   }
 }

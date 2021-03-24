@@ -4,7 +4,36 @@ export default {
     return {
       categoryTitle: { required },
       categoryDescription: { required },
-      categorySchedules: { required },
+      categorySchedules: {
+        required,
+        hourValid: (v) => {
+          for (let i = 0; i < v.length; i++) {
+            if (v[i].endHour < v[i].startHour) {
+              return false
+            } else if (v[i].endHour === v[i].startHour) {
+              if (v[i].endMinute <= v[i].startMinute) {
+                return false
+              }
+            }
+          }
+          return true
+        },
+        timeValid: (v) => {
+          for (let i = 0; i < v.length - 1; i++) {
+            for (let j = i + 1; j < v.length; j++) {
+              if (v[i].day === v[j].day) {
+                if (!(Number(v[j].startHour) < Number(v[i].startHour) ||
+                Number(v[j].startHour) > Number(v[i].endHour)) ||
+                !(Number(v[j].endHour) < Number(v[i].startHour) ||
+                Number(v[j].endHour) > Number(v[i].endHour))) {
+                  return false
+                }
+              }
+            }
+          }
+          return true
+        }
+      },
       categoryPeriod: {
         required,
         validPeriodRange: (v) => {
@@ -41,6 +70,9 @@ export default {
       const errors = []
       if (!this.$v.categorySchedules.$dirty) { return errors }
       !this.$v.categorySchedules.required && errors.push('Jadwal Kategori harus di isi minimal 1')
+      !this.$v.categorySchedules.timeValid && errors.push('Jadwal tidak boleh berlangsung bersamaan')
+      !this.$v.categorySchedules.hourValid && errors.push('Jam mulai harus lebih kecil dari jam berakhir')
+
       return errors
     },
     categoryPeriodErrors () {

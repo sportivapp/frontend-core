@@ -292,7 +292,10 @@ export default () => {
         deleteAction: 'Delete',
         deleteCancel: 'Cancel',
         deleteMessage: 'Are you sure you want to delete this class now?',
-        deleteSuccess: 'Success delete class'
+        deleteSuccess: 'Success delete class',
+        categoryDeleteModalTitle: 'Delete Class Category',
+        categoryDeleteMessage: 'Are you sure you want to delete this category now?',
+        categoryDeleteSuccess: 'Success delete class category'
       }
     })
   })
