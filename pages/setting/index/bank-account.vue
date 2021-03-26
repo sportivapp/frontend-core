@@ -1,6 +1,6 @@
 <template>
   <v-container class="px-0">
-    <add-bank-account-modal v-model="showModal" />
+    <add-bank-account-modal v-model="showModal" @saveAccount="handleSaveBankAccount" />
     <v-row class="mx-0 pa-0">
       <v-col>
         <v-row class="px-0">
@@ -23,19 +23,30 @@
         </v-row>
       </v-col>
     </v-row>
+    <v-row class="mx-0 pa-0">
+      <bank-account-list :account-list="bankAccountList" />
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import AddBankAccountModal from '@/components/BankAccount/AddBankAccountModal'
+import BankAccountList from '@/components/BankAccount/BankAccountList'
 export default {
   name: 'BankAccountPage',
   components: {
-    AddBankAccountModal
+    AddBankAccountModal,
+    BankAccountList
   },
   data: () => ({
-    showModal: false
-  })
+    showModal: false,
+    bankAccountList: []
+  }),
+  methods: {
+    handleSaveBankAccount (account) {
+      this.bankAccountList.push(account)
+    }
+  }
 }
 </script>
 

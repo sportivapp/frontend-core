@@ -23,7 +23,11 @@
         </v-row>
         <v-row class="mx-1">
           <v-select
+            v-model="bankAccount.bank"
             outlined=""
+            :items="bankList"
+            item-value="code"
+            item-text="bank"
             placeholder="Pilih nama bank"
             dense=""
           />
@@ -36,7 +40,7 @@
               </p>
             </v-row>
             <v-row>
-              <v-text-field outlined="" dense />
+              <v-text-field v-model="bankAccount.number" outlined="" dense />
             </v-row>
           </v-col>
           <v-col class="px-7 py-0">
@@ -46,7 +50,7 @@
               </p>
             </v-row>
             <v-row>
-              <v-text-field outlined="" dense />
+              <v-text-field v-model="bankAccount.owner" outlined="" dense />
             </v-row>
           </v-col>
         </v-row>
@@ -58,7 +62,7 @@
               </p>
             </v-row>
             <v-row>
-              <v-text-field outlined="" dense placeholder="Contoh: Cabang Mangga Dua" />
+              <v-text-field v-model="bankAccount.branch" outlined="" dense placeholder="Contoh: Cabang Mangga Dua" />
             </v-row>
           </v-col>
           <v-col class="px-7 py-0">
@@ -68,14 +72,14 @@
               </p>
             </v-row>
             <v-row>
-              <v-text-field outlined="" dense placeholder="Contoh: Penjaringan" />
+              <v-text-field v-model="bankAccount.area" outlined="" dense placeholder="Contoh: Penjaringan" />
             </v-row>
           </v-col>
         </v-row>
       </v-container>
       <v-card height="72px" class="mt-10">
         <v-row justify="end" class="mx-6">
-          <v-btn width="140px" class="mt-4 white--text" color="#0AB281">
+          <v-btn width="140px" class="mt-4 white--text" color="#0AB281" @click="handleSaveBankAccount">
             Simpan
           </v-btn>
         </v-row>
@@ -91,6 +95,26 @@ export default {
     value: {
       type: Boolean,
       default: false
+    }
+  },
+  data: () => ({
+    bankList: [
+      {
+        code: 'BCA',
+        bank: 'BCA'
+      },
+      { code: 'BRI', bank: 'BRI' },
+      { code: 'MANDIRI', bank: 'Bank Mandiri' },
+      { code: 'BSM', bank: 'Bank Syariah Mandiri' },
+      { code: 'BTN', bank: 'BTN' },
+      { code: 'BNI', bank: 'BNI' }
+    ],
+    bankAccount: {}
+  }),
+  methods: {
+    handleSaveBankAccount () {
+      this.$emit('saveAccount', this.bankAccount)
+      this.$emit('input', false)
     }
   }
 }
