@@ -1,9 +1,13 @@
-# [![sportiv](https://www.sportiv.app/_nuxt/img/sportiv-orange.fe73cc7.svg)](https://www.sportiv.app)
+<p align="center">
+    <img src="https://i.imgur.com/j8iwglW.png" alt="Sportiv Logo" width="250px"/>
+</p>
 
-## Frontend Core
-> this is the repository that runs sportiv organization
+# Frontend Core
+> this is the repository that runs sportiv core
 
-## Preparation
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
 
 You need to install [node](https://nodejs.org/) and [git](https://git-scm.com/) locally. The project is based on [ES2015+](https://es6.ruanyifeng.com/), [vue](https://cn.vuejs.org/index.html), [vuex](https://vuex.vuejs.org/zh-cn/), [vue-router](https://router.vuejs.org/zh-cn/), [vue-cli](https://github.com/vuejs/vue-cli) , [axios](https://github.com/axios/axios) and [element-ui](https://github.com/ElemeFE/element). Understanding and learning this knowledge in advance will greatly help the use of this project.
 
