@@ -28,7 +28,11 @@ export default {
     ]),
     successVerify () {
       this.setToken(this.$route.query.token)
-      this.$router.push('/class')
+      if (this.$route.query.page === 'class') {
+        this.$router.push('/class')
+      } else if (this.$route.query.page === 'bank-account') {
+        this.$router.push('/setting/bank-account')
+      }
     },
     failVerify () {
       this.$router.push('/')
