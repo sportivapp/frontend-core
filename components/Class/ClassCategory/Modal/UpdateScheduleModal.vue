@@ -23,7 +23,14 @@
         <v-col>
           <v-row class="mx-1 spv-body--1 grey--text">
             Jadwal (Maks. 7 Jadwal)<span class="red--text">*</span>
-            <category-schedule-list v-model="categorySchedulesLocal" />
+            <category-schedule-list
+              v-model="categorySchedules"
+              class="black--text"
+              @input="$v.categorySchedules.$touch()"
+            />
+            <small v-if="$v.categorySchedules.$error" class="red--text pl-2">
+              {{ categorySchedulesErrors[categorySchedulesErrors.length-1] }}
+            </small>
           </v-row>
           <v-row class="mx-1 spv-body--1 grey--text">
             Masa Berlangsung Jadwal (Maks. 3 bulan)<span class="red--text">*</span>
@@ -49,7 +56,10 @@
                   hide-details
                   placeholder="Pilih waktu"
                   class="class-category-modal__form__text-field"
+                  :error-messages="categoryPeriodErrors"
                   v-on="on"
+                  @input="$v.categoryPeriod.$touch()"
+                  @blur="$v.categoryPeriod.$touch()"
                 />
               </template>
               <v-card>
@@ -61,6 +71,8 @@
                       type="month"
                       range
                       no-title
+                      @input="$v.categoryPeriod.$touch()"
+                      @blur="$v.categoryPeriod.$touch()"
                     />
                   </v-row>
                   <v-row
@@ -121,12 +133,14 @@
 import CategoryScheduleList from '@/components/Class/Category/CategoryScheduleList'
 import { dateToMonthAndYear } from '@/utils/date'
 import { mapActions } from 'vuex'
+import validationExtend from '@/components/Class/validationExtend.mixin'
 
 export default {
   name: 'UpdateScheduleModal',
   components: {
     CategoryScheduleList
   },
+  mixins: [validationExtend],
   props: {
     value: {
       type: Boolean,
@@ -144,7 +158,7 @@ export default {
   data: () => ({
     periodMenu: null,
     categoryPeriod: [],
-    categorySchedulesLocal: [
+    categorySchedules: [
       {
         day: 'MONDAY',
         startHour: 10,
@@ -194,14 +208,14 @@ export default {
     },
     generateCategorySessions () {
       if (this.schedules) {
-        this.categorySchedulesLocal = [...this.schedules]
+        this.categorySchedules = [...this.schedules]
       }
     },
     handleClickSave () {
       const body = {
         startMonth: this.startMonthDate.getTime(),
         endMonth: this.endMonthDate.getTime(),
-        schedules: [...this.categorySchedulesLocal]
+        schedules: [...this.categorySchedules]
       }
       this.extendCategorySession({
         categoryId: this.$route.params.classCategoryId,
