@@ -23,8 +23,6 @@
         chips=""
         deletable-chips=""
         :label="label"
-        height="100%"
-        dense
         multiple=""
         :search-input.sync="searchText"
       >
@@ -39,7 +37,7 @@
             <v-avatar left>
               <v-img :src="getUserAvatar(data.item.file)" />
             </v-avatar>
-            {{ data.item.eusername }}
+            {{ generateNameLength(data.item.eusername) }}
           </v-chip>
         </template>
         <template v-slot:item="data">
@@ -121,6 +119,12 @@ export default {
     remove (item) {
       const index = this.selectedList.indexOf(item.euserid)
       if (index >= 0) { this.selectedList.splice(index, 1) }
+    },
+    generateNameLength (name) {
+      if (name.length > 20) {
+        return name.slice(0, 20)
+      }
+      return name
     }
   }
 }

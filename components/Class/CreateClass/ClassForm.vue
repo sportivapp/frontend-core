@@ -24,6 +24,7 @@
                   hint="nama kelas minimal 3-50 karakter."
                   dense=""
                   persistent-hint=""
+                  :disabled="isEdit"
                   :error-messages="titleErrors"
                   @input="$v.classData.title.$touch()"
                   @blur="$v.classData.title.$touch()"
@@ -43,6 +44,7 @@
                   :items="industries"
                   item-value="eindustryid"
                   item-text="eindustryname"
+                  :disabled="isEdit"
                   :error-messages="industryIdErrors"
                   @input="$v.classData.industryId.$touch()"
                   @blur="$v.classData.industryId.$touch()"
@@ -95,6 +97,7 @@
                   item-value="estateid"
                   item-text="estatename"
                   :error-messages="stateIdErrors"
+                  :disabled="isEdit"
                   @change="updateCities"
                   @input="$v.classData.stateId.$touch()"
                   @blur="$v.classData.stateId.$touch()"
@@ -114,6 +117,7 @@
                   :items="cities"
                   item-value="ecityid"
                   item-text="ecityname"
+                  :disabled="isEdit"
                   :error-messages="cityIdErrors"
                   @input="$v.classData.cityId.$touch()"
                   @blur="$v.classData.cityId.$touch()"
@@ -401,16 +405,16 @@ export default {
     async createNewClass () {
       if (this.validateForm()) {
         await this.doUploadFiles(this.rawFiles)
-        this.classData = {
+        const classDataBody = {
           ...this.classData,
           picMobileNumber: '+62' + this.classData.picMobileNumber,
           fileIds: this.fileIds,
           administrationFee: this.feeSwitchOn ? this.classData.administrationFee || 0 : 0
         }
         if (this.isEdit) {
-          this.updateClass({ id: this.$route.params.classId, body: this.classData, successCallback: this.successSaveClass })
+          this.updateClass({ id: this.$route.params.classId, body: classDataBody, successCallback: this.successSaveClass })
         } else {
-          this.createClass({ body: this.classData, successCallback: this.successSaveClass })
+          this.createClass({ body: classDataBody, successCallback: this.successSaveClass })
         }
       }
     },
@@ -443,6 +447,9 @@ export default {
         }
         await this.updateCities()
         this.classData.cityId = classDetail.city.ecityid
+        delete this.classData.city
+        delete this.classData.industry
+        delete this.classData.state
       }
     },
     getClassCoachUserIds (coaches) {

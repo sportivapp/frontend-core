@@ -14,6 +14,7 @@
           :index="index"
           :total-data="value.length"
           @delete="handleDeleteSchedule"
+          @validate="$emit('validate')"
         />
       </td>
     </tr>

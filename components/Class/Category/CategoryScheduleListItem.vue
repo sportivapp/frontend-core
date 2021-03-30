@@ -235,6 +235,7 @@ export default {
         ...this.value,
         day
       })
+      this.$emit('validate')
     },
     handleClickDelete () {
       this.$emit('delete', this.index)
@@ -253,6 +254,7 @@ export default {
         startHour: time.split(':')[0],
         startMinute: time.split(':')[1]
       })
+      this.$emit('validate')
     },
     handleChangeEndTime (time) {
       this.$emit('input', {
@@ -260,6 +262,7 @@ export default {
         endHour: time.split(':')[0],
         endMinute: time.split(':')[1]
       })
+      this.$emit('validate')
     }
   }
 }

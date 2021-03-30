@@ -21,6 +21,7 @@ COPY nuxt.config.js /app/sportivapp/frontend-core/nuxt.config.js
 COPY . /app/sportivapp/frontend-core
 
 ENV NODE_ENV=$node_env
+COPY .env.${NODE_ENV}.example .env
 
 RUN npm run generate
 
