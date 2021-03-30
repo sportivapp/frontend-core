@@ -1,5 +1,10 @@
 <template>
   <v-container class="ma-0 pa-0 class-category" fluid>
+    <update-schedule-modal
+      v-model="showModal"
+      :category-sessions="category.categorySessions"
+      :schedules="categorySchedules"
+    />
     <v-spacer />
     <v-row justify="center" align="center" no-gutters>
       <v-col cols="10">
@@ -67,6 +72,17 @@
                   value="session"
                   class="pt-3"
                 >
+                  <v-row class="border-bottom mx-0">
+                    <v-col class="text-right pr-10 ma-0 pt-0">
+                      <v-btn
+                        class="white--text"
+                        color="#FF7041"
+                        @click="showModal = true"
+                      >
+                        Perbarui Jadwal
+                      </v-btn>
+                    </v-col>
+                  </v-row>
                   <class-category-session
                     :session="category"
                   />
@@ -112,12 +128,20 @@ import ClassCategoryModal from '@/components/Class/Category/ClassCategoryModal'
 import ClassCategoryInfo from '@/components/Class/ClassCategory/ClassCategoryInfo'
 import ClassCategorySession from '@/components/Class/ClassCategory/ClassCategorySession'
 import ClassCategoryHistory from '@/components/Class/ClassCategory/ClassCategoryHistory'
+import UpdateScheduleModal from '@/components/Class/ClassCategory/Modal/UpdateScheduleModal'
 import SimplePrompt from '@/components/Modal/SimplePrompt'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ClassCategoryDetail',
-  components: { ClassCategoryModal, ClassCategoryInfo, ClassCategorySession, ClassCategoryHistory, SimplePrompt },
+  components: {
+    ClassCategoryModal,
+    ClassCategoryInfo,
+    ClassCategorySession,
+    ClassCategoryHistory,
+    UpdateScheduleModal,
+    SimplePrompt
+  },
   props: {
     category: {
       type: Object,
@@ -130,12 +154,13 @@ export default {
       isEditCategory: false,
       tab: null,
       isTableLoading: false,
+      showModal: false,
       show: false
     }
   },
   computed: {
     ...mapGetters(['industries', 'provinces', 'cities']),
-    ...mapGetters('class', ['userCurrentCompany', 'classCategoryDetail'])
+    ...mapGetters('class', ['userCurrentCompany', 'classCategoryDetail', 'categorySchedules'])
   },
   async mounted () {
     await this.getIndustries()
@@ -145,9 +170,11 @@ export default {
     }
     this.getProvinces({ params })
     await this.getUserCurrentCompany({ successCallback: this.handleGetUsers })
+    this.getSchedule({ categoryId: this.$route.params.classCategoryId })
   },
   methods: {
-    ...mapActions('class', ['updateClassCategory', 'deleteClassCategory', 'getUserCurrentCompany', 'getUsers', 'setSnackBar']),
+    ...mapActions('class', ['updateClassCategory', 'deleteClassCategory',
+      'getUserCurrentCompany', 'getUsers', 'setSnackBar', 'getSchedule']),
     ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
     async handleGetUsers (keyword = '') {
       const params = {
@@ -219,6 +246,9 @@ export default {
 
 .v-tabs {
   width: 50% !important;
+}
+.border-bottom{
+  border-bottom: 1px solid #D5D5D5;
 }
 
 .class-category {

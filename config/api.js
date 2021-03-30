@@ -1,9 +1,9 @@
 import { serializeQueryParams } from '@/utils/query'
 
-const baseUrl = 'https://api.sportiv.app/core/api/v1'
-const baseUrlTournament = 'https://api.sportiv.app/tournament'
+const baseUrl = 'https://api.quickplay.app/core/api/v1'
+const baseUrlTournament = 'https://api.quickplay.app/tournament'
 
-const staticUrl = 'https://api.sportiv.app/core/'
+const staticUrl = 'https://api.quickplay.app/core/'
 
 const api = {
   otp: '/otp-email',
@@ -40,8 +40,10 @@ const api = {
     classParticipants: id => `/class-v2/${id}/participants`,
     deleteClass: id => `/class-v2/${id}`,
     insertClassCategory: id => `/class-v2/${id}/class-category`,
-    updateClassCategory: (classId, classCategoryId) => `/class-v2/${classId}/class-category/${classCategoryId}`,
-    updateClass: id => `/class-v2/${id}`
+    updateClass: id => `/class-v2/${id}`,
+    getCategorySchedule: categoryId => `/class-category/${categoryId}/schedule`,
+    extendCategorySession: categoryId => `/class-category/${categoryId}/extend`,
+    updateClassCategory: (classId, classCategoryId) => `/class-v2/${classId}/class-category/${classCategoryId}`
   }
 }
 
