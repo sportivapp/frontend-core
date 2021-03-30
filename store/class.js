@@ -250,7 +250,6 @@ export const actions = {
         successCallback && successCallback()
       })
       .catch((err) => {
-        console.log(err.response.data.errorMessage)
         errHandler && errHandler(err.response.data.errorMessage)
       })
   }

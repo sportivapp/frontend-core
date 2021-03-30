@@ -53,7 +53,6 @@
                   outlined
                   dense
                   readonly
-                  hide-details
                   placeholder="Pilih waktu"
                   class="class-category-modal__form__text-field"
                   :error-messages="categoryPeriodErrors"
@@ -71,6 +70,7 @@
                       type="month"
                       range
                       no-title
+                      :min="todayDate"
                       @input="$v.categoryPeriod.$touch()"
                       @blur="$v.categoryPeriod.$touch()"
                     />
@@ -167,7 +167,8 @@ export default {
         endMinute: 0
       }
     ],
-    errorMessage: ''
+    errorMessage: '',
+    todayDate: new Date().toISOString().slice(0, 10)
   }),
   computed: {
     startMonthDate () {
@@ -212,20 +213,23 @@ export default {
       }
     },
     handleClickSave () {
-      const body = {
-        startMonth: this.startMonthDate.getTime(),
-        endMonth: this.endMonthDate.getTime(),
-        schedules: [...this.categorySchedules]
+      if (this.validateForm()) {
+        const body = {
+          startMonth: this.startMonthDate.getTime(),
+          endMonth: this.endMonthDate.getTime(),
+          schedules: [...this.categorySchedules]
+        }
+        this.extendCategorySession({
+          categoryId: this.$route.params.classCategoryId,
+          body,
+          successCallback: this.updateScheduleSuccess,
+          errHandler: this.updateScheduleFail
+        })
       }
-      this.extendCategorySession({
-        categoryId: this.$route.params.classCategoryId,
-        body,
-        successCallback: this.updateScheduleSuccess,
-        errHandler: this.updateScheduleFail
-      })
     },
     updateScheduleSuccess () {
       this.$emit('input', false)
+      this.$router.go(0)
     },
     updateScheduleFail (err) {
       if (err === 'NO_SESSIONS') {
