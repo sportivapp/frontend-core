@@ -183,7 +183,8 @@ export default {
       if (new Date(this.categoryPeriod[0]) > new Date(this.categoryPeriod[1])) {
         endIndex = 0
       }
-      return new Date(this.categoryPeriod[endIndex])
+      const date = new Date(this.categoryPeriod[endIndex])
+      return new Date(date.getFullYear(), date.getMonth() + 1, 0)
     },
     periodTextMonth () {
       return dateToMonthAndYear(this.startMonthDate) + ' - ' +
