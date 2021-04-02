@@ -74,7 +74,7 @@ export default {
 }
 .bank-account-container{
   margin: 0 12%;
-  padding-top: 5%;
+  padding-top: 2%;
 }
 .title-text{
   font-weight: 600;

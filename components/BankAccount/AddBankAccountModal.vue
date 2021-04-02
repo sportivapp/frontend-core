@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="value" max-width="800px" persistent="">
+  <v-dialog v-model="value" max-width="456px" persistent="">
     <v-card>
       <v-container class="px-5 pt-6">
         <v-row>
@@ -8,7 +8,7 @@
               Tambah Rekening
             </p>
           </v-col>
-          <v-col align-self="start" class="pt-1">
+          <v-col align-self="start" cols="1" class="pt-1">
             <v-btn icon="" class="float-right" @click="$emit('input',false)">
               <v-icon>
                 mdi-close
@@ -23,56 +23,70 @@
         </v-row>
         <v-row class="mx-1">
           <v-select
-            v-model="bankAccount.bank"
+            v-model="bankAccount.masterBankId"
             outlined=""
             :items="bankList"
-            item-value="code"
-            item-text="bank"
+            item-value="id"
+            item-text="name"
             placeholder="Pilih nama bank"
             dense=""
           />
         </v-row>
         <v-row>
           <v-col class="px-7 py-0">
-            <v-row class="pa-0">
-              <p class="spv-body--1 grey--text mb-1">
+            <v-row class="pa-0" align="center">
+              <p class="spv-body--1 grey--text mb-1 pr-2">
                 Nomor Rekening<span class="red--text">*</span>
               </p>
+              <v-tooltip
+                v-model="show"
+                bottom=""
+              >
+                <template v-slot:activator="{on, attrs}">
+                  <v-icon
+                    class="mb-1"
+                    size="18"
+                    v-bind="attrs"
+                    color="grey"
+                    v-on="on"
+                  >
+                    mdi-information
+                  </v-icon>
+                </template>
+                <span>Bukan no Virtual Account atau E-wallet</span>
+              </v-tooltip>
             </v-row>
             <v-row>
-              <v-text-field v-model="bankAccount.number" outlined="" dense />
-            </v-row>
-          </v-col>
-          <v-col class="px-7 py-0">
-            <v-row>
-              <p class="spv-body--1 grey--text mb-1">
-                Nama Pemilik Rekening<span class="red--text">*</span>
-              </p>
-            </v-row>
-            <v-row>
-              <v-text-field v-model="bankAccount.owner" outlined="" dense />
+              <v-text-field v-model="bankAccount.accountNumber" outlined="" dense />
             </v-row>
           </v-col>
         </v-row>
         <v-row>
           <v-col class="px-7 py-0">
-            <v-row class="pa-0">
-              <p class="spv-body--1 grey--text mb-1">
-                Nama Cabang (Opsional)
+            <v-row>
+              <p class="spv-body--1 grey--text mb-1 pr-2">
+                Nama Pemilik Rekening<span class="red--text">*</span>
               </p>
+              <v-tooltip
+                v-model="show"
+                bottom=""
+              >
+                <template v-slot:activator="{on, attrs}">
+                  <v-icon
+                    class="mb-1"
+                    size="18"
+                    v-bind="attrs"
+                    color="grey"
+                    v-on="on"
+                  >
+                    mdi-information
+                  </v-icon>
+                </template>
+                <span>Nama harus ditulis lengkap sesuai yang tertera di rekening.</span>
+              </v-tooltip>
             </v-row>
             <v-row>
-              <v-text-field v-model="bankAccount.branch" outlined="" dense placeholder="Contoh: Cabang Mangga Dua" />
-            </v-row>
-          </v-col>
-          <v-col class="px-7 py-0">
-            <v-row>
-              <p class="spv-body--1 grey--text mb-1">
-                Wilayah Cabang (Opsional)
-              </p>
-            </v-row>
-            <v-row>
-              <v-text-field v-model="bankAccount.area" outlined="" dense placeholder="Contoh: Penjaringan" />
+              <v-text-field v-model="bankAccount.accountName" outlined="" dense />
             </v-row>
           </v-col>
         </v-row>
@@ -89,32 +103,42 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'AddBankAccountModal',
   props: {
     value: {
       type: Boolean,
       default: false
+    },
+    bankList: {
+      type: Array,
+      default: () => []
     }
   },
   data: () => ({
-    bankList: [
-      {
-        code: 'BCA',
-        bank: 'BCA'
-      },
-      { code: 'BRI', bank: 'BRI' },
-      { code: 'MANDIRI', bank: 'Bank Mandiri' },
-      { code: 'BSM', bank: 'Bank Syariah Mandiri' },
-      { code: 'BTN', bank: 'BTN' },
-      { code: 'BNI', bank: 'BNI' }
-    ],
     bankAccount: {}
   }),
   methods: {
+    ...mapActions('setting', ['createCompanyBank']),
     handleSaveBankAccount () {
-      this.$emit('saveAccount', this.bankAccount)
+      const body = {
+        ...this.bankAccount,
+        accountNumber: this.bankAccountNumber(this.bankAccount.accountNumber)
+      }
+      this.createCompanyBank({ body, successCallback: this.successCallback })
+    },
+    successCallback () {
       this.$emit('input', false)
+      this.$router.go(0)
+    },
+    bankAccountNumber (num) {
+      let accNum = ''
+      for (let i = 0; i < num.length; i += 4) {
+        accNum += num.substring(i, i + 4)
+        if (!(i + 4 >= num.length)) { accNum += '-' }
+      }
+      return accNum
     }
   }
 }

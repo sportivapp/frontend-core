@@ -8,6 +8,7 @@
 
 <script>
 import BankAccountCard from '@/components/BankAccount/BankAccountCard.vue'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'BankAccountList',
   components: {
@@ -18,6 +19,15 @@ export default {
       type: Array,
       default: () => []
     }
+  },
+  computed: {
+    ...mapGetters('setting', 'companyBanks')
+  },
+  created () {
+    this.getCompanyBanks()
+  },
+  methods: {
+    ...mapActions('setting', ['getCompanyBanks'])
   }
 }
 </script>
