@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row v-for="(account,index) in accountList" :key="index">
+    <v-row v-for="account in companyBanks" :key="account.uuid">
       <bank-account-card :bank-account="account" />
     </v-row>
   </v-container>
@@ -21,10 +21,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('setting', 'companyBanks')
+    ...mapGetters('setting', ['companyBanks'])
   },
-  created () {
-    this.getCompanyBanks()
+  async mounted () {
+    await this.getCompanyBanks()
   },
   methods: {
     ...mapActions('setting', ['getCompanyBanks'])

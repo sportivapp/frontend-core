@@ -39,7 +39,6 @@
                 Nomor Rekening<span class="red--text">*</span>
               </p>
               <v-tooltip
-                v-model="show"
                 bottom=""
               >
                 <template v-slot:activator="{on, attrs}">
@@ -68,7 +67,6 @@
                 Nama Pemilik Rekening<span class="red--text">*</span>
               </p>
               <v-tooltip
-                v-model="show"
                 bottom=""
               >
                 <template v-slot:activator="{on, attrs}">
