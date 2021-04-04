@@ -12,7 +12,8 @@ export const state = () => ({
   selectedCoaches: [],
   classDetail: {},
   classParticipants: [],
-  snackBarData: {}
+  snackBarData: {},
+  categorySchedules: []
 })
 
 export const getters = {
@@ -31,7 +32,8 @@ export const getters = {
   classDetail: state => state.classDetail,
   classParticipants: state => state.classParticipants,
   showSuccessSnackBar: state => state.showSuccessSnackBar,
-  snackBarData: state => state.snackBarData
+  snackBarData: state => state.snackBarData,
+  categorySchedules: state => state.categorySchedules
 }
 
 export const mutations = {
@@ -70,6 +72,9 @@ export const mutations = {
   },
   setSnackBarData (state, data) {
     state.snackBarData = data
+  },
+  setCategorySchedules (state, data) {
+    state.categorySchedules = data
   }
 }
 
@@ -227,6 +232,25 @@ export const actions = {
       })
       .catch((err) => {
         errHandler && errHandler(err)
+      })
+  },
+  getSchedule ({ commit }, { categoryId, successCallback, errHandler } = {}) {
+    this.$axios.get(getUrl(api.class.getCategorySchedule(categoryId)))
+      .then((res) => {
+        commit('setCategorySchedules', res.data.data)
+        successCallback && successCallback()
+      })
+      .catch((err) => {
+        errHandler && errHandler(err)
+      })
+  },
+  extendCategorySession ({ _ }, { categoryId, body, successCallback, errHandler } = {}) {
+    this.$axios.post(getUrl(api.class.extendCategorySession(categoryId)), body)
+      .then((res) => {
+        successCallback && successCallback()
+      })
+      .catch((err) => {
+        errHandler && errHandler(err.response.data.errorMessage)
       })
   }
 }

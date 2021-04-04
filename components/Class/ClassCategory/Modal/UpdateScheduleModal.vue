@@ -12,16 +12,25 @@
         </v-card-title>
         <v-spacer />
         <v-card-actions>
-          <v-icon>
-            mdi-close
-          </v-icon>
+          <v-btn icon @click="$emit('input', false)">
+            <v-icon>
+              mdi-close
+            </v-icon>
+          </v-btn>
         </v-card-actions>
       </v-row>
       <v-row>
         <v-col>
           <v-row class="mx-1 spv-body--1 grey--text">
             Jadwal (Maks. 7 Jadwal)<span class="red--text">*</span>
-            <category-schedule-list v-model="categorySchedules" />
+            <category-schedule-list
+              v-model="categorySchedules"
+              class="black--text"
+              @input="$v.categorySchedules.$touch()"
+            />
+            <small v-if="$v.categorySchedules.$error" class="red--text pl-2">
+              {{ categorySchedulesErrors[categorySchedulesErrors.length-1] }}
+            </small>
           </v-row>
           <v-row class="mx-1 spv-body--1 grey--text">
             Masa Berlangsung Jadwal (Maks. 3 bulan)<span class="red--text">*</span>
@@ -30,7 +39,6 @@
             <v-menu
               v-model="periodMenu"
               content-class="class-category-modal__form__section--date__menu-content"
-              attach=".class-category-modal__form__section--date"
               open-on-click
               offset-y
               min-width="300"
@@ -45,10 +53,12 @@
                   outlined
                   dense
                   readonly
-                  hide-details
                   placeholder="Pilih waktu"
                   class="class-category-modal__form__text-field"
+                  :error-messages="categoryPeriodErrors"
                   v-on="on"
+                  @input="$v.categoryPeriod.$touch()"
+                  @blur="$v.categoryPeriod.$touch()"
                 />
               </template>
               <v-card>
@@ -60,6 +70,9 @@
                       type="month"
                       range
                       no-title
+                      :min="todayDate"
+                      @input="$v.categoryPeriod.$touch()"
+                      @blur="$v.categoryPeriod.$touch()"
                     />
                   </v-row>
                   <v-row
@@ -79,6 +92,37 @@
               </v-card>
             </v-menu>
           </v-row>
+          <v-row
+            justify="end"
+            align="center"
+            class="class-category-modal__actions"
+          >
+            <v-col>
+              <small class="red--text">{{ errorMessage }}</small>
+            </v-col>
+            <v-col class="pa-0" cols="auto">
+              <v-btn
+                outlined
+                class="class-category-modal__actions__btn class-category-modal__actions--cancel"
+                @click="handleCloseModal"
+              >
+                <span>
+                  Batal
+                </span>
+              </v-btn>
+            </v-col>
+            <v-col class="pa-0" cols="auto">
+              <v-btn
+                text
+                class="class-category-modal__actions__btn class-category-modal__actions--save"
+                @click="handleClickSave"
+              >
+                <span>
+                  Simpan
+                </span>
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-card>
@@ -88,16 +132,27 @@
 <script>
 import CategoryScheduleList from '@/components/Class/Category/CategoryScheduleList'
 import { dateToMonthAndYear } from '@/utils/date'
+import { mapActions } from 'vuex'
+import validationExtend from '@/components/Class/validationExtend.mixin'
 
 export default {
   name: 'UpdateScheduleModal',
   components: {
     CategoryScheduleList
   },
+  mixins: [validationExtend],
   props: {
     value: {
       type: Boolean,
       default: false
+    },
+    categorySessions: {
+      type: Array,
+      default: () => []
+    },
+    schedules: {
+      type: Array,
+      default: () => []
     }
   },
   data: () => ({
@@ -111,7 +166,9 @@ export default {
         endHour: 12,
         endMinute: 0
       }
-    ]
+    ],
+    errorMessage: '',
+    todayDate: new Date().toISOString().slice(0, 10)
   }),
   computed: {
     startMonthDate () {
@@ -126,7 +183,8 @@ export default {
       if (new Date(this.categoryPeriod[0]) > new Date(this.categoryPeriod[1])) {
         endIndex = 0
       }
-      return new Date(this.categoryPeriod[endIndex])
+      const date = new Date(this.categoryPeriod[endIndex])
+      return new Date(date.getFullYear(), date.getMonth() + 1, 0)
     },
     periodTextMonth () {
       return dateToMonthAndYear(this.startMonthDate) + ' - ' +
@@ -138,10 +196,58 @@ export default {
         : ''
     }
   },
+  watch: {
+    schedules: {
+      handler (value) {
+        this.generateCategorySessions()
+      }
+    }
+  },
   methods: {
+    ...mapActions('class', ['extendCategorySession']),
     handleClickResetPeriod () {
       this.categoryPeriod = []
+    },
+    generateCategorySessions () {
+      if (this.schedules) {
+        this.categorySchedules = [...this.schedules]
+      }
+    },
+    handleClickSave () {
+      if (this.validateForm()) {
+        const body = {
+          startMonth: this.startMonthDate.getTime(),
+          endMonth: this.endMonthDate.getTime(),
+          schedules: [...this.categorySchedules]
+        }
+        this.extendCategorySession({
+          categoryId: this.$route.params.classCategoryId,
+          body,
+          successCallback: this.updateScheduleSuccess,
+          errHandler: this.updateScheduleFail
+        })
+      }
+    },
+    updateScheduleSuccess () {
+      this.$emit('input', false)
+      this.$router.go(0)
+    },
+    updateScheduleFail (err) {
+      if (err === 'NO_SESSIONS') {
+        this.errorMessage = '*Sesi tidak tersedia'
+      } else if (err === 'SCHEDULE_CONFLICT') {
+        this.errorMessage = '*Terdapat sesi yang konflik'
+      }
+    },
+    handleCloseModal () {
+      this.$emit('input', false)
+    },
+    setCategoryPeriod (startms, endms) {
+      const startDate = new Date(startms * 1000)
+      const endDate = new Date(endms * 1000)
+      this.categoryPeriod = [startDate, endDate]
     }
+
   }
 }
 </script>
@@ -156,6 +262,7 @@ export default {
 }
 
 .class-category-modal {
+  color: white;
   background-color: white;
   &__container {
     padding: 0 40px;
@@ -253,7 +360,7 @@ export default {
     padding: 16px 28px;
     margin: 8px -40px 0 !important;
     box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
-
+    bottom: 0;
     &__btn {
       width: 120px;
       height: 40px;
