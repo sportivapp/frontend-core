@@ -30,6 +30,9 @@
             item-text="name"
             placeholder="Pilih nama bank"
             dense=""
+            :error-messages="masterBankIdError"
+            @input="$v.bankAccount.masterBankId.$touch()"
+            @blur="$v.bankAccount.masterBankId.$touch()"
           />
         </v-row>
         <v-row>
@@ -56,7 +59,14 @@
               </v-tooltip>
             </v-row>
             <v-row>
-              <v-text-field v-model="bankAccount.accountNumber" outlined="" dense />
+              <v-text-field
+                v-model="bankAccount.accountNumber"
+                outlined=""
+                dense
+                :error-messages="accountNumberError"
+                @input="$v.bankAccount.accountNumber.$touch()"
+                @blur="$v.bankAccount.accountNumber.$touch()"
+              />
             </v-row>
           </v-col>
         </v-row>
@@ -84,7 +94,14 @@
               </v-tooltip>
             </v-row>
             <v-row>
-              <v-text-field v-model="bankAccount.accountName" outlined="" dense />
+              <v-text-field
+                v-model="bankAccount.accountName"
+                outlined=""
+                dense
+                :error-messages="accountNameError"
+                @input="$v.bankAccount.accountName.$touch()"
+                @blur="$v.bankAccount.accountName.$touch()"
+              />
             </v-row>
           </v-col>
         </v-row>
@@ -102,8 +119,10 @@
 
 <script>
 import { mapActions } from 'vuex'
+import validation from '@/components/BankAccount/validationBankAccount.mixin'
 export default {
   name: 'AddBankAccountModal',
+  mixins: [validation],
   props: {
     value: {
       type: Boolean,
@@ -120,11 +139,13 @@ export default {
   methods: {
     ...mapActions('setting', ['createCompanyBank']),
     handleSaveBankAccount () {
-      const body = {
-        ...this.bankAccount,
-        accountNumber: this.bankAccountNumber(this.bankAccount.accountNumber)
+      if (this.validateForm()) {
+        const body = {
+          ...this.bankAccount,
+          accountNumber: this.bankAccountNumber(this.bankAccount.accountNumber)
+        }
+        this.createCompanyBank({ body, successCallback: this.successCallback })
       }
-      this.createCompanyBank({ body, successCallback: this.successCallback })
     },
     successCallback () {
       this.$emit('input', false)

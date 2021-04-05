@@ -28,7 +28,6 @@ export const actions = {
   getCompanyBanks ({ commit }, { successCallback, errHandler } = {}) {
     this.$axios.get(getUrl(api.setting.companyBanks)).then((response) => {
       commit('setCompanyBanks', response.data.data)
-      console.log(response)
       successCallback && successCallback(response)
     }).catch((error) => {
       errHandler && errHandler(error)
@@ -41,11 +40,18 @@ export const actions = {
       errHandler && errHandler(error)
     })
   },
-  deleteBank ({ _ }, { params, successCallback, errHandler } = {}) {
-    this.$axios.post(getUrl(api.setting.deleteBank(params))).then((response) => {
+  updateMainBank ({ _ }, { params, successCallback, errHandler } = {}) {
+    this.$axios.put(getUrl(api.setting.updateMainBank(params))).then((response) => {
       successCallback && successCallback(response)
     }).catch((error) => {
       errHandler && errHandler(error)
+    })
+  },
+  deleteBank ({ _ }, { params, successCallback, errHandler } = {}) {
+    this.$axios.delete(getUrl(api.setting.deleteBank(params))).then((response) => {
+      successCallback && successCallback(response)
+    }).catch((error) => {
+      errHandler && errHandler(error.response.data)
     })
   }
 }
