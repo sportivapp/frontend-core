@@ -1,12 +1,12 @@
 <template>
-  <v-card outlined rounded="" width="990px" class="mb-5">
-    <v-row justify="center" class="my-2">
-      <v-col align-self="center" cols="1">
-        <v-avatar class="ml-4" rounded>
+  <v-card outlined rounded="" width="100%" class="mb-5">
+    <v-row justify="center" class="my-2 mx-2">
+      <v-col align-self="center" md="1">
+        <v-avatar rounded>
           <img :src="bankPic" alt="">
         </v-avatar>
       </v-col>
-      <v-col align-self="center" cols="3">
+      <v-col align-self="center" md="3">
         <v-row align="center">
           <p class="spv-caption--3 ma-0 mr-2">
             PT. {{ bankAccount.masterBank.name }}
@@ -47,9 +47,9 @@
           </p>
         </v-row>
       </v-col>
-      <v-col align-self="center" cols="6">
+      <v-col align-self="center" md="6">
         <v-row align="center">
-          <v-col>
+          <v-col md="7">
             <p class="spv-special--3 ma-0">
               {{ bankAccount.accountNumber }}
             </p>
@@ -146,7 +146,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('setting', ['deleteBank', 'updateMainBank']),
+    ...mapActions('setting', ['deleteBank', 'updateMainBank', 'getCompanyBanks']),
     handleDeleteBank () {
       const params = { bankUuid: this.bankAccount.uuid }
       this.deleteBank({ params, successCallback: this.reloadPage, errHandler: this.showError })
@@ -156,7 +156,7 @@ export default {
       this.updateMainBank({ params, successCallback: this.reloadPage })
     },
     reloadPage () {
-      this.$router.go(0)
+      this.getCompanyBanks()
     },
     showError (err) {
       if (err.errorMessage === 'MAIN_BANK') {

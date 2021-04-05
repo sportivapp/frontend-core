@@ -137,7 +137,7 @@ export default {
     bankAccount: {}
   }),
   methods: {
-    ...mapActions('setting', ['createCompanyBank']),
+    ...mapActions('setting', ['createCompanyBank', 'getCompanyBanks']),
     handleSaveBankAccount () {
       if (this.validateForm()) {
         const body = {
@@ -149,7 +149,7 @@ export default {
     },
     successCallback () {
       this.$emit('input', false)
-      this.$router.go(0)
+      this.getCompanyBanks()
     },
     bankAccountNumber (num) {
       let accNum = ''
