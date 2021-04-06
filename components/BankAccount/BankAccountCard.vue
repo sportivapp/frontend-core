@@ -9,7 +9,7 @@
       <v-col align-self="center" md="3">
         <v-row align="center">
           <p class="spv-caption--3 ma-0 mr-2">
-            PT. {{ bankAccount.masterBank.name }}
+            {{ bankAccount.masterBank.name }}
           </p>
 
           <v-tooltip
