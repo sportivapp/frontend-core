@@ -44,6 +44,12 @@ const api = {
     getCategorySchedule: categoryId => `/class-category/${categoryId}/schedule`,
     extendCategorySession: categoryId => `/class-category/${categoryId}/extend`,
     updateClassCategory: (classId, classCategoryId) => `/class-v2/${classId}/class-category/${classCategoryId}`
+  },
+  setting: {
+    getAllBanks: '/common/banks',
+    companyBanks: '/company-banks',
+    updateMainBank: params => `/company-banks/${params.bankUuid}/main`,
+    deleteBank: params => `/company-banks/${params.bankUuid}`
   }
 }
 
