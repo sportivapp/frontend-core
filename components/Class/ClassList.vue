@@ -48,7 +48,7 @@
       </v-card-title>
       <v-data-table
         :headers="headers"
-        :items="classList"
+        :items="classListArr"
         :loading="isTableLoading"
         disable-filtering
         disable-sort
@@ -77,7 +77,16 @@
             </div>
           </v-container>
         </template>
-        <template v-slot:item.priceRange.minPrice="{ item }">
+        <template v-if="accessFrom === 'core'" v-slot:item.startFrom="{ item }">
+          <div
+            :class="item.startFrom === 0
+              ?'class-list__table__price--free'
+              :'class-list__table__price'"
+          >
+            {{ calculatePrice(item.startFrom) }}
+          </div>
+        </template>
+        <template v-else v-slot:item.priceRange.minPrice="{ item }">
           <div
             :class="(item.priceRange.minPrice===item.priceRange.maxPrice) && (item.priceRange.minPrice===0)
               ?'class-list__table__price--free'
@@ -103,6 +112,12 @@ const LIST_TO = 10
 export default {
   name: 'ClassListComponent',
   components: { SearchBar },
+  props: {
+    accessFrom: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {
       searchTable: '',
@@ -115,7 +130,7 @@ export default {
         },
         { text: 'Tipe', value: 'industry.eindustryname' },
         { text: 'Kota', value: 'city.ecityname' },
-        { text: 'Harga', value: 'priceRange.minPrice' },
+        { text: 'Harga', value: this.$route.path.includes('/user/class') ? 'startFrom' : 'priceRange.minPrice' },
         { text: 'Peserta', value: 'totalParticipants' }
       ],
       isTableLoading: true,
@@ -128,29 +143,39 @@ export default {
       'classList',
       'classListPaging'
     ]),
+    ...mapGetters('classLanding', [
+      'classLandingList',
+      'classLandingListPaging'
+    ]),
+    classListArr () {
+      return this.accessFrom === 'core' ? this.classLandingList : this.classList
+    },
+    classListPagingSelected () {
+      return this.accessFrom === 'core' ? this.classLandingListPaging : this.classListPaging
+    },
     getStartNum () {
-      if (!this.classListPaging.totalSize || this.classListPaging.totalSize <= 0) {
+      if (!this.classListPagingSelected.totalSize || this.classListPagingSelected.totalSize <= 0) {
         return 0
       }
       return (this.LIST_TO * this.currentPage) + 1
     },
     getEndNum () {
-      if (!this.classListPaging.totalSize) { return 0 }
+      if (!this.classListPagingSelected.totalSize) { return 0 }
       const endNum = this.LIST_TO * (this.currentPage + 1)
-      if (endNum >= this.classListPaging.totalSize) {
-        return this.classListPaging.totalSize
+      if (endNum >= this.classListPagingSelected.totalSize) {
+        return this.classListPagingSelected.totalSize
       }
       return endNum
     },
     getTotalSize () {
-      return this.classListPaging.totalSize ? this.classListPaging.totalSize : 0
+      return this.classListPagingSelected.totalSize ? this.classListPagingSelected.totalSize : 0
     },
     disablePrevPageButton () {
       return this.currentPage <= 0
     },
     disableNextPageButton () {
-      if (!this.classListPaging.totalPage) { return true }
-      return (this.currentPage + 1) >= this.classListPaging.totalPage
+      if (!this.classListPagingSelected.totalPage) { return true }
+      return (this.currentPage + 1) >= this.classListPagingSelected.totalPage
     }
   },
   created () {
@@ -159,6 +184,9 @@ export default {
   methods: {
     ...mapActions('class', [
       'getClassList'
+    ]),
+    ...mapActions('classLanding', [
+      'getClassLandingList'
     ]),
     initData () {
       this.searchClass()
@@ -172,13 +200,20 @@ export default {
     },
     searchClass () {
       this.isTableLoading = true
-      this.getClassList({
-        params: this.constructParams(),
-        successCallback: this.successGetClassList
-      })
+      if (this.accessFrom === 'core') {
+        this.getClassLandingList({
+          params: this.constructParams(),
+          successCallback: this.successGetClassList
+        })
+      } else {
+        this.getClassList({
+          params: this.constructParams(),
+          successCallback: this.successGetClassList
+        })
+      }
     },
     successGetClassList () {
-      this.currentPage = this.classListPaging.page
+      this.currentPage = this.classListPagingSelected.page
       this.isTableLoading = false
     },
     handleSearch (searchString) {
@@ -191,6 +226,9 @@ export default {
       this.searchClass()
     },
     calculatePrice (priceRange) {
+      if (this.accessFrom === 'core') {
+        return convertToPrice(priceRange)
+      }
       // priceRange is an obj with keys minPrice and maxPrice
 
       if ((priceRange.minPrice === priceRange.maxPrice) && (priceRange.minPrice === 0)) {
@@ -218,7 +256,11 @@ export default {
       return bannerSrc
     },
     handleClickCreateClass () {
-      this.$router.push('/class/class-form')
+      if (this.accessFrom === 'core') {
+        this.$router.push('/user/class/class-form')
+      } else {
+        this.$router.push('/class/class-form')
+      }
     },
     handleClickRow (item) {
       this.$router.push(`/class/${item.uuid}`)

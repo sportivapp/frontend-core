@@ -160,7 +160,7 @@
             </v-col>
           </v-row>
         </div>
-        <div>
+        <div v-if="accessFrom !== 'core'">
           <v-row class="spv-heading--3 pt-7 mb-4">
             Info Pelatih
           </v-row>
@@ -234,7 +234,7 @@
           </v-row>
         </div>
         <div>
-          <v-row v-if="!isEdit" class="spv-heading--3 pt-7">
+          <v-row v-if="!isEdit" class="spv-heading--3 pt-7 pb-3">
             Kategori Kelas
           </v-row>
           <v-row v-if="!isEdit">
@@ -297,6 +297,17 @@ import ClassCategoryTable from '@/components/Class/Category/ClassCategoryTable'
 import { mapGetters, mapActions } from 'vuex'
 import validationMixin from '@/components/Class/validation.mixin'
 import { staticUrl } from '@/config/api'
+import { toFullDateWeekdayHourMinute } from '@/utils/date'
+
+const dayNumber = [
+  { code: 'MONDAY', value: 0 },
+  { code: 'TUESDAY', value: 1 },
+  { code: 'WEDNESDAY', value: 2 },
+  { code: 'THURSDAY', value: 3 },
+  { code: 'FRIDAY', value: 4 },
+  { code: 'SATURDAY', value: 5 },
+  { code: 'SUNDAY', value: 6 }
+]
 
 export default {
   name: 'ClassForm',
@@ -312,6 +323,10 @@ export default {
     isEdit: {
       type: Boolean,
       default: false
+    },
+    accessFrom: {
+      type: String,
+      default: ''
     }
   },
   data: () => ({
@@ -328,7 +343,7 @@ export default {
   }),
   // eslint-disable-next-line vue/order-in-components
   computed: {
-    ...mapGetters(['industries', 'provinces', 'cities']),
+    ...mapGetters(['industries', 'provinces', 'cities', 'user']),
     ...mapGetters('class', ['classUsers', 'userCurrentCompany'])
   },
   // eslint-disable-next-line vue/order-in-components
@@ -339,11 +354,6 @@ export default {
       }
     }
   },
-
-  created () {
-
-  },
-
   async mounted () {
     await this.getIndustries()
     await this.getUserCurrentCompany({ successCallback: this.handleGetUsers })
@@ -366,6 +376,7 @@ export default {
       'uploadFile',
       'getClassDetail']),
     ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
+    ...mapActions('classLanding', ['createClassLanding']),
     getUserAvatar (file) {
       return file ? staticUrl + file.efilename : require('@/assets/images/logos/sportiv-logo-small.png')
     },
@@ -411,18 +422,67 @@ export default {
           fileIds: this.fileIds,
           administrationFee: this.feeSwitchOn ? this.classData.administrationFee || 0 : 0
         }
-        if (this.isEdit) {
-          this.updateClass({ id: this.$route.params.classId, body: classDataBody, successCallback: this.successSaveClass })
-        } else {
-          this.createClass({ body: classDataBody, successCallback: this.successSaveClass })
+        if (this.accessFrom === 'core') {
+          classDataBody.picId = this.user.euserid
+          classDataBody.picMobileNumber = this.user.eusermobilenumber
+          classDataBody.categories = this.generateCategories(classDataBody.categories)
+          console.log(classDataBody.categories)
+          this.createClassLanding({ body: classDataBody, successCallback: this.successSaveClass })
+        } else if (this.accessFrom !== 'core') {
+          if (this.isEdit) {
+            this.updateClass({ id: this.$route.params.classId, body: classDataBody, successCallback: this.successSaveClass })
+          } else {
+            this.createClass({ body: classDataBody, successCallback: this.successSaveClass })
+          }
         }
       }
+    },
+    generateCategories (categories) {
+      const generatedCategories = []
+      for (let i = 0; i < categories.length; i++) {
+        generatedCategories.push({
+          ...categories[0],
+          sessions: this.generateSessions(
+            {
+              startMonth: categories[0].startMonth,
+              endMonth: categories[0].endMonth,
+              schedules: categories[0].schedules
+            })
+        })
+      }
+      return generatedCategories
+    },
+    generateSessions (scheduleData) {
+      const sessions = []
+      for (let i = 0; i < scheduleData.schedules.length; i++) {
+        const selectedDay = dayNumber.find(day => day.code === scheduleData.schedules[i].day)
+        const distance = (selectedDay.value + 7 - new Date(scheduleData.startMonth).getDay()) % 7
+        console.log(distance)
+        console.log(scheduleData.schedules[i])
+        let startDate = new Date(scheduleData.startMonth)
+        startDate.setDate(startDate.getDate() + distance)
+        startDate = startDate.getTime()
+        while (startDate < scheduleData.endMonth) {
+          sessions.push({
+            monthUtc: startDate,
+            startDate,
+            endDate: 1619956800000
+          })
+          console.log(toFullDateWeekdayHourMinute(startDate))
+          startDate += 604800000
+        }
+      }
+      return sessions
     },
     cancelCreateClass () {
       this.$router.push('/class')
     },
     successSaveClass () {
-      this.$router.push('/class')
+      if (this.accessFrom === 'core') {
+        this.$router.push('/user/class')
+      } else {
+        this.$router.push('/class')
+      }
     },
     async initClassData () {
       await this.getClassDetail({
