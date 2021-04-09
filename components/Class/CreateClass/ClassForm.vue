@@ -455,7 +455,6 @@ export default {
         classDataBody.picId = this.user.euserid
         classDataBody.picMobileNumber = this.user.eusermobilenumber
         classDataBody.categories = this.generateCategories(classDataBody.categories)
-        console.log(classDataBody.categories)
         this.createClassLanding({ body: classDataBody, successCallback: this.successSaveClass })
       } else if (this.accessFrom !== 'core') {
         if (this.isEdit) {
@@ -485,8 +484,6 @@ export default {
       for (let i = 0; i < scheduleData.schedules.length; i++) {
         const selectedDay = dayNumber.find(day => day.code === scheduleData.schedules[i].day)
         const distance = (selectedDay.value + 7 - new Date(scheduleData.startMonth).getDay()) % 7
-        console.log(distance)
-        console.log(scheduleData.schedules[i])
         let startDate = new Date(scheduleData.startMonth)
         startDate.setDate(startDate.getDate() + distance)
         startDate = startDate.getTime()
@@ -496,7 +493,6 @@ export default {
             startDate,
             endDate: 1619956800000
           })
-          console.log(toFullDateWeekdayHourMinute(startDate))
           startDate += 604800000
         }
       }

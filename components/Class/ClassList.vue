@@ -171,7 +171,6 @@ export default {
       'classLandingListPaging'
     ]),
     classListArr () {
-      console.log(this.classLandingList)
       return this.accessFrom === 'core' ? this.classLandingList : this.classList
     },
     classListPagingSelected () {
