@@ -43,11 +43,11 @@ export default {
     showModal: false,
     bankAccountList: []
   }),
-  created () {
-    this.getAllBanks()
-  },
   computed: {
     ...mapGetters('setting', ['allBanks'])
+  },
+  created () {
+    this.getAllBanks()
   },
   methods: {
     ...mapActions('setting', ['getAllBanks']),
