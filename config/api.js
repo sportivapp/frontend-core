@@ -48,6 +48,12 @@ const api = {
   classLanding: {
     createClass: '/landing/class-v2',
     classList: params => `/landing/class-v2${serializeQueryParams(params)}`
+  },
+  setting: {
+    getAllBanks: '/common/banks',
+    companyBanks: '/company-banks',
+    updateMainBank: params => `/company-banks/${params.bankUuid}/main`,
+    deleteBank: params => `/company-banks/${params.bankUuid}`
   }
 }
 
