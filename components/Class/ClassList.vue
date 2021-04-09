@@ -1,7 +1,6 @@
 <template>
   <v-container class="ma-0 pa-0 class-list" fluid>
     <v-row align="center" justify="end" no-gutters>
-      <v-spacer />
       <v-col align-self="center" cols="4">
         <search-bar
           label="Search"
@@ -12,6 +11,7 @@
         <v-btn
           depressed
           dark
+          height="45px"
           color="#FF7D43"
           class="px-7"
           @click="handleClickCreateClass"
@@ -22,6 +22,7 @@
           Tambah Kelas
         </v-btn>
       </v-col>
+      <v-spacer v-if="accessFrom === 'core'" />
       <v-col align-self="center" cols="3">
         <v-row align="center" justify="end" no-gutters>
           {{ getStartNum }}-{{ getEndNum }} dari {{ getTotalSize }}
@@ -48,7 +49,7 @@
       </v-card-title>
       <v-data-table
         :headers="headers"
-        :items="classList"
+        :items="classListArr"
         :loading="isTableLoading"
         disable-filtering
         disable-sort
@@ -65,19 +66,50 @@
         </template>
         <template v-slot:item.title="{ item }">
           <v-container class="ma-0 pa-0 pl-12 py-3 d-flex justify-start align-content-center">
-            <v-img
-              max-height="60"
-              max-width="107"
-              :src="getClassBanner(item.classMedia)"
-              :lazy-src="require('@/assets/images/bg/orange_background.png')"
-              class="rounded"
-            />
-            <div class="class-list__table__title">
-              {{ item.title }}
-            </div>
+            <v-row align="center">
+              <v-col md="4" class="py-0">
+                <v-img
+                  max-height="60"
+                  max-width="107"
+                  :src="getClassBanner(item.classMedia)"
+                  :lazy-src="require('@/assets/images/bg/orange_background.png')"
+                  class="rounded"
+                />
+              </v-col>
+              <v-col class="py-0">
+                <v-row class="pa-0">
+                  <div class="class-list__table__title">
+                    {{ item.title }}
+                  </div>
+                </v-row>
+                <v-row v-if="accessFrom === 'core' && item.company" class="pa-0" align="center">
+                  <v-avatar size="16" class="ml-2">
+                    <v-img
+                      max-height="60"
+                      max-width="107"
+                      :src="getClassBanner(item.company&&item.company.logo)"
+                      :lazy-src="require('@/assets/images/bg/orange_background.png')"
+                      class="rounded"
+                    />
+                  </v-avatar>
+                  <span class="spv-body--3 grey--text ml-2">
+                    {{ item.company && item.company.ecompanyname }}
+                  </span>
+                </v-row>
+              </v-col>
+            </v-row>
           </v-container>
         </template>
-        <template v-slot:item.priceRange.minPrice="{ item }">
+        <template v-if="accessFrom === 'core'" v-slot:item.startFrom="{ item }">
+          <div
+            :class="item.startFrom === 0
+              ?'class-list__table__price--free'
+              :'class-list__table__price'"
+          >
+            {{ calculatePrice(item.startFrom) }}
+          </div>
+        </template>
+        <template v-else v-slot:item.priceRange.minPrice="{ item }">
           <div
             :class="(item.priceRange.minPrice===item.priceRange.maxPrice) && (item.priceRange.minPrice===0)
               ?'class-list__table__price--free'
@@ -103,6 +135,12 @@ const LIST_TO = 10
 export default {
   name: 'ClassListComponent',
   components: { SearchBar },
+  props: {
+    accessFrom: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {
       searchTable: '',
@@ -115,7 +153,7 @@ export default {
         },
         { text: 'Tipe', value: 'industry.eindustryname' },
         { text: 'Kota', value: 'city.ecityname' },
-        { text: 'Harga', value: 'priceRange.minPrice' },
+        { text: this.$route.path.includes('/user/class') ? 'Harga mulai dari' : 'Harga', value: this.$route.path.includes('/user/class') ? 'startFrom' : 'priceRange.minPrice' },
         { text: 'Peserta', value: 'totalParticipants' }
       ],
       isTableLoading: true,
@@ -128,29 +166,39 @@ export default {
       'classList',
       'classListPaging'
     ]),
+    ...mapGetters('classLanding', [
+      'classLandingList',
+      'classLandingListPaging'
+    ]),
+    classListArr () {
+      return this.accessFrom === 'core' ? this.classLandingList : this.classList
+    },
+    classListPagingSelected () {
+      return this.accessFrom === 'core' ? this.classLandingListPaging : this.classListPaging
+    },
     getStartNum () {
-      if (!this.classListPaging.totalSize || this.classListPaging.totalSize <= 0) {
+      if (!this.classListPagingSelected.totalSize || this.classListPagingSelected.totalSize <= 0) {
         return 0
       }
       return (this.LIST_TO * this.currentPage) + 1
     },
     getEndNum () {
-      if (!this.classListPaging.totalSize) { return 0 }
+      if (!this.classListPagingSelected.totalSize) { return 0 }
       const endNum = this.LIST_TO * (this.currentPage + 1)
-      if (endNum >= this.classListPaging.totalSize) {
-        return this.classListPaging.totalSize
+      if (endNum >= this.classListPagingSelected.totalSize) {
+        return this.classListPagingSelected.totalSize
       }
       return endNum
     },
     getTotalSize () {
-      return this.classListPaging.totalSize ? this.classListPaging.totalSize : 0
+      return this.classListPagingSelected.totalSize ? this.classListPagingSelected.totalSize : 0
     },
     disablePrevPageButton () {
       return this.currentPage <= 0
     },
     disableNextPageButton () {
-      if (!this.classListPaging.totalPage) { return true }
-      return (this.currentPage + 1) >= this.classListPaging.totalPage
+      if (!this.classListPagingSelected.totalPage) { return true }
+      return (this.currentPage + 1) >= this.classListPagingSelected.totalPage
     }
   },
   created () {
@@ -159,6 +207,9 @@ export default {
   methods: {
     ...mapActions('class', [
       'getClassList'
+    ]),
+    ...mapActions('classLanding', [
+      'getClassLandingList'
     ]),
     initData () {
       this.searchClass()
@@ -172,13 +223,20 @@ export default {
     },
     searchClass () {
       this.isTableLoading = true
-      this.getClassList({
-        params: this.constructParams(),
-        successCallback: this.successGetClassList
-      })
+      if (this.accessFrom === 'core') {
+        this.getClassLandingList({
+          params: this.constructParams(),
+          successCallback: this.successGetClassList
+        })
+      } else {
+        this.getClassList({
+          params: this.constructParams(),
+          successCallback: this.successGetClassList
+        })
+      }
     },
     successGetClassList () {
-      this.currentPage = this.classListPaging.page
+      this.currentPage = this.classListPagingSelected.page
       this.isTableLoading = false
     },
     handleSearch (searchString) {
@@ -191,6 +249,12 @@ export default {
       this.searchClass()
     },
     calculatePrice (priceRange) {
+      if (this.accessFrom === 'core') {
+        if (priceRange === 0) {
+          return this.$t('tournament.priceFree')
+        }
+        return convertToPrice(priceRange)
+      }
       // priceRange is an obj with keys minPrice and maxPrice
 
       if ((priceRange.minPrice === priceRange.maxPrice) && (priceRange.minPrice === 0)) {
@@ -203,9 +267,10 @@ export default {
         ? minPrice + '/bulan'
         : minPrice + ' - ' + maxPrice + '/bulan'
     },
-    getClassBanner (classMedia) {
+    getClassBanner (classMedia = []) {
       // classMedia is array of obj
       let bannerSrc = null
+      if (classMedia === null) { return bannerSrc }
       if (classMedia.length < 1) { return bannerSrc }
       for (let i = 0; i < classMedia.length; i++) {
         if (classMedia[i].file.efiletype.startsWith('image')) {
@@ -218,10 +283,18 @@ export default {
       return bannerSrc
     },
     handleClickCreateClass () {
-      this.$router.push('/class/class-form')
+      if (this.accessFrom === 'core') {
+        this.$router.push('/user/class/class-form')
+      } else {
+        this.$router.push('/class/class-form')
+      }
     },
     handleClickRow (item) {
-      this.$router.push(`/class/${item.uuid}`)
+      if (this.accessFrom === 'core') {
+
+      } else {
+        this.$router.push(`/class/${item.uuid}`)
+      }
     }
   }
 }

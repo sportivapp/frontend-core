@@ -296,6 +296,15 @@ export default () => {
         categoryDeleteModalTitle: 'Delete Class Category',
         categoryDeleteMessage: 'Are you sure you want to delete this category now?',
         categoryDeleteSuccess: 'Success delete class category'
+      },
+      userClass: {
+        createClassCancelModalTitle: 'Cancel create class?',
+        createClassCancelMessage: 'Inputed data not saved',
+        cancelCancel: 'No',
+        cancelAction: 'Cancel',
+        createClassSaveModalTitle: 'Add class?',
+        createClassSaveMessage: 'With This you will create a new class',
+        saveAction: 'Add'
       }
     })
   })

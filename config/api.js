@@ -45,6 +45,10 @@ const api = {
     extendCategorySession: categoryId => `/class-category/${categoryId}/extend`,
     updateClassCategory: (classId, classCategoryId) => `/class-v2/${classId}/class-category/${classCategoryId}`
   },
+  classLanding: {
+    createClass: '/landing/class-v2',
+    classList: params => `/landing/class-v2${serializeQueryParams(params)}`
+  },
   setting: {
     getAllBanks: '/common/banks',
     companyBanks: '/company-banks',
