@@ -1,7 +1,42 @@
 <template>
   <v-container class="ma-0 pa-0 class-category-info" fluid>
+    <update-schedule-modal
+      v-model="showModal"
+      :category-sessions="info.categorySessions"
+    />
     <v-row>
       <v-col class="py-0" cols="auto" md="7">
+        <v-row>
+          <v-card
+            v-if="showReminder"
+            class="mx-4 px-4 mb-4"
+            style="border:1px solid #F4B718"
+            outlined=""
+            rounded=""
+            color="#FFF3D3"
+          >
+            <v-row align="center">
+              <v-col align-self="center" cols="1">
+                <v-icon size="20" color="#F4B718">
+                  mdi-alert
+                </v-icon>
+              </v-col>
+              <v-col align-self="center">
+                <p class="ma-0 spv-subtitle--3">
+                  Kategori kelas Anda akan berakhir pada tanggal {{ lastSession }}. Perpanjang
+                  sekarang <span class="green--text action-text" @click="showModal=true">disini</span>.
+                </p>
+              </v-col>
+              <v-col cols="1">
+                <v-btn icon @click="showReminder = false">
+                  <v-icon size="14">
+                    mdi-close
+                  </v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-row>
         <v-row>
           <v-col class="py-0" cols="auto" md="12">
             <h3 class="class-category-info__title pb-3">
@@ -101,9 +136,13 @@
 
 <script>
 import { convertToPrice } from '@/utils/price.js'
-
+import UpdateScheduleModal from '@/components/Class/ClassCategory/Modal/UpdateScheduleModal'
+import { toFullDateHourMinute } from '@/utils/date.js'
 export default {
   name: 'ClassCategoryInfo',
+  components: {
+    UpdateScheduleModal
+  },
   props: {
     info: {
       type: Object,
@@ -112,10 +151,15 @@ export default {
   },
   data () {
     return {
-      showMoreCoach: false
+      showMoreCoach: false,
+      showReminder: true,
+      showModal: false
     }
   },
   computed: {
+    lastSession () {
+      return this.info ? toFullDateHourMinute(this.info.categorySessions[this.info.categorySessions.length - 1].endDate) : '...'
+    },
     handlePrice () {
       if (!this.info.price || this.info.price === '0') { return 'Gratis' }
       return convertToPrice(this.info.price) + '/bulan'
@@ -171,5 +215,8 @@ export default {
       line-height: 18px;
       cursor: pointer;
     }
+}
+.action-text{
+  cursor: pointer;
 }
 </style>
