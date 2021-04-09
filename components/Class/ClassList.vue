@@ -1,7 +1,6 @@
 <template>
   <v-container class="ma-0 pa-0 class-list" fluid>
     <v-row align="center" justify="end" no-gutters>
-      <v-spacer />
       <v-col align-self="center" cols="4">
         <search-bar
           label="Search"
@@ -12,6 +11,7 @@
         <v-btn
           depressed
           dark
+          height="45px"
           color="#FF7D43"
           class="px-7"
           @click="handleClickCreateClass"
@@ -22,6 +22,7 @@
           Tambah Kelas
         </v-btn>
       </v-col>
+      <v-spacer v-if="accessFrom === 'core'" />
       <v-col align-self="center" cols="3">
         <v-row align="center" justify="end" no-gutters>
           {{ getStartNum }}-{{ getEndNum }} dari {{ getTotalSize }}
@@ -65,16 +66,38 @@
         </template>
         <template v-slot:item.title="{ item }">
           <v-container class="ma-0 pa-0 pl-12 py-3 d-flex justify-start align-content-center">
-            <v-img
-              max-height="60"
-              max-width="107"
-              :src="getClassBanner(item.classMedia)"
-              :lazy-src="require('@/assets/images/bg/orange_background.png')"
-              class="rounded"
-            />
-            <div class="class-list__table__title">
-              {{ item.title }}
-            </div>
+            <v-row align="center">
+              <v-col md="4" class="py-0">
+                <v-img
+                  max-height="60"
+                  max-width="107"
+                  :src="getClassBanner(item.classMedia)"
+                  :lazy-src="require('@/assets/images/bg/orange_background.png')"
+                  class="rounded"
+                />
+              </v-col>
+              <v-col class="py-0">
+                <v-row class="pa-0">
+                  <div class="class-list__table__title">
+                    {{ item.title }}
+                  </div>
+                </v-row>
+                <v-row v-if="accessFrom === 'core' && item.company" class="pa-0" align="center">
+                  <v-avatar size="16" class="ml-2">
+                    <v-img
+                      max-height="60"
+                      max-width="107"
+                      :src="getClassBanner(item.company&&item.company.logo)"
+                      :lazy-src="require('@/assets/images/bg/orange_background.png')"
+                      class="rounded"
+                    />
+                  </v-avatar>
+                  <span class="spv-body--3 grey--text ml-2">
+                    {{ item.company && item.company.ecompanyname }}
+                  </span>
+                </v-row>
+              </v-col>
+            </v-row>
           </v-container>
         </template>
         <template v-if="accessFrom === 'core'" v-slot:item.startFrom="{ item }">
@@ -130,7 +153,7 @@ export default {
         },
         { text: 'Tipe', value: 'industry.eindustryname' },
         { text: 'Kota', value: 'city.ecityname' },
-        { text: 'Harga', value: this.$route.path.includes('/user/class') ? 'startFrom' : 'priceRange.minPrice' },
+        { text: this.$route.path.includes('/user/class') ? 'Harga mulai dari' : 'Harga', value: this.$route.path.includes('/user/class') ? 'startFrom' : 'priceRange.minPrice' },
         { text: 'Peserta', value: 'totalParticipants' }
       ],
       isTableLoading: true,
@@ -148,6 +171,7 @@ export default {
       'classLandingListPaging'
     ]),
     classListArr () {
+      console.log(this.classLandingList)
       return this.accessFrom === 'core' ? this.classLandingList : this.classList
     },
     classListPagingSelected () {
@@ -227,6 +251,9 @@ export default {
     },
     calculatePrice (priceRange) {
       if (this.accessFrom === 'core') {
+        if (priceRange === 0) {
+          return this.$t('tournament.priceFree')
+        }
         return convertToPrice(priceRange)
       }
       // priceRange is an obj with keys minPrice and maxPrice
@@ -241,9 +268,10 @@ export default {
         ? minPrice + '/bulan'
         : minPrice + ' - ' + maxPrice + '/bulan'
     },
-    getClassBanner (classMedia) {
+    getClassBanner (classMedia = []) {
       // classMedia is array of obj
       let bannerSrc = null
+      if (classMedia === null) { return bannerSrc }
       if (classMedia.length < 1) { return bannerSrc }
       for (let i = 0; i < classMedia.length; i++) {
         if (classMedia[i].file.efiletype.startsWith('image')) {
@@ -263,7 +291,11 @@ export default {
       }
     },
     handleClickRow (item) {
-      this.$router.push(`/class/${item.uuid}`)
+      if (this.accessFrom === 'core') {
+
+      } else {
+        this.$router.push(`/class/${item.uuid}`)
+      }
     }
   }
 }

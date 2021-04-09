@@ -286,6 +286,28 @@
         {{ isEdit?'Simpan':'Tambah Kelas' }}
       </v-btn>
     </v-row>
+    <simple-prompt
+      :show="showCancelModal"
+      :title="$t('userClass.createClassCancelModalTitle')"
+      :message="$t('userClass.createClassCancelMessage')"
+      action-color="#FF3333"
+      :cancel-text="$t('userClass.cancelCancel')"
+      :action-text="$t('userClass.cancelAction')"
+      @update:show="showCancelModal = false"
+      @click:cancel="showCancelModal = false"
+      @click:action="handleCancelCreateClass"
+    />
+    <simple-prompt
+      :show="showSaveModal"
+      :title="$t('userClass.createClassSaveModalTitle')"
+      :message="$t('userClass.createClassSaveMessage')"
+      action-color="#0AB281"
+      :cancel-text="$t('userClass.cancelCancel')"
+      :action-text="$t('userClass.saveAction')"
+      @update:show="showSaveModal = false"
+      @click:cancel="showSaveModal = false"
+      @click:action="handleSaveClass"
+    />
   </v-container>
 </template>
 
@@ -298,6 +320,7 @@ import { mapGetters, mapActions } from 'vuex'
 import validationMixin from '@/components/Class/validation.mixin'
 import { staticUrl } from '@/config/api'
 import { toFullDateWeekdayHourMinute } from '@/utils/date'
+import SimplePrompt from '@/components/Modal/SimplePrompt'
 
 const dayNumber = [
   { code: 'MONDAY', value: 0 },
@@ -315,8 +338,8 @@ export default {
     Editor,
     CoachTable,
     UploadFile,
-    ClassCategoryTable
-
+    ClassCategoryTable,
+    SimplePrompt
   },
   mixins: [validationMixin],
   props: {
@@ -339,7 +362,9 @@ export default {
       classCoachUserIds: []
     },
     rawFiles: [],
-    fileIds: []
+    fileIds: [],
+    showCancelModal: false,
+    showSaveModal: false
   }),
   // eslint-disable-next-line vue/order-in-components
   computed: {
@@ -413,27 +438,30 @@ export default {
     successUploadFile (uploadedFile) {
       this.fileIds.push(uploadedFile.efileid)
     },
-    async createNewClass () {
+    createNewClass () {
       if (this.validateForm()) {
-        await this.doUploadFiles(this.rawFiles)
-        const classDataBody = {
-          ...this.classData,
-          picMobileNumber: '+62' + this.classData.picMobileNumber,
-          fileIds: this.fileIds,
-          administrationFee: this.feeSwitchOn ? this.classData.administrationFee || 0 : 0
-        }
-        if (this.accessFrom === 'core') {
-          classDataBody.picId = this.user.euserid
-          classDataBody.picMobileNumber = this.user.eusermobilenumber
-          classDataBody.categories = this.generateCategories(classDataBody.categories)
-          console.log(classDataBody.categories)
-          this.createClassLanding({ body: classDataBody, successCallback: this.successSaveClass })
-        } else if (this.accessFrom !== 'core') {
-          if (this.isEdit) {
-            this.updateClass({ id: this.$route.params.classId, body: classDataBody, successCallback: this.successSaveClass })
-          } else {
-            this.createClass({ body: classDataBody, successCallback: this.successSaveClass })
-          }
+        this.showSaveModal = true
+      }
+    },
+    async handleSaveClass () {
+      await this.doUploadFiles(this.rawFiles)
+      const classDataBody = {
+        ...this.classData,
+        picMobileNumber: '+62' + this.classData.picMobileNumber,
+        fileIds: this.fileIds,
+        administrationFee: this.feeSwitchOn ? this.classData.administrationFee || 0 : 0
+      }
+      if (this.accessFrom === 'core') {
+        classDataBody.picId = this.user.euserid
+        classDataBody.picMobileNumber = this.user.eusermobilenumber
+        classDataBody.categories = this.generateCategories(classDataBody.categories)
+        console.log(classDataBody.categories)
+        this.createClassLanding({ body: classDataBody, successCallback: this.successSaveClass })
+      } else if (this.accessFrom !== 'core') {
+        if (this.isEdit) {
+          this.updateClass({ id: this.$route.params.classId, body: classDataBody, successCallback: this.successSaveClass })
+        } else {
+          this.createClass({ body: classDataBody, successCallback: this.successSaveClass })
         }
       }
     },
@@ -475,7 +503,10 @@ export default {
       return sessions
     },
     cancelCreateClass () {
-      this.$router.push('/class')
+      this.showCancelModal = true
+    },
+    handleCancelCreateClass () {
+      this.$router.push('/user/class')
     },
     successSaveClass () {
       if (this.accessFrom === 'core') {
