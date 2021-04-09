@@ -319,7 +319,6 @@ import ClassCategoryTable from '@/components/Class/Category/ClassCategoryTable'
 import { mapGetters, mapActions } from 'vuex'
 import validationMixin from '@/components/Class/validation.mixin'
 import { staticUrl } from '@/config/api'
-import { toFullDateWeekdayHourMinute } from '@/utils/date'
 import SimplePrompt from '@/components/Modal/SimplePrompt'
 
 const dayNumber = [
