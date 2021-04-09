@@ -158,7 +158,7 @@ export default {
   },
   computed: {
     lastSession () {
-      return this.info ? toFullDateHourMinute(this.info.categorySessions[this.info.categorySessions.length - 1].endDate) : '...'
+      return this.info.categorySessions ? toFullDateHourMinute(this.info.categorySessions[this.info.categorySessions.length - 1].endDate) : '...'
     },
     handlePrice () {
       if (!this.info.price || this.info.price === '0') { return 'Gratis' }
