@@ -238,7 +238,13 @@
             Kategori Kelas
           </v-row>
           <v-row v-if="!isEdit">
+            <class-landing-category-table
+              v-if="accessFrom === 'core'"
+              v-model="classData.categories"
+              :class-coach-user-ids="classData.classCoachUserIds"
+            />
             <class-category-table
+              v-else
               v-model="classData.categories"
               :class-coach-user-ids="classData.classCoachUserIds"
             />
@@ -316,6 +322,7 @@ import Editor from '@/components/TextEditor/Editor'
 import CoachTable from '@/components/Class/CreateClass/CoachTable'
 import UploadFile from '@/components/Class/CreateClass/UploadFileNew'
 import ClassCategoryTable from '@/components/Class/Category/ClassCategoryTable'
+import ClassLandingCategoryTable from '@/components/Class/Category/ClassLandingCategoryTable'
 import { mapGetters, mapActions } from 'vuex'
 import validationMixin from '@/components/Class/validation.mixin'
 import { staticUrl } from '@/config/api'
@@ -338,7 +345,8 @@ export default {
     CoachTable,
     UploadFile,
     ClassCategoryTable,
-    SimplePrompt
+    SimplePrompt,
+    ClassLandingCategoryTable
   },
   mixins: [validationMixin],
   props: {
