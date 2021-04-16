@@ -32,3 +32,4 @@ LABEL maintainer "Yefta Sutanto <yeftasutanto@gmail.com>"
 LABEL org.opencontainers.image.source https://github.com/sportivapp/frontend-core
 
 COPY --from=builder /app/sportivapp/frontend-core/dist /usr/share/nginx/html
+COPY --from=builder /app/sportivapp/frontend-organization/default.conf /etc/nginx/conf.d/default.conf
