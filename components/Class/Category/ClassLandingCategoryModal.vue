@@ -328,7 +328,10 @@
             </v-row>
           </v-container>
         </v-form>
-        <preview-session-list v-else />
+        <preview-session-list
+          v-else
+          :sessions="generatedSessions"
+        />
         <v-row
           justify="end"
           align="center"
@@ -395,7 +398,7 @@ import { dateToMonthAndYear } from '@/utils/date'
 import { duplicateObject } from '@/utils/object'
 import { convertToPrice } from '@/utils/price'
 import validationMixin from '@/components/Class/validationCategory.mixin'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import PreviewSessionList from '@/components/Class/Category/PreviewSessionList'
 
 export default {
@@ -436,6 +439,10 @@ export default {
     accessFrom: {
       type: String,
       default: 'core'
+    },
+    selectedCity: {
+      type: Number,
+      default: 1
     }
   },
   data () {
@@ -444,15 +451,7 @@ export default {
       categoryDescription: '',
       categoryRequirement: '',
       priceOption: 1,
-      categorySchedules: [
-        {
-          day: 'MONDAY',
-          startHour: 10,
-          startMinute: 0,
-          endHour: 12,
-          endMinute: 0
-        }
-      ],
+      categorySchedules: [],
       categoryPrice: 0,
       periodMenu: null,
       categoryPeriod: [],
@@ -470,6 +469,8 @@ export default {
 
   computed: {
     ...mapGetters('class', ['classUsers']),
+    ...mapGetters('classLanding', ['generatedSessions']),
+
     classForm () {
       return this.$refs.classForm
     },
@@ -543,6 +544,7 @@ export default {
     this.init()
   },
   methods: {
+    ...mapActions('classLanding', ['generateSessions']),
     print () {
       console.log(this.categoryPeriod)
     },
@@ -566,7 +568,25 @@ export default {
       this.isPreview = false
     },
     handleClickNext () {
+      const body = {
+        cityId: this.selectedCity,
+        start: this.startMonthDate.getTime(),
+        end: this.endMonthDate.getTime(),
+        schedules: this.convertSchedule()
+      }
+      this.generateSessions({ body })
       this.isPreview = true
+    },
+    convertSchedule () {
+      console.log(this.categorySchedules)
+      const schedules = this.categorySchedules.map((schedule) => {
+        return {
+          start: schedule.startTimeDate,
+          end: schedule.endTimeDate,
+          isWeekly: schedule.isRecurring
+        }
+      })
+      return schedules
     },
     handleClickSave () {
       // if (this.validateForm()) {
@@ -582,7 +602,7 @@ export default {
     },
     init () {
       if (this.initialData) {
-        this.initDataFromProps()
+        // this.initDataFromProps()
       }
     },
     initDataFromProps () {

@@ -207,7 +207,7 @@ export default {
     handleChange () {
       const session = {
         startTimeDate: this.generateDate(this.selectedDate, this.startTime),
-        endDateTime: this.generateDate(this.selectedDate, this.endTime),
+        endTimeDate: this.generateDate(this.selectedDate, this.endTime),
         isRecurring: this.isRecurring,
         price: this.fee
       }
@@ -221,7 +221,7 @@ export default {
         dt.setMinutes(timeArr[1])
         console.log(dt)
       }
-      return dt.getTime
+      return dt.getTime()
     }
   }
 }

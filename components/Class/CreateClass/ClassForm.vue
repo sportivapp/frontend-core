@@ -242,6 +242,7 @@
               v-if="accessFrom === 'core'"
               v-model="classData.categories"
               :class-coach-user-ids="classData.classCoachUserIds"
+              :selected-city="classData.cityId"
             />
             <class-category-table
               v-else

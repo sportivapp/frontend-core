@@ -67,6 +67,7 @@
       :index="selectedIndex"
       :initial-data="selectedCategory"
       :class-coach-user-ids="classCoachUserIds"
+      :selected-city="selectedCity"
       @close="handleCloseCategoryModal"
       @save="handleSave"
       @edit="handleEdit"
@@ -97,6 +98,10 @@ export default {
     classCoachUserIds: {
       type: Array,
       default: () => ([])
+    },
+    selectedCity: {
+      type: Number,
+      default: 1
     }
   },
   data () {
