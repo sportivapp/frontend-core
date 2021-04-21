@@ -42,11 +42,12 @@ import CategoryLandingScheduleListItem from '@/components/Class/Category/Categor
 import { duplicateObject } from '@/utils/object'
 
 const defaultAddNewSchedule = {
-  day: 'MONDAY',
-  startHour: 10,
-  startMinute: 0,
-  endHour: 12,
-  endMinute: 0
+  startTimeDate: null,
+  endTimeDate: null,
+  isRecurring: false,
+  price: 0,
+  startTime: null,
+  endTime: null
 }
 
 export default {

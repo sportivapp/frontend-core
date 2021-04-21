@@ -51,7 +51,7 @@
         </tr>
       </template>
       <template v-slot:item="{ item, index }">
-        <class-category-table-row
+        <class-landing-category-row
           :category="item"
           @edit="handleClickEdit(index)"
           @delete="handleClickDelete(index)"

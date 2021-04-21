@@ -34,6 +34,17 @@ const milisecondToFullDateShortMonth = (timestamp) => {
   return date.toLocaleDateString('id-ID', options)
 }
 
+const milisecondForDatePicker = (timestamp) => {
+  const date = new Date(parseInt(timestamp, 10))
+  const options = {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit'
+  }
+
+  return date.toISOString('id-ID', options).substr(0, 10)
+}
+
 const dateToMonthAndYear = (date) => {
   const options = {
     month: 'long',
@@ -101,5 +112,6 @@ export {
   dateToHourAndMinute,
   toFullDateWeekdayHourMinute,
   milisecondToLongFullDate,
-  msToHourMinute
+  msToHourMinute,
+  milisecondForDatePicker
 }

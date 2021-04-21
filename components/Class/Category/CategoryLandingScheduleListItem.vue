@@ -133,7 +133,7 @@
       </v-row>
     </v-col>
     <v-col cols="auto" class="pa-0 ma-0 ">
-      <v-btn icon="" @click="$emit('delete')">
+      <v-btn icon="" @click="$emit('delete', index)">
         <v-icon size="24">
           mdi-delete
         </v-icon>
@@ -143,10 +143,14 @@
 </template>
 
 <script>
-import { milisecondToFullDate } from '@/utils/date'
+import { milisecondToFullDate, milisecondForDatePicker } from '@/utils/date'
 export default {
   name: 'CategoryLandingScheduleListItem',
   props: {
+    value: {
+      type: Object,
+      default: () => ({})
+    },
     isFeePerSession: {
       type: Boolean,
       required: true
@@ -158,6 +162,10 @@ export default {
     categoryPeriod: {
       type: Array,
       default: () => []
+    },
+    index: {
+      type: Number,
+      default: 0
     }
   },
   data: () => ({
@@ -195,21 +203,32 @@ export default {
     }
   },
   watch: {
-    categoryPeriod: {
+    value: {
       handler (v) {
-        console.log(v)
+        if (v) {
+          this.initData(v)
+        }
       },
       deep: true,
       immediate: true
     }
   },
   methods: {
+    initData (v) {
+      this.selectedDate = v.startTimeDate ? milisecondForDatePicker(v.startTimeDate) : new Date().toISOString().substr(0, 10)
+      this.isRecurring = v.isRecurring
+      this.startTime = v.startTime
+      this.endTime = v.endTime
+      this.fee = v.price
+    },
     handleChange () {
       const session = {
         startTimeDate: this.generateDate(this.selectedDate, this.startTime),
         endTimeDate: this.generateDate(this.selectedDate, this.endTime),
         isRecurring: this.isRecurring,
-        price: this.fee
+        price: this.isFeePerSession ? this.fee : 0,
+        startTime: this.startTime,
+        endTime: this.endTime
       }
       this.$emit('input', session)
     },
@@ -219,7 +238,6 @@ export default {
         const timeArr = time.split(':')
         dt.setHours(timeArr[0])
         dt.setMinutes(timeArr[1])
-        console.log(dt)
       }
       return dt.getTime()
     }

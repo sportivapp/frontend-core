@@ -3,15 +3,18 @@
     <v-row>
       <span class="spv-subtitle--1 grey--text">Berikut adalah daftar sesi kelas berdasarkan pengaturan sebelumnya.</span>
     </v-row>
-    <v-row>
-      <span class="spv-subtitle--2">Harga Paket : Rp350.000 / bulan</span>
+    <v-row v-if="packetFee">
+      <span class="spv-subtitle--2">Harga Paket : Rp{{ packetFee }} / bulan</span>
     </v-row>
     <v-row>
-      <v-data-table
-        :headers="headers"
-        :disable-pagination="true"
-        :items="generatedSessions"
-      />
+      <v-col cols="12">
+        <v-data-table
+          height="450"
+          :headers="headers"
+          :disable-pagination="true"
+          :items="generatedSessions"
+        />
+      </v-col>
     </v-row>
   </v-sheet>
 </template>
@@ -24,6 +27,10 @@ export default {
     sessions: {
       type: Array,
       default: () => []
+    },
+    packetFee: {
+      type: Number,
+      default: null
     }
   },
   data: () => ({
@@ -53,7 +60,8 @@ export default {
       return sessions.map((session) => {
         return {
           date: milisecondToLongFullDate(session.startDate),
-          time: msToHourMinute(session.startDate) + '-' + msToHourMinute(session.endDate)
+          time: msToHourMinute(session.startDate) + '-' + msToHourMinute(session.endDate),
+          price: 'Rp.' + session.price
         }
       })
     }

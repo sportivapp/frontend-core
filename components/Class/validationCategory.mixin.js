@@ -11,36 +11,36 @@ export default {
             return this.minParticipant < this.maxParticipant
           }
         },
-        categorySchedules: {
-          required,
-          hourValid: (v) => {
-            for (let i = 0; i < v.length; i++) {
-              if (v[i].endHour < v[i].startHour) {
-                return false
-              } else if (v[i].endHour === v[i].startHour) {
-                if (v[i].endMinute <= v[i].startMinute) {
-                  return false
-                }
-              }
-            }
-            return true
-          },
-          timeValid: (v) => {
-            for (let i = 0; i < v.length - 1; i++) {
-              for (let j = i + 1; j < v.length; j++) {
-                if (v[i].day === v[j].day) {
-                  if (!(Number(v[j].startHour) < Number(v[i].startHour) ||
-                Number(v[j].startHour) > Number(v[i].endHour)) ||
-                !(Number(v[j].endHour) < Number(v[i].startHour) ||
-                Number(v[j].endHour) > Number(v[i].endHour))) {
-                    return false
-                  }
-                }
-              }
-            }
-            return true
-          }
-        },
+        // categorySchedules: {
+        //   required,
+        //   hourValid: (v) => {
+        //     for (let i = 0; i < v.length; i++) {
+        //       if (v[i].endHour < v[i].startHour) {
+        //         return false
+        //       } else if (v[i].endHour === v[i].startHour) {
+        //         if (v[i].endMinute <= v[i].startMinute) {
+        //           return false
+        //         }
+        //       }
+        //     }
+        //     return true
+        //   },
+        //   timeValid: (v) => {
+        //     for (let i = 0; i < v.length - 1; i++) {
+        //       for (let j = i + 1; j < v.length; j++) {
+        //         if (v[i].day === v[j].day) {
+        //           if (!(Number(v[j].startHour) < Number(v[i].startHour) ||
+        //         Number(v[j].startHour) > Number(v[i].endHour)) ||
+        //         !(Number(v[j].endHour) < Number(v[i].startHour) ||
+        //         Number(v[j].endHour) > Number(v[i].endHour))) {
+        //             return false
+        //           }
+        //         }
+        //       }
+        //     }
+        //     return true
+        //   }
+        // },
         categoryPeriod: {
           required,
           validPeriodRange: (v) => {
@@ -50,12 +50,6 @@ export default {
               return positifTotalMonth < 3
             }
             return false
-          }
-        },
-        categoryCoachUserIds: {
-          required,
-          firstArrayIsFilled: (v) => {
-            return v[0] !== null
           }
         }
       }

@@ -270,7 +270,6 @@
                         :min="todayDate"
                         @input="$v.categoryPeriod.$touch()"
                         @blur="$v.categoryPeriod.$touch()"
-                        @change="print"
                       />
                     </v-row>
                     <v-row
@@ -305,12 +304,10 @@
                 :is-fee-per-session="isFeePerSession"
                 :session-fee="sessionFee"
                 :category-period="categoryPeriodConvert"
-                @input="$v.categorySchedules.$touch()"
-                @validate="$v.categorySchedules.$touch()"
               />
-              <small v-if="$v.categorySchedules.$error" class="red--text pl-2">
+              <!-- <small v-if="$v.categorySchedules.$error" class="red--text pl-2">
                 {{ categorySchedulesErrors[categorySchedulesErrors.length-1] }}
-              </small>
+              </small> -->
             </v-row>
             <v-row
               class="class-category-modal__form__section"
@@ -331,6 +328,7 @@
         <preview-session-list
           v-else
           :sessions="generatedSessions"
+          :packet-fee="packetFee"
         />
         <v-row
           justify="end"
@@ -451,7 +449,17 @@ export default {
       categoryDescription: '',
       categoryRequirement: '',
       priceOption: 1,
-      categorySchedules: [],
+      categorySchedules: [
+        {
+          startTimeDate: null,
+          endTimeDate: null,
+          isRecurring: false,
+          price: 0,
+          startTime: null,
+          endTime: null
+        }
+
+      ],
       categoryPrice: 0,
       periodMenu: null,
       categoryPeriod: [],
@@ -534,7 +542,8 @@ export default {
         if (value !== 1) {
           this.isFeePerSession = false
           this.sessionFee = null
-        } else if (value !== 2) {
+        }
+        if (value !== 2) {
           this.packetFee = null
         }
       }
@@ -545,20 +554,21 @@ export default {
   },
   methods: {
     ...mapActions('classLanding', ['generateSessions']),
-    print () {
-      console.log(this.categoryPeriod)
-    },
     constructCategoryObject () {
       return {
-        startMonth: this.startMonthDate.getTime(),
-        endMonth: this.endMonthDate.getTime(),
         title: this.categoryTitle,
         description: this.categoryDescription,
-        price: this.priceOption === 1 ? 0 : parseInt(this.categoryPrice, 10),
-        requirements: this.categoryRequirement,
-        categoryCoachUserIds: [...this.categoryCoachUserIds],
-        schedules: duplicateObject(this.categorySchedules),
-        isRecurring: true
+        price: this.packetFee,
+        requirements: '',
+        isRecurring: false,
+        minParticipant: this.minParticipant,
+        maxParticipant: this.maxParticipant,
+        sessions: [this.generatedSessions.map((session) => {
+          return {
+            ...session,
+            price: 0 // harusnya dinamic
+          }
+        })]
       }
     },
     handleCloseModal () {
@@ -568,37 +578,37 @@ export default {
       this.isPreview = false
     },
     handleClickNext () {
-      const body = {
-        cityId: this.selectedCity,
-        start: this.startMonthDate.getTime(),
-        end: this.endMonthDate.getTime(),
-        schedules: this.convertSchedule()
+      if (this.validateForm()) {
+        const body = {
+          cityId: this.selectedCity,
+          start: this.startMonthDate.getTime(),
+          end: this.endMonthDate.getTime(),
+          schedules: this.convertSchedule()
+        }
+        this.generateSessions({ body })
+        this.isPreview = true
       }
-      this.generateSessions({ body })
-      this.isPreview = true
     },
     convertSchedule () {
-      console.log(this.categorySchedules)
       const schedules = this.categorySchedules.map((schedule) => {
         return {
           start: schedule.startTimeDate,
           end: schedule.endTimeDate,
+          price: schedule.price,
           isWeekly: schedule.isRecurring
         }
       })
       return schedules
     },
     handleClickSave () {
-      // if (this.validateForm()) {
-      //   if (this.isEdit) {
-      //     this.$emit('edit', {
-      //       index: this.index,
-      //       data: this.constructCategoryObject()
-      //     })
-      //   } else {
-      //     this.$emit('save', this.constructCategoryObject())
-      //   }
-      // }
+      if (this.isEdit) {
+        this.$emit('edit', {
+          index: this.index,
+          data: this.constructCategoryObject()
+        })
+      } else {
+        this.$emit('save', this.constructCategoryObject())
+      }
     },
     init () {
       if (this.initialData) {
