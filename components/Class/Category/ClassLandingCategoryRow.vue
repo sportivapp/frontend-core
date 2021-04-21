@@ -11,7 +11,7 @@
     </td>
     <td>
       <span class="spv-body--2 class-category-row__text--black">
-        <a href="">Lihat semua jadwal</a>
+        <span class="link-preview-schedule" @click="setPreviewModal">Lihat semua jadwal</span>
       </span>
     </td>
     <td>
@@ -25,9 +25,6 @@
           </span>
           <span v-else class="spv-subtitle--2 class-category-row__price--paid">
             {{ category.price | convertToPrice }}
-            <span class="class-category-row__text--grey">
-              / bulan
-            </span>
           </span>
         </v-col>
         <v-spacer />
@@ -74,6 +71,10 @@ export default {
     category: {
       type: Object,
       default: () => ({})
+    },
+    index: {
+      type: Number,
+      required: true
     }
   },
   data () {
@@ -96,6 +97,9 @@ export default {
     },
     handleClickDelete () {
       this.$emit('delete')
+    },
+    setPreviewModal () {
+      this.$emit('preview', this.index)
     }
   }
 }
@@ -139,5 +143,9 @@ export default {
       }
     }
   }
+}
+.link-preview-schedule{
+  border-bottom: 1px solid black;
+  cursor: pointer;
 }
 </style>

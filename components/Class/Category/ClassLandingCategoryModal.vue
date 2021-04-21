@@ -563,12 +563,7 @@ export default {
         isRecurring: false,
         minParticipant: this.minParticipant,
         maxParticipant: this.maxParticipant,
-        sessions: [this.generatedSessions.map((session) => {
-          return {
-            ...session,
-            price: 0 // harusnya dinamic
-          }
-        })]
+        sessions: this.generatedSessions
       }
     },
     handleCloseModal () {

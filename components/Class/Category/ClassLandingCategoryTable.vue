@@ -53,8 +53,10 @@
       <template v-slot:item="{ item, index }">
         <class-landing-category-row
           :category="item"
+          :index="index"
           @edit="handleClickEdit(index)"
           @delete="handleClickDelete(index)"
+          @preview="handlePreviewSchedule"
         />
       </template>
     </v-data-table>
@@ -72,6 +74,19 @@
       @save="handleSave"
       @edit="handleEdit"
     />
+
+    <v-dialog
+      v-model="isPreview"
+      max-width="978px"
+      class="pa-10"
+    >
+      <v-sheet>
+        <preview-session-list
+          :sessions="previewSessions"
+          :packet-fee="previewPacketFee"
+        />
+      </v-sheet>
+    </v-dialog>
   </div>
 </template>
 
@@ -108,9 +123,19 @@ export default {
     return {
       headers,
       showAddCategoryModal: false,
-      selectedCategory: null,
+      selectedCategory: {},
       isEditing: false,
-      selectedIndex: 0
+      selectedIndex: 0,
+      isPreview: false
+    }
+  },
+  computed: {
+    previewSessions () {
+      console.log(this.selectedCategory)
+      return this.selectedCategory && this.selectedCategory.sessions
+    },
+    previewPacketFee () {
+      return this.selectedCategory && this.selectedCategory.price
     }
   },
   methods: {
@@ -148,6 +173,10 @@ export default {
       const newArray = duplicateObject(this.value)
       newArray.splice(index, 1)
       this.$emit('input', newArray)
+    },
+    handlePreviewSchedule (index) {
+      this.selectedCategory = duplicateObject(this.value[index])
+      this.isPreview = true
     }
   }
 }
