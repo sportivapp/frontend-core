@@ -78,9 +78,8 @@
     <v-dialog
       v-model="isPreview"
       max-width="978px"
-      class="pa-10"
     >
-      <v-sheet>
+      <v-sheet class="pa-10">
         <preview-session-list
           :sessions="previewSessions"
           :packet-fee="previewPacketFee"

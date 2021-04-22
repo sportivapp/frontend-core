@@ -589,7 +589,7 @@ export default {
         return {
           start: schedule.startTimeDate,
           end: schedule.endTimeDate,
-          price: schedule.price,
+          price: this.isFeePerSession ? schedule.price : this.sessionFee,
           isWeekly: schedule.isRecurring
         }
       })

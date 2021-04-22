@@ -26,7 +26,6 @@
         <v-btn
           outlined=""
           class="category-schedule-list__add-btn"
-          :disabled="disableAddSchedule"
           @click="handleClickAddSchedule"
         >
           Tambah
