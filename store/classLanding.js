@@ -2,14 +2,15 @@ import { api, getUrl } from '@/config/api'
 
 export const state = () => ({
   classLandingList: [],
-  classLandingListPaging: {}
+  classLandingListPaging: {},
+  generatedSessions: []
 
 })
 
 export const getters = {
   classLandingList: state => state.classLandingList,
-  classLandingListPaging: state => state.classLandingListPaging
-
+  classLandingListPaging: state => state.classLandingListPaging,
+  generatedSessions: state => state.generatedSessions
 }
 
 export const mutations = {
@@ -18,6 +19,9 @@ export const mutations = {
   },
   setClassLandingListPaging (state, classListPaging) {
     state.classLandingListPaging = classListPaging
+  },
+  setGeneratedSessions (state, data) {
+    state.generatedSessions = data
   }
 }
 
@@ -39,5 +43,16 @@ export const actions = {
       .catch((_) => {
         errHandler && errHandler()
       })
+  },
+  generateSessions ({ commit }, { body, successCallback, errHandler } = {}) {
+    this.$axios.post(getUrl(api.classLanding.sessionGenerate), body)
+      .then((res) => {
+        commit('setGeneratedSessions', res.data.data)
+        successCallback && successCallback()
+      })
+      .catch((_) => {
+        errHandler && errHandler()
+      })
   }
+
 }

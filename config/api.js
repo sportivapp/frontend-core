@@ -47,7 +47,8 @@ const api = {
   },
   classLanding: {
     createClass: '/landing/class-v2',
-    classList: params => `/landing/class-v2${serializeQueryParams(params)}`
+    classList: params => `/landing/class-v2${serializeQueryParams(params)}`,
+    sessionGenerate: '/common/class-category-session-generate'
   },
   setting: {
     getAllBanks: '/common/banks',

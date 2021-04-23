@@ -238,7 +238,14 @@
             Kategori Kelas
           </v-row>
           <v-row v-if="!isEdit">
+            <class-landing-category-table
+              v-if="accessFrom === 'core'"
+              v-model="classData.categories"
+              :class-coach-user-ids="classData.classCoachUserIds"
+              :selected-city="classData.cityId"
+            />
             <class-category-table
+              v-else
               v-model="classData.categories"
               :class-coach-user-ids="classData.classCoachUserIds"
             />
@@ -316,20 +323,21 @@ import Editor from '@/components/TextEditor/Editor'
 import CoachTable from '@/components/Class/CreateClass/CoachTable'
 import UploadFile from '@/components/Class/CreateClass/UploadFileNew'
 import ClassCategoryTable from '@/components/Class/Category/ClassCategoryTable'
+import ClassLandingCategoryTable from '@/components/Class/Category/ClassLandingCategoryTable'
 import { mapGetters, mapActions } from 'vuex'
 import validationMixin from '@/components/Class/validation.mixin'
 import { staticUrl } from '@/config/api'
 import SimplePrompt from '@/components/Modal/SimplePrompt'
 
-const dayNumber = [
-  { code: 'MONDAY', value: 0 },
-  { code: 'TUESDAY', value: 1 },
-  { code: 'WEDNESDAY', value: 2 },
-  { code: 'THURSDAY', value: 3 },
-  { code: 'FRIDAY', value: 4 },
-  { code: 'SATURDAY', value: 5 },
-  { code: 'SUNDAY', value: 6 }
-]
+// const dayNumber = [
+//   { code: 'MONDAY', value: 0 },
+//   { code: 'TUESDAY', value: 1 },
+//   { code: 'WEDNESDAY', value: 2 },
+//   { code: 'THURSDAY', value: 3 },
+//   { code: 'FRIDAY', value: 4 },
+//   { code: 'SATURDAY', value: 5 },
+//   { code: 'SUNDAY', value: 6 }
+// ]
 
 export default {
   name: 'ClassForm',
@@ -338,7 +346,8 @@ export default {
     CoachTable,
     UploadFile,
     ClassCategoryTable,
-    SimplePrompt
+    SimplePrompt,
+    ClassLandingCategoryTable
   },
   mixins: [validationMixin],
   props: {
@@ -453,7 +462,7 @@ export default {
       if (this.accessFrom === 'core') {
         classDataBody.picId = this.user.euserid
         classDataBody.picMobileNumber = this.user.eusermobilenumber
-        classDataBody.categories = this.generateCategories(classDataBody.categories)
+
         this.createClassLanding({ body: classDataBody, successCallback: this.successSaveClass })
       } else if (this.accessFrom !== 'core') {
         if (this.isEdit) {
@@ -463,40 +472,40 @@ export default {
         }
       }
     },
-    generateCategories (categories) {
-      const generatedCategories = []
-      for (let i = 0; i < categories.length; i++) {
-        generatedCategories.push({
-          ...categories[0],
-          sessions: this.generateSessions(
-            {
-              startMonth: categories[0].startMonth,
-              endMonth: categories[0].endMonth,
-              schedules: categories[0].schedules
-            })
-        })
-      }
-      return generatedCategories
-    },
-    generateSessions (scheduleData) {
-      const sessions = []
-      for (let i = 0; i < scheduleData.schedules.length; i++) {
-        const selectedDay = dayNumber.find(day => day.code === scheduleData.schedules[i].day)
-        const distance = (selectedDay.value + 7 - new Date(scheduleData.startMonth).getDay()) % 7
-        let startDate = new Date(scheduleData.startMonth)
-        startDate.setDate(startDate.getDate() + distance)
-        startDate = startDate.getTime()
-        while (startDate < scheduleData.endMonth) {
-          sessions.push({
-            monthUtc: startDate,
-            startDate,
-            endDate: 1619956800000
-          })
-          startDate += 604800000
-        }
-      }
-      return sessions
-    },
+    // generateCategories (categories) {
+    //   const generatedCategories = []
+    //   for (let i = 0; i < categories.length; i++) {
+    //     generatedCategories.push({
+    //       ...categories[0],
+    //       sessions: this.generateSessions(
+    //         {
+    //           startMonth: categories[0].startMonth,
+    //           endMonth: categories[0].endMonth,
+    //           schedules: categories[0].schedules
+    //         })
+    //     })
+    //   }
+    //   return generatedCategories
+    // },
+    // generateSessions (scheduleData) {
+    //   const sessions = []
+    //   for (let i = 0; i < scheduleData.schedules.length; i++) {
+    //     const selectedDay = dayNumber.find(day => day.code === scheduleData.schedules[i].day)
+    //     const distance = (selectedDay.value + 7 - new Date(scheduleData.startMonth).getDay()) % 7
+    //     let startDate = new Date(scheduleData.startMonth)
+    //     startDate.setDate(startDate.getDate() + distance)
+    //     startDate = startDate.getTime()
+    //     while (startDate < scheduleData.endMonth) {
+    //       sessions.push({
+    //         monthUtc: startDate,
+    //         startDate,
+    //         endDate: 1619956800000
+    //       })
+    //       startDate += 604800000
+    //     }
+    //   }
+    //   return sessions
+    // },
     cancelCreateClass () {
       this.showCancelModal = true
     },
