@@ -298,6 +298,15 @@ export default () => {
         categoryDeleteModalTitle: 'Hapus Kategori Kelas',
         categoryDeleteMessage: 'Kamu yakin untuk menghapus kategori kelas sekarang?',
         categoryDeleteSuccess: 'Kategori Kelas berhasil dihapus'
+      },
+      userClass: {
+        createClassCancelModalTitle: 'Batal tambah kelas?',
+        createClassCancelMessage: 'Data-data yang telah dimasukkan tidak akan tersimpan.',
+        cancelCancel: 'Tidak',
+        cancelAction: 'Batal',
+        createClassSaveModalTitle: 'Tambah Kelas?',
+        createClassSaveMessage: 'Dengan ini Anda akan membuat kelas baru.',
+        saveAction: 'Tambah'
       }
     })
   })

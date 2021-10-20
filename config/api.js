@@ -40,8 +40,21 @@ const api = {
     classParticipants: id => `/class-v2/${id}/participants`,
     deleteClass: id => `/class-v2/${id}`,
     insertClassCategory: id => `/class-v2/${id}/class-category`,
-    updateClassCategory: (classId, classCategoryId) => `/class-v2/${classId}/class-category/${classCategoryId}`,
-    updateClass: id => `/class-v2/${id}`
+    updateClass: id => `/class-v2/${id}`,
+    getCategorySchedule: categoryId => `/class-category/${categoryId}/schedule`,
+    extendCategorySession: categoryId => `/class-category/${categoryId}/extend`,
+    updateClassCategory: (classId, classCategoryId) => `/class-v2/${classId}/class-category/${classCategoryId}`
+  },
+  classLanding: {
+    createClass: '/landing/class-v2',
+    classList: params => `/landing/class-v2${serializeQueryParams(params)}`,
+    sessionGenerate: '/common/class-category-session-generate'
+  },
+  setting: {
+    getAllBanks: '/common/banks',
+    companyBanks: '/company-banks',
+    updateMainBank: params => `/company-banks/${params.bankUuid}/main`,
+    deleteBank: params => `/company-banks/${params.bankUuid}`
   }
 }
 
