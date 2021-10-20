@@ -95,5 +95,12 @@ export default {
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
     transpile: ['vuetify/lib', 'tiptap-vuetify']
+  },
+
+  env: {
+    api: {
+      baseUrlSportiv: process.env.BASE_URL_SPORTIV,
+      srcUrlSportiv: process.env.SRC_URL_SPORTIV
+    }
   }
 }
