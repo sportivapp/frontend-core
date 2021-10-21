@@ -1,9 +1,9 @@
 import { serializeQueryParams } from '@/utils/query'
 
-const baseUrl = 'https://api.quickplay.app/core/api/v1'
-const baseUrlTournament = 'https://api.quickplay.app/tournament'
+const baseUrl = 'https://api.sportiv.asia/core/api/v1'
+const baseUrlTournament = 'https://api.sportiv.asia/tournament'
 
-const staticUrl = 'https://api.quickplay.app/core/'
+const staticUrl = 'https://api.sportiv.asia/core/'
 
 const api = {
   otp: '/otp-email',
