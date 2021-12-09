@@ -453,7 +453,7 @@ export default {
         {
           startTimeDate: null,
           endTimeDate: null,
-          isRecurring: false,
+          isRecurring: true,
           price: 0,
           startTime: null,
           endTime: null
