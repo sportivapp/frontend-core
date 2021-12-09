@@ -560,7 +560,7 @@ export default {
         description: this.categoryDescription,
         price: this.packetFee,
         requirements: '',
-        isRecurring: false,
+        isRecurring: true,
         minParticipant: this.minParticipant,
         maxParticipant: this.maxParticipant,
         sessions: this.generatedSessions
