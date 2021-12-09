@@ -180,7 +180,6 @@ export default {
         isRecurring: false
       }
     ],
-    isRecurring: true,
     fee: null,
     startTime: null,
     endTime: null
