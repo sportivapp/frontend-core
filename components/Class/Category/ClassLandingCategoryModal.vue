@@ -453,7 +453,7 @@ export default {
         {
           startTimeDate: null,
           endTimeDate: null,
-          isRecurring: false,
+          isRecurring: true,
           price: 0,
           startTime: null,
           endTime: null
@@ -560,7 +560,7 @@ export default {
         description: this.categoryDescription,
         price: this.packetFee,
         requirements: '',
-        isRecurring: false,
+        isRecurring: true,
         minParticipant: this.minParticipant,
         maxParticipant: this.maxParticipant,
         sessions: this.generatedSessions
