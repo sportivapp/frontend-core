@@ -1,5 +1,4 @@
 <template>
-
   <v-dialog v-model="value" max-width="456px" persistent="">
     <v-card>
       <v-container class="px-5 pt-6">
