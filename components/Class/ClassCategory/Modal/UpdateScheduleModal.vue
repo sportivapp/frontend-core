@@ -183,9 +183,6 @@ export default {
     },
     schedules: {
       type: Array,
-<<<<<<< HEAD:components/Class/ClassCategory/Modal/UpdateScheduleModal.vue
-      default: () => []
-=======
       default: () => [
         {
           day: 'MONDAY',
@@ -195,7 +192,6 @@ export default {
           endMinute: 0
         }
       ]
->>>>>>> development:components/Class/ClassDetail/Modal/UpdateScheduleModal.vue
     }
   },
   data: () => ({
@@ -211,12 +207,8 @@ export default {
       }
     ],
     errorMessage: '',
-<<<<<<< HEAD:components/Class/ClassCategory/Modal/UpdateScheduleModal.vue
-    todayDate: new Date().toISOString().slice(0, 10)
-=======
     todayDate: new Date().toISOString().slice(0, 10),
     showReminder: true
->>>>>>> development:components/Class/ClassDetail/Modal/UpdateScheduleModal.vue
   }),
   computed: {
     startMonthDate () {
