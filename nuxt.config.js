@@ -3,8 +3,8 @@ import languages from './static/lang/languages'
 export default {
   ssr: false,
   publicRuntimeConfig: {
-    tournamentUrl: process.env.TOURNAMENT_URL || 'https://tournament.sportiv.app',
-    tournamentCreateUrl: process.env.TOURNAMENT_CREATE_URL || 'https://tournament.sportiv.app/tournament/form/step-1'
+    tournamentUrl: process.env.TOURNAMENT_URL || 'https://tournament.sportiv.asia',
+    tournamentCreateUrl: process.env.TOURNAMENT_CREATE_URL || 'https://tournament.sportiv.asia/tournament/form/step-1'
   },
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
@@ -95,5 +95,12 @@ export default {
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
     transpile: ['vuetify/lib', 'tiptap-vuetify']
+  },
+
+  env: {
+    api: {
+      baseUrlSportiv: process.env.BASE_URL_SPORTIV,
+      srcUrlSportiv: process.env.SRC_URL_SPORTIV
+    }
   }
 }

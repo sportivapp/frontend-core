@@ -1,6 +1,6 @@
 <template>
   <v-container class="px-0">
-    <add-bank-account-modal v-model="showModal" @saveAccount="handleSaveBankAccount" />
+    <add-bank-account-modal v-model="showModal" :bank-list="allBanks" @saveAccount="handleSaveBankAccount" />
     <v-row class="mx-0 pa-0">
       <v-col>
         <v-row class="px-0">
@@ -32,6 +32,7 @@
 <script>
 import AddBankAccountModal from '@/components/BankAccount/AddBankAccountModal'
 import BankAccountList from '@/components/BankAccount/BankAccountList'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'BankAccountPage',
   components: {
@@ -42,7 +43,14 @@ export default {
     showModal: false,
     bankAccountList: []
   }),
+  computed: {
+    ...mapGetters('setting', ['allBanks'])
+  },
+  created () {
+    this.getAllBanks()
+  },
   methods: {
+    ...mapActions('setting', ['getAllBanks']),
     handleSaveBankAccount (account) {
       this.bankAccountList.push(account)
     }

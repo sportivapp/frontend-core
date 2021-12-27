@@ -35,7 +35,7 @@
           <v-row class="mx-1 spv-body--1 grey--text">
             Masa Berlangsung Jadwal (Maks. 3 bulan)<span class="red--text">*</span>
           </v-row>
-          <v-row class="mx-1 class-category-modal__form__section class-category-modal__form__section--date">
+          <v-row class="mx-1 pa-0 class-category-modal__form__section class-category-modal__form__section--date">
             <v-menu
               v-model="periodMenu"
               content-class="class-category-modal__form__section--date__menu-content"
@@ -91,6 +91,37 @@
                 </v-container>
               </v-card>
             </v-menu>
+          </v-row>
+          <v-row align="center" class="mb-3">
+            <v-card
+              v-if="showReminder"
+              class="mx-4 px-4"
+              style="border:1px solid #2F80ED"
+              outlined=""
+              rounded=""
+              color="#EDF5FF"
+            >
+              <v-row align="center">
+                <v-col align-self="center" cols="1">
+                  <v-icon size="20" color="#2F80ED">
+                    mdi-information
+                  </v-icon>
+                </v-col>
+                <v-col align-self="center">
+                  <p class="ma-0">
+                    Jika sesi tidak diperpanjang sampai masa berlangsung berakhir,
+                    maka kategori kelas ini akan di hold.
+                  </p>
+                </v-col>
+                <v-col cols="1">
+                  <v-btn icon @click="showReminder = false">
+                    <v-icon size="14">
+                      mdi-close
+                    </v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-card>
           </v-row>
           <v-row
             justify="end"
@@ -152,7 +183,19 @@ export default {
     },
     schedules: {
       type: Array,
+<<<<<<< HEAD:components/Class/ClassCategory/Modal/UpdateScheduleModal.vue
       default: () => []
+=======
+      default: () => [
+        {
+          day: 'MONDAY',
+          startHour: 10,
+          startMinute: 0,
+          endHour: 12,
+          endMinute: 0
+        }
+      ]
+>>>>>>> development:components/Class/ClassDetail/Modal/UpdateScheduleModal.vue
     }
   },
   data: () => ({
@@ -168,7 +211,12 @@ export default {
       }
     ],
     errorMessage: '',
+<<<<<<< HEAD:components/Class/ClassCategory/Modal/UpdateScheduleModal.vue
     todayDate: new Date().toISOString().slice(0, 10)
+=======
+    todayDate: new Date().toISOString().slice(0, 10),
+    showReminder: true
+>>>>>>> development:components/Class/ClassDetail/Modal/UpdateScheduleModal.vue
   }),
   computed: {
     startMonthDate () {
@@ -358,7 +406,7 @@ export default {
 
   &__actions {
     padding: 16px 28px;
-    margin: 8px -40px 0 !important;
+    margin: 0px -20px 0 !important;
     box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
     bottom: 0;
     &__btn {

@@ -2,25 +2,41 @@ import { required, maxLength, minLength, numeric, requiredIf } from 'vuelidate/l
 import { isValidPhoneNumber } from '@/utils/validation.js'
 export default {
   validations () {
-    return {
-      classData: {
-        title: { required, maxLength: maxLength(50), minLength: minLength(3) },
-        industryId: { required },
-        description: { required, minLength: minLength(8) },
-        stateId: { required },
-        cityId: { required },
-        addressName: { required },
-        address: { required },
-        classCoachUserIds: { required },
-        picId: { required },
-        picMobileNumber: {
-          required,
-          numeric,
-          isValid: v => isValidPhoneNumber(v)
+    if (this.accessFrom === 'core') {
+      return {
+        classData: {
+          title: { required, maxLength: maxLength(50), minLength: minLength(3) },
+          industryId: { required },
+          description: { required, minLength: minLength(8) },
+          stateId: { required },
+          cityId: { required },
+          addressName: { required },
+          address: { required },
+          categories: { required: requiredIf(() => { return !this.isEdit }) }
         },
-        categories: { required: requiredIf(() => { return !this.isEdit }) }
-      },
-      rawFiles: { required }
+        rawFiles: { required }
+      }
+    } else {
+      return {
+        classData: {
+          title: { required, maxLength: maxLength(50), minLength: minLength(3) },
+          industryId: { required },
+          description: { required, minLength: minLength(8) },
+          stateId: { required },
+          cityId: { required },
+          addressName: { required },
+          address: { required },
+          classCoachUserIds: { required },
+          picId: { required },
+          picMobileNumber: {
+            required,
+            numeric,
+            isValid: v => isValidPhoneNumber(v)
+          },
+          categories: { required: requiredIf(() => { return !this.isEdit }) }
+        },
+        rawFiles: { required }
+      }
     }
   },
   computed: {

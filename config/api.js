@@ -1,9 +1,16 @@
 import { serializeQueryParams } from '@/utils/query'
 
+<<<<<<< HEAD
 const baseUrl = 'https://api.sportiv.app/core/api/v1'
 const baseUrlTournament = 'https://api.sportiv.app/tournament'
 
 const staticUrl = 'https://api.sportiv.app/core/'
+=======
+const baseUrl = 'https://api.sportiv.asia/core/api/v1'
+const baseUrlTournament = 'https://api.sportiv.asia/tournament'
+
+const staticUrl = 'https://api.sportiv.asia/core/'
+>>>>>>> development
 
 const api = {
   otp: '/otp-email',
@@ -44,6 +51,20 @@ const api = {
     getCategorySchedule: categoryId => `/class-category/${categoryId}/schedule`,
     extendCategorySession: categoryId => `/class-category/${categoryId}/extend`,
     updateClassCategory: (classId, classCategoryId) => `/class-v2/${classId}/class-category/${classCategoryId}`
+<<<<<<< HEAD
+=======
+  },
+  classLanding: {
+    createClass: '/landing/class-v2',
+    classList: params => `/landing/class-v2${serializeQueryParams(params)}`,
+    sessionGenerate: '/common/class-category-session-generate'
+  },
+  setting: {
+    getAllBanks: '/common/banks',
+    companyBanks: '/company-banks',
+    updateMainBank: params => `/company-banks/${params.bankUuid}/main`,
+    deleteBank: params => `/company-banks/${params.bankUuid}`
+>>>>>>> development
   }
 }
 

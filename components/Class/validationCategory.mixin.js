@@ -1,54 +1,108 @@
 import { required } from 'vuelidate/lib/validators'
 export default {
   validations () {
-    return {
-      categoryTitle: { required },
-      categoryDescription: { required },
-      categorySchedules: {
-        required,
-        hourValid: (v) => {
-          for (let i = 0; i < v.length; i++) {
-            if (v[i].endHour < v[i].startHour) {
-              return false
-            } else if (v[i].endHour === v[i].startHour) {
-              if (v[i].endMinute <= v[i].startMinute) {
-                return false
-              }
-            }
+    if (this.accessFrom === 'core') {
+      return {
+        categoryTitle: { required },
+        minParticipant: { required },
+        maxParticipant: {
+          required,
+          isValid: () => {
+            return this.minParticipant < this.maxParticipant
           }
-          return true
         },
-        timeValid: (v) => {
-          for (let i = 0; i < v.length - 1; i++) {
-            for (let j = i + 1; j < v.length; j++) {
-              if (v[i].day === v[j].day) {
-                if (!(Number(v[j].startHour) < Number(v[i].startHour) ||
-                Number(v[j].startHour) > Number(v[i].endHour)) ||
-                !(Number(v[j].endHour) < Number(v[i].startHour) ||
-                Number(v[j].endHour) > Number(v[i].endHour))) {
+        // categorySchedules: {
+        //   required,
+        //   hourValid: (v) => {
+        //     for (let i = 0; i < v.length; i++) {
+        //       if (v[i].endHour < v[i].startHour) {
+        //         return false
+        //       } else if (v[i].endHour === v[i].startHour) {
+        //         if (v[i].endMinute <= v[i].startMinute) {
+        //           return false
+        //         }
+        //       }
+        //     }
+        //     return true
+        //   },
+        //   timeValid: (v) => {
+        //     for (let i = 0; i < v.length - 1; i++) {
+        //       for (let j = i + 1; j < v.length; j++) {
+        //         if (v[i].day === v[j].day) {
+        //           if (!(Number(v[j].startHour) < Number(v[i].startHour) ||
+        //         Number(v[j].startHour) > Number(v[i].endHour)) ||
+        //         !(Number(v[j].endHour) < Number(v[i].startHour) ||
+        //         Number(v[j].endHour) > Number(v[i].endHour))) {
+        //             return false
+        //           }
+        //         }
+        //       }
+        //     }
+        //     return true
+        //   }
+        // },
+        categoryPeriod: {
+          required,
+          validPeriodRange: (v) => {
+            if (v.length === 2) {
+              const totalMonths = Number(v[1].substr(5, 2)) - Number(v[0].substr(5, 2))
+              const positifTotalMonth = totalMonths > 0 ? totalMonths : totalMonths * -1
+              return positifTotalMonth < 3
+            }
+            return false
+          }
+        }
+      }
+    } else {
+      return {
+        categoryTitle: { required },
+        categoryDescription: { required },
+        categorySchedules: {
+          required,
+          hourValid: (v) => {
+            for (let i = 0; i < v.length; i++) {
+              if (v[i].endHour < v[i].startHour) {
+                return false
+              } else if (v[i].endHour === v[i].startHour) {
+                if (v[i].endMinute <= v[i].startMinute) {
                   return false
                 }
               }
             }
+            return true
+          },
+          timeValid: (v) => {
+            for (let i = 0; i < v.length - 1; i++) {
+              for (let j = i + 1; j < v.length; j++) {
+                if (v[i].day === v[j].day) {
+                  if (!(Number(v[j].startHour) < Number(v[i].startHour) ||
+                Number(v[j].startHour) > Number(v[i].endHour)) ||
+                !(Number(v[j].endHour) < Number(v[i].startHour) ||
+                Number(v[j].endHour) > Number(v[i].endHour))) {
+                    return false
+                  }
+                }
+              }
+            }
+            return true
           }
-          return true
-        }
-      },
-      categoryPeriod: {
-        required,
-        validPeriodRange: (v) => {
-          if (v.length === 2) {
-            const totalMonths = Number(v[1].substr(5, 2)) - Number(v[0].substr(5, 2))
-            const positifTotalMonth = totalMonths > 0 ? totalMonths : totalMonths * -1
-            return positifTotalMonth < 3
+        },
+        categoryPeriod: {
+          required,
+          validPeriodRange: (v) => {
+            if (v.length === 2) {
+              const totalMonths = Number(v[1].substr(5, 2)) - Number(v[0].substr(5, 2))
+              const positifTotalMonth = totalMonths > 0 ? totalMonths : totalMonths * -1
+              return positifTotalMonth < 3
+            }
+            return false
           }
-          return false
-        }
-      },
-      categoryCoachUserIds: {
-        required,
-        firstArrayIsFilled: (v) => {
-          return v[0] !== null
+        },
+        categoryCoachUserIds: {
+          required,
+          firstArrayIsFilled: (v) => {
+            return v[0] !== null
+          }
         }
       }
     }
@@ -88,6 +142,20 @@ export default {
       if (!this.$v.categoryCoachUserIds.$dirty) { return errors }
       !this.$v.categoryCoachUserIds.required && errors.push('Pelatih harus di isi')
       !this.$v.categoryCoachUserIds.firstArrayIsFilled && errors.push('Nama pelatih harus di isi')
+      return errors
+    },
+    minParticipantErrors () {
+      const errors = []
+      if (!this.$v.minParticipant.$dirty) { return errors }
+      !this.$v.minParticipant.required && errors.push('Minimal partisipan harus di isi.')
+      return errors
+    },
+    maxParticipantErrors () {
+      const errors = []
+      if (!this.$v.maxParticipant.$dirty) { return errors }
+      !this.$v.maxParticipant.required && errors.push('Maximal partisipan harus di isi.')
+      !this.$v.maxParticipant.isValid && errors.push('Maksimal partisipan harus lebih besar dari minimal partisipan.')
+
       return errors
     }
   },
