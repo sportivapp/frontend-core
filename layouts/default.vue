@@ -175,6 +175,14 @@
             </v-list-item>
           </v-list>
         </v-menu>
+        <v-btn
+          text
+          class="app-bar__menu"
+          elevation="0"
+          @click="handleRedirectToUserClass"
+        >
+          {{ $t('common.class') }}
+        </v-btn>
         <!-- booking -->
         <!-- <v-menu
           bottom
@@ -485,6 +493,14 @@ export default {
     },
     hideOverlay () {
       this.overlay = false
+    },
+    handleRedirectToUserClass () {
+      this.drawer = false
+      if (!this.isLoggedIn) {
+        this.$router.push('/login')
+      } else {
+        this.$router.push('/user/class')
+      }
     }
   }
 }

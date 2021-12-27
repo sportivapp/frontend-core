@@ -9,10 +9,13 @@
         {{ index + 1 }}.
       </td>
       <td class="category-schedule-list__cell">
-        <category-schedule-list-item
+        <category-landing-schedule-list-item
           v-model="value[index]"
           :index="index"
           :total-data="value.length"
+          :is-fee-per-session="isFeePerSession"
+          :session-fee="sessionFee"
+          :category-period="categoryPeriod"
           @delete="handleDeleteSchedule"
           @validate="$emit('validate')"
         />
@@ -21,21 +24,11 @@
     <tr>
       <td colspan="2" class="category-schedule-list__add">
         <v-btn
-          text
+          outlined=""
           class="category-schedule-list__add-btn"
-          :disabled="disableAddSchedule"
           @click="handleClickAddSchedule"
         >
-          <v-row>
-            <v-col class="px-0">
-              <v-icon>
-                mdi-plus-circle
-              </v-icon>
-            </v-col>
-            <v-col>
-              Tambah Jadwal
-            </v-col>
-          </v-row>
+          Tambah
         </v-btn>
       </td>
     </tr>
@@ -43,22 +36,23 @@
 </template>
 
 <script>
-import CategoryScheduleListItem
-  from '@/components/Class/Category/CategoryScheduleListItem'
+
+import CategoryLandingScheduleListItem from '@/components/Class/Category/CategoryLandingScheduleListItem'
 import { duplicateObject } from '@/utils/object'
 
 const defaultAddNewSchedule = {
-  day: 'MONDAY',
-  startHour: 10,
-  startMinute: 0,
-  endHour: 12,
-  endMinute: 0
+  startTimeDate: null,
+  endTimeDate: null,
+  isRecurring: true,
+  price: 0,
+  startTime: null,
+  endTime: null
 }
 
 export default {
-  name: 'CategoryScheduleList',
+  name: 'CategoryLandingScheduleList',
   components: {
-    CategoryScheduleListItem
+    CategoryLandingScheduleListItem
   },
   props: {
     value: {
@@ -68,6 +62,18 @@ export default {
     accessFrom: {
       type: String,
       default: ''
+    },
+    sessionFee: {
+      type: Number,
+      default: 0
+    },
+    isFeePerSession: {
+      type: Boolean,
+      required: true
+    },
+    categoryPeriod: {
+      type: Array,
+      default: () => ([])
     }
   },
   computed: {
@@ -97,6 +103,10 @@ export default {
 
   &__number, &__cell {
     padding: 4px 0;
+  }
+
+  &__number{
+    width: 13px;
   }
 
   &__delete {

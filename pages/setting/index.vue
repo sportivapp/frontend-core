@@ -5,7 +5,7 @@
   >
     <div class="bank-account-container">
       <v-row>
-        <p>Nama Organisasi: PT. Indo</p>
+        <p>Nama Organisasi: {{ userCurrentCompany.companyName }}</p>
       </v-row>
       <v-row>
         <v-sheet rounded="" width="1120px">
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { permissions } from '@/config/permission'
 import HomeFooter from '@/components/Footer/HomeFooter.vue'
 import SimpleSnackBar from '@/components/SnackBar/SimpleSnackBar'
@@ -48,7 +48,8 @@ export default {
   computed: {
     ...mapGetters('class', [
       'hasClassPermission',
-      'snackBarData'
+      'snackBarData',
+      'userCurrentCompany'
     ]),
     hasReadPermission () {
       return this.hasClassPermission(permissions.read)
@@ -59,6 +60,12 @@ export default {
       },
       set () {}
     }
+  },
+  created () {
+    this.getUserCurrentCompany()
+  },
+  methods: {
+    ...mapActions('class', ['getUserCurrentCompany'])
   },
   head () {
     return {
@@ -74,7 +81,7 @@ export default {
 }
 .bank-account-container{
   margin: 0 12%;
-  padding-top: 5%;
+  padding-top: 2%;
 }
 .title-text{
   font-weight: 600;

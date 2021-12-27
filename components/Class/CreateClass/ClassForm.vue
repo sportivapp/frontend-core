@@ -160,7 +160,7 @@
             </v-col>
           </v-row>
         </div>
-        <div>
+        <div v-if="accessFrom !== 'core'">
           <v-row class="spv-heading--3 pt-7 mb-4">
             Info Pelatih
           </v-row>
@@ -234,11 +234,18 @@
           </v-row>
         </div>
         <div>
-          <v-row v-if="!isEdit" class="spv-heading--3 pt-7">
+          <v-row v-if="!isEdit" class="spv-heading--3 pt-7 pb-3">
             Kategori Kelas
           </v-row>
           <v-row v-if="!isEdit">
+            <class-landing-category-table
+              v-if="accessFrom === 'core'"
+              v-model="classData.categories"
+              :class-coach-user-ids="classData.classCoachUserIds"
+              :selected-city="classData.cityId"
+            />
             <class-category-table
+              v-else
               v-model="classData.categories"
               :class-coach-user-ids="classData.classCoachUserIds"
             />
@@ -286,6 +293,28 @@
         {{ isEdit?'Simpan':'Tambah Kelas' }}
       </v-btn>
     </v-row>
+    <simple-prompt
+      :show="showCancelModal"
+      :title="$t('userClass.createClassCancelModalTitle')"
+      :message="$t('userClass.createClassCancelMessage')"
+      action-color="#FF3333"
+      :cancel-text="$t('userClass.cancelCancel')"
+      :action-text="$t('userClass.cancelAction')"
+      @update:show="showCancelModal = false"
+      @click:cancel="showCancelModal = false"
+      @click:action="handleCancelCreateClass"
+    />
+    <simple-prompt
+      :show="showSaveModal"
+      :title="$t('userClass.createClassSaveModalTitle')"
+      :message="$t('userClass.createClassSaveMessage')"
+      action-color="#0AB281"
+      :cancel-text="$t('userClass.cancelCancel')"
+      :action-text="$t('userClass.saveAction')"
+      @update:show="showSaveModal = false"
+      @click:cancel="showSaveModal = false"
+      @click:action="handleSaveClass"
+    />
   </v-container>
 </template>
 
@@ -294,9 +323,21 @@ import Editor from '@/components/TextEditor/Editor'
 import CoachTable from '@/components/Class/CreateClass/CoachTable'
 import UploadFile from '@/components/Class/CreateClass/UploadFileNew'
 import ClassCategoryTable from '@/components/Class/Category/ClassCategoryTable'
+import ClassLandingCategoryTable from '@/components/Class/Category/ClassLandingCategoryTable'
 import { mapGetters, mapActions } from 'vuex'
 import validationMixin from '@/components/Class/validation.mixin'
 import { staticUrl } from '@/config/api'
+import SimplePrompt from '@/components/Modal/SimplePrompt'
+
+// const dayNumber = [
+//   { code: 'MONDAY', value: 0 },
+//   { code: 'TUESDAY', value: 1 },
+//   { code: 'WEDNESDAY', value: 2 },
+//   { code: 'THURSDAY', value: 3 },
+//   { code: 'FRIDAY', value: 4 },
+//   { code: 'SATURDAY', value: 5 },
+//   { code: 'SUNDAY', value: 6 }
+// ]
 
 export default {
   name: 'ClassForm',
@@ -304,14 +345,19 @@ export default {
     Editor,
     CoachTable,
     UploadFile,
-    ClassCategoryTable
-
+    ClassCategoryTable,
+    SimplePrompt,
+    ClassLandingCategoryTable
   },
   mixins: [validationMixin],
   props: {
     isEdit: {
       type: Boolean,
       default: false
+    },
+    accessFrom: {
+      type: String,
+      default: ''
     }
   },
   data: () => ({
@@ -324,11 +370,13 @@ export default {
       classCoachUserIds: []
     },
     rawFiles: [],
-    fileIds: []
+    fileIds: [],
+    showCancelModal: false,
+    showSaveModal: false
   }),
   // eslint-disable-next-line vue/order-in-components
   computed: {
-    ...mapGetters(['industries', 'provinces', 'cities']),
+    ...mapGetters(['industries', 'provinces', 'cities', 'user']),
     ...mapGetters('class', ['classUsers', 'userCurrentCompany'])
   },
   // eslint-disable-next-line vue/order-in-components
@@ -339,11 +387,6 @@ export default {
       }
     }
   },
-
-  created () {
-
-  },
-
   async mounted () {
     await this.getIndustries()
     await this.getUserCurrentCompany({ successCallback: this.handleGetUsers })
@@ -366,6 +409,7 @@ export default {
       'uploadFile',
       'getClassDetail']),
     ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
+    ...mapActions('classLanding', ['createClassLanding']),
     getUserAvatar (file) {
       return file ? staticUrl + file.efilename : require('@/assets/images/logos/sportiv-logo-small.png')
     },
@@ -402,15 +446,25 @@ export default {
     successUploadFile (uploadedFile) {
       this.fileIds.push(uploadedFile.efileid)
     },
-    async createNewClass () {
+    createNewClass () {
       if (this.validateForm()) {
-        await this.doUploadFiles(this.rawFiles)
-        const classDataBody = {
-          ...this.classData,
-          picMobileNumber: '+62' + this.classData.picMobileNumber,
-          fileIds: this.fileIds,
-          administrationFee: this.feeSwitchOn ? this.classData.administrationFee || 0 : 0
-        }
+        this.showSaveModal = true
+      }
+    },
+    async handleSaveClass () {
+      await this.doUploadFiles(this.rawFiles)
+      const classDataBody = {
+        ...this.classData,
+        picMobileNumber: '+62' + this.classData.picMobileNumber,
+        fileIds: this.fileIds,
+        administrationFee: this.feeSwitchOn ? this.classData.administrationFee || 0 : 0
+      }
+      if (this.accessFrom === 'core') {
+        classDataBody.picId = this.user.euserid
+        classDataBody.picMobileNumber = this.user.eusermobilenumber
+
+        this.createClassLanding({ body: classDataBody, successCallback: this.successSaveClass })
+      } else if (this.accessFrom !== 'core') {
         if (this.isEdit) {
           this.updateClass({ id: this.$route.params.classId, body: classDataBody, successCallback: this.successSaveClass })
         } else {
@@ -418,11 +472,52 @@ export default {
         }
       }
     },
+    // generateCategories (categories) {
+    //   const generatedCategories = []
+    //   for (let i = 0; i < categories.length; i++) {
+    //     generatedCategories.push({
+    //       ...categories[0],
+    //       sessions: this.generateSessions(
+    //         {
+    //           startMonth: categories[0].startMonth,
+    //           endMonth: categories[0].endMonth,
+    //           schedules: categories[0].schedules
+    //         })
+    //     })
+    //   }
+    //   return generatedCategories
+    // },
+    // generateSessions (scheduleData) {
+    //   const sessions = []
+    //   for (let i = 0; i < scheduleData.schedules.length; i++) {
+    //     const selectedDay = dayNumber.find(day => day.code === scheduleData.schedules[i].day)
+    //     const distance = (selectedDay.value + 7 - new Date(scheduleData.startMonth).getDay()) % 7
+    //     let startDate = new Date(scheduleData.startMonth)
+    //     startDate.setDate(startDate.getDate() + distance)
+    //     startDate = startDate.getTime()
+    //     while (startDate < scheduleData.endMonth) {
+    //       sessions.push({
+    //         monthUtc: startDate,
+    //         startDate,
+    //         endDate: 1619956800000
+    //       })
+    //       startDate += 604800000
+    //     }
+    //   }
+    //   return sessions
+    // },
     cancelCreateClass () {
-      this.$router.push('/class')
+      this.showCancelModal = true
+    },
+    handleCancelCreateClass () {
+      this.$router.push('/user/class')
     },
     successSaveClass () {
-      this.$router.push('/class')
+      if (this.accessFrom === 'core') {
+        this.$router.push('/user/class')
+      } else {
+        this.$router.push('/class')
+      }
     },
     async initClassData () {
       await this.getClassDetail({

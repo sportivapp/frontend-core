@@ -3,7 +3,6 @@
     <update-schedule-modal
       v-model="showModal"
       :category-sessions="category.categorySessions"
-      :schedules="categorySchedules"
     />
     <v-spacer />
     <v-row justify="center" align="center" no-gutters>
