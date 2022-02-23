@@ -366,6 +366,7 @@ export default {
     picId: null,
     searchText: '',
     classData: {
+      title: '',
       categories: [],
       classCoachUserIds: []
     },
@@ -377,7 +378,10 @@ export default {
   // eslint-disable-next-line vue/order-in-components
   computed: {
     ...mapGetters(['industries', 'provinces', 'cities', 'user']),
-    ...mapGetters('class', ['classUsers', 'userCurrentCompany'])
+    ...mapGetters('class', ['classUsers', 'userCurrentCompany']),
+    ...mapGetters('classLanding', [
+      'classDetail'
+    ])
   },
   // eslint-disable-next-line vue/order-in-components
   watch: {
@@ -386,6 +390,9 @@ export default {
         // this.handleGetUsers(value) //if use search
       }
     }
+  },
+  created () {
+    this.initPage()
   },
   async mounted () {
     await this.getIndustries()
@@ -398,6 +405,7 @@ export default {
     if (this.$route.params.classId) {
       // eslint-disable-next-line no-console
       this.initClassData()
+      // this.initClassData()
     }
   },
   methods: {
@@ -406,10 +414,17 @@ export default {
       'updateClass',
       'getUsers',
       'getUserCurrentCompany',
-      'uploadFile',
-      'getClassDetail']),
+      'uploadFile']),
     ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
-    ...mapActions('classLanding', ['createClassLanding']),
+    ...mapActions('classLanding', ['createClassLanding', 'getClassDetail']),
+    async initPage () {
+      if (this.isEdit) {
+        await this.getClassDetail({
+          id: this.$route.params.classId
+        })
+        this.setClassData()
+      }
+    },
     getUserAvatar (file) {
       return file ? staticUrl + file.efilename : require('@/assets/images/logos/sportiv-logo-small.png')
     },
@@ -522,7 +537,7 @@ export default {
     async initClassData () {
       await this.getClassDetail({
         id: this.$route.params.classId,
-        successCallback: this.setClassData
+        successCallback: await this.setClassData
       })
     },
     async setClassData (classDetail) {
@@ -530,12 +545,12 @@ export default {
       if (classDetail) {
         this.classData = {
           ...classDetail,
-          industryId: classDetail.industry.eindustryid,
-          classCoachUserIds: this.getClassCoachUserIds(classDetail.coaches),
-          picId: classDetail.pic.euserid,
-          stateId: classDetail.state.estateid,
-          initFiles: this.generateRawFiles(classDetail.classMedia),
-          picMobileNumber: classDetail.picMobileNumber.slice(3, classDetail.picMobileNumber.length)
+          // industryId: classDetail.industry.eindustryid,
+          classCoachUserIds: this.getClassCoachUserIds(classDetail.coaches)
+          // picId: classDetail.pic.euserid,
+          // stateId: classDetail.state.estateid,
+          // initFiles: this.generateRawFiles(classDetail.classMedia),
+          // picMobileNumber: classDetail.picMobileNumber.slice(3, classDetail.picMobileNumber.length)
         }
         if (classDetail.administrationFee) {
           this.feeSwitchOn = true
@@ -549,7 +564,9 @@ export default {
     },
     getClassCoachUserIds (coaches) {
       // eslint-disable-next-line no-console
-      return coaches.map((user) => { return user.userId })
+      return coaches.map((user) => {
+        return user.userId
+      })
     },
     generateRawFiles (classMedia) {
       const generatedRawFiles = classMedia.map((media) => {
