@@ -58,6 +58,7 @@
           </nuxt-link>
         </v-card>
         <span
+          v-if="isEnable"
           class="class-info__class-category__orange"
           @click="handleClickAddCategory"
         >
@@ -183,9 +184,18 @@ export default {
       selectedIndex: 0
     }
   },
+  props: {
+    isEnable: {
+      type: Boolean,
+      default: false
+    }
+  },
   computed: {
     ...mapGetters(['industries', 'provinces', 'cities']),
-    ...mapGetters('class', ['classDetail', 'userCurrentCompany']),
+    ...mapGetters('class', ['userCurrentCompany']),
+    ...mapGetters('classLanding', [
+      'classDetail'
+    ]),
     isSingleBanner () {
       return this.classDetail.classMedia && this.classDetail.classMedia.length === 1
     },
@@ -242,11 +252,13 @@ export default {
   },
   methods: {
     ...mapActions('class', [
-      'getClassDetail',
       'updateSelectedCoaches',
       'addClassCategory',
       'getUserCurrentCompany',
       'getUsers'
+    ]),
+    ...mapActions('classLanding', [
+      'getClassDetail'
     ]),
     ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
     initPage () {

@@ -19,7 +19,7 @@
     </v-row>
     <v-row align-content="center" justify="center" align="center" no-gutters>
       <v-col align-items="center" class="class-detail__width class-detail__card py-7">
-        <!-- <v-row class="mr-5">
+        <v-row class="mr-5">
           <span class="px-16 class-detail__card__title">
             {{ $t('cmsClass.classDetail') }}
           </span>
@@ -41,7 +41,7 @@
               mdi-delete
             </v-icon>
           </v-btn>
-        </v-row> -->
+        </v-row>
 
         <v-tabs v-model="tab" class="pt-7 px-16 class-detail__card__tabs">
           <v-tab>Info</v-tab>

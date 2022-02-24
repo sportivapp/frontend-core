@@ -21,8 +21,13 @@
         </v-tab>
       </v-tabs>
     </div>
-
-    <class-list v-if="selectedTab===0" class="ma-auto pt-5" access-from="core" />
+    <span v-if="selectedTab===0">
+      <class-list class="ma-auto pt-5" access-from="core" />
+    </span>
+    <span v-else>
+      <class-list class="ma-auto pt-5" access-from="saya" />
+      <!-- <class-list class="ma-auto pt-5" kelass-access-from="core" :is-kelas-saya="true" /> -->
+    </span>
     <home-footer />
     <simple-snack-bar
       v-model="showSuccessSnackBar"
