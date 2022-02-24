@@ -233,10 +233,12 @@ export default {
     },
     generateDate (selectedDt, time) {
       const dt = new Date(selectedDt)
-      if (time) {
+      if (time && selectedDt) {
         const timeArr = time.split(':')
-        dt.setHours(timeArr[0])
-        dt.setMinutes(timeArr[1])
+        // dt.setHours(timeArr[0])
+        new Date(dt).setHours(dt.getHours() + timeArr[0])
+        // dt.setMinutes(timeArr[1])
+        new Date(dt).setMinutes(dt.getMinutes() + timeArr[1])
       }
       return dt.getTime()
     }

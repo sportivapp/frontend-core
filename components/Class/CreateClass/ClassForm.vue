@@ -357,7 +357,7 @@ export default {
     },
     accessFrom: {
       type: String,
-      default: ''
+      default: 'core'
     }
   },
   data: () => ({
@@ -560,6 +560,15 @@ export default {
         delete this.classData.city
         delete this.classData.industry
         delete this.classData.state
+        if (classDetail.classMedia) {
+          for (let i = 0; i < classDetail.classMedia.length;) {
+            try {
+              if (classDetail.classMedia[i].file) {
+                this.doUploadFiles(classDetail.classMedia[i].file)
+              }
+            } catch (error) {}
+          }
+        }
       }
     },
     getClassCoachUserIds (coaches) {
