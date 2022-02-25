@@ -11,7 +11,6 @@
           <p class="spv-caption--3 ma-0 mr-2">
             {{ bankAccount.masterBank.name }}
           </p>
-
           <v-tooltip
             v-if="bankAccount.status === 'PENDING'"
             bottom=""
