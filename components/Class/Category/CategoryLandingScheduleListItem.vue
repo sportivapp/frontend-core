@@ -235,13 +235,10 @@ export default {
       const dt = new Date(selectedDt)
       if (time && selectedDt) {
         const timeArr = time.split(':')
-        const h = timeArr[0]
-        const m = timeArr[1]
-        dt.setHours(h)
-        // new Date(dt).setHours(dt.getHours() + h)
-        dt.setMinutes(m)
-        // new Date(dt).setMinutes(dt.getMinutes() + m)
-        dt.toString()
+        // dt.setHours(timeArr[0])
+        new Date(dt).setHours(dt.getHours() + timeArr[0])
+        // dt.setMinutes(timeArr[1])
+        new Date(dt).setMinutes(dt.getMinutes() + timeArr[1])
       }
       const getTime = dt.getTime()
       return getTime
