@@ -392,17 +392,44 @@ export default {
   },
   methods: {
     constructCategoryObject () {
-      return {
-        startMonth: this.startMonthDate.getTime(),
-        endMonth: this.endMonthDate.getTime(),
-        title: this.categoryTitle,
-        description: this.categoryDescription,
-        price: this.priceOption === 1 ? 0 : parseInt(this.categoryPrice, 10),
-        requirements: this.categoryRequirement,
-        categoryCoachUserIds: [...this.categoryCoachUserIds],
-        schedules: duplicateObject(this.categorySchedules),
-        isRecurring: true
+      let data = ''
+      if (this.priceOption !== 2) {
+        data = {
+          startMonth: this.startMonthDate.getTime(),
+          endMonth: this.endMonthDate.getTime(),
+          title: this.categoryTitle,
+          description: this.categoryDescription,
+          price: this.priceOption === 1 ? 0 : parseInt(this.categoryPrice, 10),
+          requirements: this.categoryRequirement,
+          categoryCoachUserIds: [...this.categoryCoachUserIds],
+          schedules: duplicateObject(this.categorySchedules),
+          isRecurring: false
+        }
+      } else {
+        data = {
+          startMonth: this.startMonthDate.getTime(),
+          endMonth: this.endMonthDate.getTime(),
+          title: this.categoryTitle,
+          description: this.categoryDescription,
+          price: this.priceOption === 1 ? 0 : parseInt(this.categoryPrice, 10),
+          requirements: this.categoryRequirement,
+          categoryCoachUserIds: [...this.categoryCoachUserIds],
+          schedules: duplicateObject(this.categorySchedules),
+          isRecurring: true
+        }
       }
+      return data
+      // return {
+      //   startMonth: this.startMonthDate.getTime(),
+      //   endMonth: this.endMonthDate.getTime(),
+      //   title: this.categoryTitle,
+      //   description: this.categoryDescription,
+      //   price: this.priceOption === 1 ? 0 : parseInt(this.categoryPrice, 10),
+      //   requirements: this.categoryRequirement,
+      //   categoryCoachUserIds: [...this.categoryCoachUserIds],
+      //   schedules: duplicateObject(this.categorySchedules),
+      //   isRecurring: true
+      // }
     },
     handleCloseModal () {
       this.$emit('close')

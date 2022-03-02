@@ -543,9 +543,6 @@ export default {
           this.isFeePerSession = false
           this.sessionFee = null
         }
-        if (value !== 2) {
-          this.packetFee = null
-        }
       }
     }
   },
@@ -556,7 +553,7 @@ export default {
     ...mapActions('classLanding', ['generateSessions']),
     constructCategoryObject () {
       let data = {}
-      if (!this.isFeePerSession) {
+      if (this.feeType === 1) {
         data = {
           title: this.categoryTitle,
           description: this.categoryDescription,
