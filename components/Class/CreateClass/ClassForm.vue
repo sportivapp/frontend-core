@@ -468,6 +468,11 @@ export default {
     },
     async handleSaveClass () {
       await this.doUploadFiles(this.rawFiles)
+      for (const key in this.classData.categories) {
+        if (!this.classData.categories[key].price) {
+          this.classData.categories[key].price = 0
+        }
+      }
       const classDataBody = {
         ...this.classData,
         picMobileNumber: '+62' + this.classData.picMobileNumber,

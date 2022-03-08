@@ -1,0 +1,15 @@
+::v-deep .vue-tel-input {
+  border: none;
+  background-color: $grey-4;
+  border-radius: 8px;
+  height: 32px;
+
+  input {
+    border-radius: 0 8px 8px 0;
+  }
+}
+
+::v-deep .vti__flag {
+  border-radius: 50%;
+  object-fit: contain;
+}
