@@ -61,7 +61,7 @@ export default {
         return {
           date: milisecondToLongFullDate(session.startDate),
           time: msToHourMinute(session.startDate) + '-' + msToHourMinute(session.endDate),
-          price: 'Rp.' + session.price
+          price: 'Rp.' + ((session.price) ? session.price : 0)
         }
       })
     }

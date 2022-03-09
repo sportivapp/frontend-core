@@ -236,12 +236,14 @@ export default {
       if (time && selectedDt) {
         const timeArr = time.split(':')
         const h = timeArr[0]
-        const m = timeArr[1]
-        dt.setHours(h)
+        const m = timeArr[1
+        dt.setDate(dt.getDate())
+        dt.setHours(h, m, 0)
         // new Date(dt).setHours(dt.getHours() + h)
-        dt.setMinutes(m)
+        // dt.setMinutes(m)
         // new Date(dt).setMinutes(dt.getMinutes() + m)
-        dt.toString()
+        // dt.toString()
+        dt.toLocaleString('en-US', { hour12: false })
       }
       const getTime = dt.getTime()
       return getTime
