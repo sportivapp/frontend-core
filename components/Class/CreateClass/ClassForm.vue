@@ -325,6 +325,7 @@ import UploadFile from '@/components/Class/CreateClass/UploadFileNew'
 import ClassCategoryTable from '@/components/Class/Category/ClassCategoryTable'
 import ClassLandingCategoryTable from '@/components/Class/Category/ClassLandingCategoryTable'
 import { mapGetters, mapActions } from 'vuex'
+// mapActions
 import validationMixin from '@/components/Class/validation.mixin'
 import { staticUrl } from '@/config/api'
 import SimplePrompt from '@/components/Modal/SimplePrompt'
@@ -392,10 +393,10 @@ export default {
     }
   },
   created () {
-    this.initPage()
+    // this.initPage()
   },
   async mounted () {
-    await this.getIndustries()
+    // await this.getIndustries()
     await this.getUserCurrentCompany({ successCallback: this.handleGetUsers })
     const params = {
       countryId: 1,
@@ -404,8 +405,8 @@ export default {
     this.getProvinces({ params })
     if (this.$route.params.classId) {
       // eslint-disable-next-line no-console
-      this.initClassData()
       // this.initClassData()
+      this.initClassData()
     }
   },
   methods: {
@@ -548,6 +549,7 @@ export default {
     async setClassData (classDetail) {
       // eslint-disable-next-line no-console
       if (classDetail) {
+        await this.updateCities()
         this.classData = {
           ...classDetail,
           // industryId: classDetail.industry.eindustryid,
@@ -560,20 +562,19 @@ export default {
         if (classDetail.administrationFee) {
           this.feeSwitchOn = true
         }
-        await this.updateCities()
         this.classData.cityId = classDetail.city.ecityid
         delete this.classData.city
         delete this.classData.industry
         delete this.classData.state
-        if (classDetail.classMedia) {
-          for (let i = 0; i < classDetail.classMedia.length;) {
-            try {
-              if (classDetail.classMedia[i].file) {
-                this.doUploadFiles(classDetail.classMedia[i].file)
-              }
-            } catch (error) {}
-          }
-        }
+        // if (classDetail.classMedia) {
+        //   for (let i = 0; i < classDetail.classMedia.length;) {
+        //     try {
+        //       if (classDetail.classMedia[i].file) {
+        //         this.doUploadFiles(classDetail.classMedia[i].file)
+        //       }
+        //     } catch (error) {}
+        //   }
+        // }
       }
     },
     getClassCoachUserIds (coaches) {
