@@ -242,10 +242,9 @@ export default {
         // newDate = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate() + 1,)
         // dt.setDate(dt.getDate())
         dt.setHours(+h, +m, 0)
-        // new Date(dt).setHours(dt.getHours() + h)
-        // dt.setMinutes(m)
-        // new Date(dt).setMinutes(dt.getMinutes() + m)
-        // dt.toString()
+        if (h <= 12) {
+          dt.setDate(dt.getDate() + 1)
+        }
         return dt.getTime()
       }
       // const getTime = dt.getTime()
