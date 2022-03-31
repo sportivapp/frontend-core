@@ -130,6 +130,7 @@ export default {
   },
   computed: {
     previewSessions () {
+      // console.log(this.selectedCategory)
       return this.selectedCategory && this.selectedCategory.sessions
     },
     previewPacketFee () {

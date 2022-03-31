@@ -233,22 +233,12 @@ export default {
     },
     generateDate (selectedDt, time) {
       const dt = new Date(selectedDt)
-      // dt.toLocaleString('en-US', { hour12: false })
-      // let newDate = ''
-      if (time && selectedDt) {
+      if (time) {
         const timeArr = time.split(':')
-        const h = timeArr[0]
-        const m = timeArr[1]
-        // newDate = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate() + 1,)
-        // dt.setDate(dt.getDate())
-        dt.setHours(+h, +m, 0)
-        if (h <= 12) {
-          dt.setDate(dt.getDate() + 1)
-        }
-        return dt.getTime()
+        dt.setHours(timeArr[0])
+        dt.setMinutes(timeArr[1])
       }
-      // const getTime = dt.getTime()
-      return dt
+      return dt.getTime()
     }
   }
 }

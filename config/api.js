@@ -30,7 +30,6 @@ const api = {
     verifyToken: '/verify/token',
     permissions: '/permissions/class',
     classList: params => `/class-v2${serializeQueryParams(params)}`,
-    myClassList: params => `/landing/my-class-v2${serializeQueryParams(params)}`,
     classDetail: id => `/class-v2/${id}`,
     classCategoryDetail: (classId, classCategoryId) => `/class-v2/${classId}/class-category/${classCategoryId}`,
     classSessionParticipant: (classCategoryId, sessionId, params) => `/class-category/${classCategoryId}/class-category-session/${sessionId}/participants${serializeQueryParams(params)}`,
@@ -49,10 +48,6 @@ const api = {
   classLanding: {
     createClass: '/landing/class-v2',
     classList: params => `/landing/class-v2${serializeQueryParams(params)}`,
-    classDetail: id => `/landing/class-v2/${id}`,
-    deleteClass: id => `/landing/class-v2/${id}`,
-    myClassList: params => `/landing/my-class-v2${serializeQueryParams(params)}`,
-    users: data => `/landing/company/${data.companyId}/users${serializeQueryParams(data.params)}`,
     sessionGenerate: '/common/class-category-session-generate'
   },
   setting: {

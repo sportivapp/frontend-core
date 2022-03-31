@@ -28,7 +28,7 @@ export default {
     ]),
     init () {
       if (Object.keys(this.classPermissions).length <= 0) {
-        // this.getClassPermissions()
+        this.getClassPermissions()
       }
     }
   }
