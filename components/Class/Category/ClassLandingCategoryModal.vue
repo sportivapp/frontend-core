@@ -543,9 +543,6 @@ export default {
           this.isFeePerSession = false
           this.sessionFee = null
         }
-        if (value !== 2) {
-          this.packetFee = null
-        }
       }
     }
   },
@@ -555,16 +552,30 @@ export default {
   methods: {
     ...mapActions('classLanding', ['generateSessions']),
     constructCategoryObject () {
-      return {
-        title: this.categoryTitle,
-        description: this.categoryDescription,
-        price: this.packetFee,
-        requirements: '',
-        isRecurring: true,
-        minParticipant: this.minParticipant,
-        maxParticipant: this.maxParticipant,
-        sessions: this.generatedSessions
+      let data = {}
+      if (this.priceOption === 1) {
+        data = {
+          title: this.categoryTitle,
+          description: this.categoryDescription,
+          requirements: '',
+          isRecurring: false,
+          minParticipant: this.minParticipant,
+          maxParticipant: this.maxParticipant,
+          sessions: this.generatedSessions
+        }
+      } else {
+        data = {
+          title: this.categoryTitle,
+          description: this.categoryDescription,
+          price: this.packetFee,
+          requirements: '',
+          isRecurring: true,
+          minParticipant: this.minParticipant,
+          maxParticipant: this.maxParticipant,
+          sessions: this.generatedSessions
+        }
       }
+      return data
     },
     handleCloseModal () {
       this.$emit('close')
@@ -603,6 +614,7 @@ export default {
         })
       } else {
         this.$emit('save', this.constructCategoryObject())
+        this.addCategory()
       }
     },
     init () {
@@ -652,6 +664,8 @@ export default {
     },
     handleClickResetPeriod () {
       this.categoryPeriod = []
+    },
+    addCategory () {
     }
   }
 }

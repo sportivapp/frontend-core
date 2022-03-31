@@ -58,6 +58,7 @@
           </nuxt-link>
         </v-card>
         <span
+          v-if="isEnable"
           class="class-info__class-category__orange"
           @click="handleClickAddCategory"
         >
@@ -85,7 +86,7 @@
                       :'class-info__detail-table__price'
                     "
                   >
-                    {{ getClassFee }}
+                    {{ getClassFee }} -- {{ pricepermonth }}
                   </div>
                 </td>
               </tr>
@@ -155,9 +156,10 @@
         </v-simple-table>
       </v-col>
     </v-row>
-    <class-category-modal
+    <class-landing-category-modal
       :show="showAddCategoryModal"
       :title-text="'Tambah Kategori'"
+      :access-from="core"
       @close="handleCloseCategoryModal"
       @save="handleAddClassCategory"
     />
@@ -168,24 +170,34 @@
 import { mapGetters, mapActions } from 'vuex'
 import { staticUrl } from '@/config/api'
 import { convertToPrice } from '@/utils/price'
-import ClassCategoryModal from '@/components/Class/Category/ClassCategoryModal'
+// import ClassLandingCategoryModal from '@/components/class/Category/ClassLandingCategoryModal'
 
 export default {
   name: 'ClassInfo',
   components: {
-    ClassCategoryModal
+    // ClassLandingCategoryModal
+  },
+  props: {
+    isEnable: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
       staticUrl,
       showMoreCoach: false,
       showAddCategoryModal: false,
-      selectedIndex: 0
+      selectedIndex: 0,
+      pricepermonth: 0
     }
   },
   computed: {
     ...mapGetters(['industries', 'provinces', 'cities']),
-    ...mapGetters('class', ['classDetail', 'userCurrentCompany']),
+    ...mapGetters('class', ['userCurrentCompany']),
+    ...mapGetters('classLanding', [
+      'classDetail'
+    ]),
     isSingleBanner () {
       return this.classDetail.classMedia && this.classDetail.classMedia.length === 1
     },
@@ -242,17 +254,20 @@ export default {
   },
   methods: {
     ...mapActions('class', [
-      'getClassDetail',
       'updateSelectedCoaches',
       'addClassCategory',
       'getUserCurrentCompany',
       'getUsers'
     ]),
+    ...mapActions('classLanding', [
+      'getClassDetail'
+    ]),
     ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
-    initPage () {
-      this.getClassDetail({
+    async initPage () {
+      await this.getClassDetail({
         id: this.$route.params.classId
       })
+      // this.pricepermonth = this.getClassFee()
     },
     async handleGetUsers (keyword = '') {
       const params = {

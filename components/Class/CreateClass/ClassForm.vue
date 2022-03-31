@@ -325,6 +325,7 @@ import UploadFile from '@/components/Class/CreateClass/UploadFileNew'
 import ClassCategoryTable from '@/components/Class/Category/ClassCategoryTable'
 import ClassLandingCategoryTable from '@/components/Class/Category/ClassLandingCategoryTable'
 import { mapGetters, mapActions } from 'vuex'
+// mapActions
 import validationMixin from '@/components/Class/validation.mixin'
 import { staticUrl } from '@/config/api'
 import SimplePrompt from '@/components/Modal/SimplePrompt'
@@ -357,7 +358,7 @@ export default {
     },
     accessFrom: {
       type: String,
-      default: ''
+      default: 'core'
     }
   },
   data: () => ({
@@ -366,6 +367,7 @@ export default {
     picId: null,
     searchText: '',
     classData: {
+      title: '',
       categories: [],
       classCoachUserIds: []
     },
@@ -377,7 +379,10 @@ export default {
   // eslint-disable-next-line vue/order-in-components
   computed: {
     ...mapGetters(['industries', 'provinces', 'cities', 'user']),
-    ...mapGetters('class', ['classUsers', 'userCurrentCompany'])
+    ...mapGetters('class', ['classUsers', 'userCurrentCompany']),
+    ...mapGetters('classLanding', [
+      'classDetail'
+    ])
   },
   // eslint-disable-next-line vue/order-in-components
   watch: {
@@ -387,8 +392,11 @@ export default {
       }
     }
   },
+  created () {
+    // this.initPage()
+  },
   async mounted () {
-    await this.getIndustries()
+    // await this.getIndustries()
     await this.getUserCurrentCompany({ successCallback: this.handleGetUsers })
     const params = {
       countryId: 1,
@@ -397,6 +405,7 @@ export default {
     this.getProvinces({ params })
     if (this.$route.params.classId) {
       // eslint-disable-next-line no-console
+      // this.initClassData()
       this.initClassData()
     }
   },
@@ -406,10 +415,17 @@ export default {
       'updateClass',
       'getUsers',
       'getUserCurrentCompany',
-      'uploadFile',
-      'getClassDetail']),
+      'uploadFile']),
     ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
-    ...mapActions('classLanding', ['createClassLanding']),
+    ...mapActions('classLanding', ['createClassLanding', 'getClassDetail']),
+    async initPage () {
+      if (this.isEdit) {
+        await this.getClassDetail({
+          id: this.$route.params.classId
+        })
+        this.setClassData()
+      }
+    },
     getUserAvatar (file) {
       return file ? staticUrl + file.efilename : require('@/assets/images/logos/sportiv-logo-small.png')
     },
@@ -453,6 +469,11 @@ export default {
     },
     async handleSaveClass () {
       await this.doUploadFiles(this.rawFiles)
+      for (const key in this.classData.categories) {
+        if (!this.classData.categories[key].price) {
+          this.classData.categories[key].price = 0
+        }
+      }
       const classDataBody = {
         ...this.classData,
         picMobileNumber: '+62' + this.classData.picMobileNumber,
@@ -522,34 +543,45 @@ export default {
     async initClassData () {
       await this.getClassDetail({
         id: this.$route.params.classId,
-        successCallback: this.setClassData
+        successCallback: await this.setClassData
       })
     },
     async setClassData (classDetail) {
       // eslint-disable-next-line no-console
       if (classDetail) {
+        await this.updateCities()
         this.classData = {
           ...classDetail,
-          industryId: classDetail.industry.eindustryid,
-          classCoachUserIds: this.getClassCoachUserIds(classDetail.coaches),
-          picId: classDetail.pic.euserid,
-          stateId: classDetail.state.estateid,
-          initFiles: this.generateRawFiles(classDetail.classMedia),
-          picMobileNumber: classDetail.picMobileNumber.slice(3, classDetail.picMobileNumber.length)
+          // industryId: classDetail.industry.eindustryid,
+          classCoachUserIds: this.getClassCoachUserIds(classDetail.coaches)
+          // picId: classDetail.pic.euserid,
+          // stateId: classDetail.state.estateid,
+          // initFiles: this.generateRawFiles(classDetail.classMedia),
+          // picMobileNumber: classDetail.picMobileNumber.slice(3, classDetail.picMobileNumber.length)
         }
         if (classDetail.administrationFee) {
           this.feeSwitchOn = true
         }
-        await this.updateCities()
         this.classData.cityId = classDetail.city.ecityid
         delete this.classData.city
         delete this.classData.industry
         delete this.classData.state
+        // if (classDetail.classMedia) {
+        //   for (let i = 0; i < classDetail.classMedia.length;) {
+        //     try {
+        //       if (classDetail.classMedia[i].file) {
+        //         this.doUploadFiles(classDetail.classMedia[i].file)
+        //       }
+        //     } catch (error) {}
+        //   }
+        // }
       }
     },
     getClassCoachUserIds (coaches) {
       // eslint-disable-next-line no-console
-      return coaches.map((user) => { return user.userId })
+      return coaches.map((user) => {
+        return user.userId
+      })
     },
     generateRawFiles (classMedia) {
       const generatedRawFiles = classMedia.map((media) => {
