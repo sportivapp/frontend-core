@@ -4,8 +4,6 @@ export const state = () => ({
   classPermissions: {},
   classList: [],
   classListPaging: {},
-  myClassList: [],
-  myClassListPaging: {},
   sessionParticipant: [],
   sessionHistoryParticipant: [],
   classCategoryDetail: {},
@@ -25,8 +23,6 @@ export const getters = {
   },
   classList: state => state.classList,
   classListPaging: state => state.classListPaging,
-  myClassList: state => state.myClassList,
-  myClassListPaging: state => state.myClassListPaging,
   sessionParticipant: state => state.sessionParticipant,
   sessionHistoryParticipant: state => state.sessionHistoryParticipant,
   classCategoryDetail: state => state.classCategoryDetail,
@@ -49,12 +45,6 @@ export const mutations = {
   },
   setClassListPaging (state, classListPaging) {
     state.classListPaging = classListPaging
-  },
-  setMyClassList (state, myClassList) {
-    state.myClassList = myClassList
-  },
-  setMyClassListPaging (state, myClassListPaging) {
-    state.myClassListPaging = myClassListPaging
   },
   setSessionParticipant (state, sessionParticipant) {
     state.sessionParticipant = sessionParticipant
@@ -112,15 +102,6 @@ export const actions = {
     this.$axios.get(getUrl(api.class.classList(params))).then((response) => {
       commit('setClassList', response.data.data)
       commit('setClassListPaging', response.data.paging)
-      successCallback && successCallback(response)
-    }).catch((error) => {
-      errHandler && errHandler(error)
-    })
-  },
-  getMyClassList ({ commit }, { params, successCallback, errHandler } = {}) {
-    this.$axios.get(getUrl(api.class.myClassList(params))).then((response) => {
-      commit('setMyClassList', response.data.data)
-      commit('setMyClassListPaging', response.data.paging)
       successCallback && successCallback(response)
     }).catch((error) => {
       errHandler && errHandler(error)

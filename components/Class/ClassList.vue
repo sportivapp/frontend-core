@@ -1,7 +1,5 @@
 <template>
   <v-container class="ma-0 pa-0 class-list" fluid>
-    <!-- class="ma-0 pa-0 class-list" fluid -->
-    <!-- class="ma-0 pa-0 class-list" fluid -->
     <v-row align="center" justify="end" no-gutters>
       <v-col align-self="center" cols="4">
         <search-bar
@@ -24,8 +22,7 @@
           Tambah Kelas
         </v-btn>
       </v-col>
-      <!-- v-if="accessFrom === 'core'" -->
-      <v-spacer />
+      <v-spacer v-if="accessFrom === 'core'" />
       <v-col align-self="center" cols="3">
         <v-row align="center" justify="end" no-gutters>
           {{ getStartNum }}-{{ getEndNum }} dari {{ getTotalSize }}
@@ -50,85 +47,10 @@
       <v-card-title class="class-list__card__title">
         Kelas
       </v-card-title>
-      <!-- {{ classListArr }} -- {{ accessFrom }} -->
       <v-data-table
-        v-if="accessFrom === 'core'"
         :headers="headers"
         :items="classListArr"
         :loading="isTableLoading"
-        disable-filtering
-        disable-sort
-        disable-pagination
-        hide-default-footer
-        class="class-list__table"
-        @click:row="handleClickRow"
-      >
-        <!-- eslint-disable vue/valid-v-slot -->
-        <template v-slot:header.title="{ header }">
-          <div class="pl-12">
-            {{ header.text }}
-          </div>
-        </template>
-        <template v-slot:item.title="{ item }">
-          <v-container class="ma-0 pa-0 pl-12 py-3 d-flex justify-start align-content-center">
-            <v-row align="center">
-              <v-col md="4" class="py-0">
-                <v-img
-                  max-height="60"
-                  max-width="107"
-                  :src="getClassBanner(item.classMedia)"
-                  :lazy-src="require('@/assets/images/bg/orange_background.png')"
-                  class="rounded"
-                />
-              </v-col>
-              <v-col class="py-0">
-                <v-row class="pa-0">
-                  <div class="class-list__table__title">
-                    {{ item.title }}
-                  </div>
-                </v-row>
-                <v-row v-if="accessFrom === 'core' && item.company" class="pa-0" align="center">
-                  <v-avatar size="16" class="ml-2">
-                    <v-img
-                      max-height="60"
-                      max-width="107"
-                      :src="getClassBanner(item.company&&item.company.logo)"
-                      :lazy-src="require('@/assets/images/bg/orange_background.png')"
-                      class="rounded"
-                    />
-                  </v-avatar>
-                  <span class="spv-body--3 grey--text ml-2">
-                    {{ item.company && item.company.ecompanyname }}
-                  </span>
-                </v-row>
-              </v-col>
-            </v-row>
-          </v-container>
-        </template>
-        <template v-if="accessFrom === 'core'" v-slot:item.startFrom="{ item }">
-          <div
-            :class="item.startFrom === 0
-              ?'class-list__table__price--free'
-              :'class-list__table__price'"
-          >
-            {{ calculatePrice(item.startFrom) }}
-          </div>
-        </template>
-        <template v-else v-slot:item.priceRange.minPrice="{ item }">
-          <div
-            :class="(item.priceRange.minPrice===item.priceRange.maxPrice) && (item.priceRange.minPrice===0)
-              ?'class-list__table__price--free'
-              :'class-list__table__price'"
-          >
-            {{ calculatePrice(item.priceRange) }}
-          </div>
-        </template>
-      </v-data-table>
-      <v-data-table
-        v-if="accessFrom === 'saya'"
-        :headers="headers"
-        :items="myClassListArr"
-        :loading="isMyClassTableLoading"
         disable-filtering
         disable-sort
         disable-pagination
@@ -209,7 +131,6 @@ import { convertToPrice } from '@/utils/price'
 import SearchBar from '../inputs/SearchBar.vue'
 
 const LIST_TO = 10
-const MY_LIST_TO = 10
 
 export default {
   name: 'ClassListComponent',
@@ -219,14 +140,6 @@ export default {
       type: String,
       default: ''
     }
-    // kelassAccessFrom: {
-    //   type: String,
-    //   default: ''
-    // },
-    // isKelasSaya: {
-    //   type: Boolean,
-    //   default: false
-    // }
   },
   data () {
     return {
@@ -244,26 +157,18 @@ export default {
         { text: 'Peserta', value: 'totalParticipants' }
       ],
       isTableLoading: true,
-      isMyClassTableLoading: true,
       LIST_TO,
-      MY_LIST_TO,
-      currentPage: 0,
-      myClassCurrentPage: 0
+      currentPage: 0
     }
   },
   computed: {
     ...mapGetters('class', [
       'classList',
-      'classListPaging',
-      'myClassList',
-      'myClassListPaging'
+      'classListPaging'
     ]),
     ...mapGetters('classLanding', [
       'classLandingList',
-      'classLandingListPaging',
-      'myClassLandingList',
-      'myClassLandingListPaging'
-
+      'classLandingListPaging'
     ]),
     classListArr () {
       return this.accessFrom === 'core' ? this.classLandingList : this.classList
@@ -271,66 +176,29 @@ export default {
     classListPagingSelected () {
       return this.accessFrom === 'core' ? this.classLandingListPaging : this.classListPaging
     },
-    myClassListArr () {
-      return this.accessFrom === 'saya' ? this.myClassLandingList : this.myClassList
-    },
-    myClassListPagingSelected () {
-      return this.accessFrom === 'saya' ? this.myClassLandingListPaging : this.myClassListPaging
-    },
     getStartNum () {
-      if (this.accessFrom === 'core') {
-        if (!this.classListPagingSelected.totalSize || this.classListPagingSelected.totalSize <= 0) {
-          return 0
-        }
-        return (this.LIST_TO * this.currentPage) + 1
-      } else {
-        if (!this.myClassListPagingSelected.totalSize || this.myClassListPagingSelected.totalSize <= 0) {
-          return 0
-        }
-        return (this.MY_LIST_TO * this.myClassCurrentPage) + 1
+      if (!this.classListPagingSelected.totalSize || this.classListPagingSelected.totalSize <= 0) {
+        return 0
       }
+      return (this.LIST_TO * this.currentPage) + 1
     },
     getEndNum () {
-      if (this.accessFrom === 'core') {
-        if (!this.classListPagingSelected.totalSize) { return 0 }
-        const endNum = this.LIST_TO * (this.currentPage + 1)
-        if (endNum >= this.classListPagingSelected.totalSize) {
-          return this.classListPagingSelected.totalSize
-        }
-        return endNum
-      } else {
-        if (!this.myClassListPagingSelected.totalSize) { return 0 }
-        const endNum = this.MY_LIST_TO * (this.myClassCurrentPage + 1)
-        if (endNum >= this.myClassListPagingSelected.totalSize) {
-          return this.myClassListPagingSelected.totalSize
-        }
-        return endNum
+      if (!this.classListPagingSelected.totalSize) { return 0 }
+      const endNum = this.LIST_TO * (this.currentPage + 1)
+      if (endNum >= this.classListPagingSelected.totalSize) {
+        return this.classListPagingSelected.totalSize
       }
+      return endNum
     },
     getTotalSize () {
-      if (this.accessFrom === 'core') {
-        return this.classListPagingSelected.totalSize ? this.classListPagingSelected.totalSize : 0
-      } else {
-        return this.myClassListPagingSelected.totalSize ? this.myClassListPagingSelected.totalSize : 0
-      }
+      return this.classListPagingSelected.totalSize ? this.classListPagingSelected.totalSize : 0
     },
     disablePrevPageButton () {
       return this.currentPage <= 0
     },
     disableNextPageButton () {
-      if (this.accessFrom === 'core') {
-        if (!this.classListPagingSelected.totalPage) { return true }
-        return (this.currentPage + 1) >= this.classListPagingSelected.totalPage
-      } else {
-        if (!this.myClassListPagingSelected.totalPage) { return true }
-        return (this.myClassCurrentPage + 1) >= this.myClassListPagingSelected.totalPage
-      }
-    }
-  },
-  watch: {
-    accessFrom (newValue, oldValue) {
-      // console.log(newValue, oldValue)
-      this.initData()
+      if (!this.classListPagingSelected.totalPage) { return true }
+      return (this.currentPage + 1) >= this.classListPagingSelected.totalPage
     }
   },
   created () {
@@ -338,12 +206,10 @@ export default {
   },
   methods: {
     ...mapActions('class', [
-      'getClassList',
-      'getMyClassList'
+      'getClassList'
     ]),
     ...mapActions('classLanding', [
-      'getClassLandingList',
-      'getMyClassLandingList'
+      'getClassLandingList'
     ]),
     initData () {
       this.searchClass()
@@ -362,33 +228,16 @@ export default {
           params: this.constructParams(),
           successCallback: this.successGetClassList
         })
-      }
-      // else {
-      //   this.getClassList({
-      //     params: this.constructParams(),
-      //     successCallback: this.successGetClassList
-      //   })
-      // }
-      if (this.accessFrom === 'saya') {
-        this.getMyClassLandingList({
+      } else {
+        this.getClassList({
           params: this.constructParams(),
-          successCallback: this.successGetMyClassList
+          successCallback: this.successGetClassList
         })
       }
-      // else {
-      //   this.getMyClassList({
-      //     params: this.constructParams(),
-      //     successCallback: this.successGetMyClassList
-      //   })
-      // }
     },
     successGetClassList () {
       this.currentPage = this.classListPagingSelected.page
       this.isTableLoading = false
-    },
-    successGetMyClassList () {
-      this.currentPage = this.classListPagingSelected.page
-      this.isMyClassTableLoading = false
     },
     handleSearch (searchString) {
       this.searchTable = searchString
@@ -442,9 +291,9 @@ export default {
     },
     handleClickRow (item) {
       if (this.accessFrom === 'core') {
-        this.$router.push(`/class/${item.uuid}`)
+
       } else {
-        this.$router.push(`/user/class/${item.uuid}`)
+        this.$router.push(`/class/${item.uuid}`)
       }
     }
   }

@@ -1,6 +1,5 @@
 <template>
-  <!-- v-if="hasReadPermission" -->
-  <v-container class="ma-0 pa-0 class-detail" fluid>
+  <v-container v-if="hasReadPermission" class="ma-0 pa-0 class-detail" fluid>
     <simple-prompt
       :show="show"
       :title="$t('cmsClass.deleteModalTitle')"
@@ -19,7 +18,7 @@
     </v-row>
     <v-row align-content="center" justify="center" align="center" no-gutters>
       <v-col align-items="center" class="class-detail__width class-detail__card py-7">
-        <!-- <v-row class="mr-5">
+        <v-row class="mr-5">
           <span class="px-16 class-detail__card__title">
             {{ $t('cmsClass.classDetail') }}
           </span>
@@ -41,7 +40,7 @@
               mdi-delete
             </v-icon>
           </v-btn>
-        </v-row> -->
+        </v-row>
 
         <v-tabs v-model="tab" class="pt-7 px-16 class-detail__card__tabs">
           <v-tab>Info</v-tab>
@@ -49,7 +48,7 @@
         </v-tabs>
         <v-tabs-items v-model="tab" class="py-7">
           <v-tab-item class="px-16">
-            <class-info :is-enable="false" />
+            <class-info />
           </v-tab-item>
           <v-tab-item>
             <class-participants />
@@ -73,7 +72,7 @@ import ClassParticipants from '@/components/Class/ClassDetail/ClassParticipants'
 import HomeFooter from '@/components/Footer/HomeFooter.vue'
 import SimplePrompt from '@/components/Modal/SimplePrompt'
 import SimpleSnackBar from '@/components/SnackBar/SimpleSnackBar'
-import SimpleBreadcrumb from '@/components/Breadcrumb/SimpleBreadcrumb.vue'
+import SimpleBreadcrumb from '../../../components/Breadcrumb/SimpleBreadcrumb.vue'
 
 export default {
   name: 'ClassDetail',
@@ -88,10 +87,8 @@ export default {
   computed: {
     ...mapGetters('class', [
       'hasClassPermission',
+      'classDetail',
       'snackBarData'
-    ]),
-    ...mapGetters('classLanding', [
-      'classDetail'
     ]),
     hasReadPermission () {
       return this.hasClassPermission(permissions.read)
@@ -119,11 +116,8 @@ export default {
   },
   methods: {
     ...mapActions('class', ['deleteClass', 'setSnackBar']),
-    ...mapActions('classLanding', [
-      'deleteClassLanding'
-    ]),
     async handleDeleteClass () {
-      await this.deleteClassLanding({ id: this.$route.params.classId, successCallback: this.successCallbackDelete })
+      await this.deleteClass({ id: this.$route.params.classId, successCallback: this.successCallbackDelete })
     },
     successCallbackDelete () {
       const data = {

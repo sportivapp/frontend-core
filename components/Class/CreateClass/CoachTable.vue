@@ -75,8 +75,7 @@ export default {
     selectedCoachsId: []
   }),
   computed: {
-    ...mapGetters('class', ['userCurrentCompany']),
-    ...mapGetters('classLanding', ['classUsers'])
+    ...mapGetters('class', ['classUsers', 'userCurrentCompany'])
   },
   watch: {
     selectedCoachsId: {
@@ -93,15 +92,8 @@ export default {
       immediate: true
     }
   },
-  created () {
-    this.intitCall()
-  },
   methods: {
-    ...mapActions('class', ['getUserCurrentCompany', 'updateSelectedCoaches']),
-    ...mapActions('classLanding', ['getUsers']),
-    intitCall () {
-      this.getUsers()
-    },
+    ...mapActions('class', ['getUsers', 'getUserCurrentCompany', 'updateSelectedCoaches']),
     handleSelectedCoach (data) {
       this.initSelectedCoach(data)
       this.showModal = false
