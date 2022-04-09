@@ -268,6 +268,7 @@ export default {
         id: this.$route.params.classId
       })
       // this.pricepermonth = this.getClassFee()
+
     },
     async handleGetUsers (keyword = '') {
       const params = {
