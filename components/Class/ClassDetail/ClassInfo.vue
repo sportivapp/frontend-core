@@ -267,7 +267,8 @@ export default {
       await this.getClassDetail({
         id: this.$route.params.classId
       })
-      this.pricepermonth = this.getClassFee()
+      // this.pricepermonth = this.getClassFee()
+
     },
     async handleGetUsers (keyword = '') {
       const params = {

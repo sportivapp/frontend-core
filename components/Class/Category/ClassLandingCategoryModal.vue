@@ -553,7 +553,7 @@ export default {
     ...mapActions('classLanding', ['generateSessions']),
     constructCategoryObject () {
       let data = {}
-      if (this.feeType === 1) {
+      if (this.priceOption === 1) {
         data = {
           title: this.categoryTitle,
           description: this.categoryDescription,
