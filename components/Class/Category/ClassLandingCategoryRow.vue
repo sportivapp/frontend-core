@@ -18,13 +18,19 @@
       <v-row no-gutters justify="start" align="center">
         <v-col class="pa-0">
           <span
-            v-if="isFree"
+            v-if="category.feeType === 0"
             class="spv-subtitle--2 class-category-row__price--free"
           >
             Gratis
           </span>
-          <span v-else class="spv-subtitle--2 class-category-row__price--paid">
-            {{ category.price | convertToPrice }}
+          <span
+            v-if="category.feeType === 2"
+            class="spv-subtitle--2 class-category-row__price--free"
+          >
+            -
+          </span>
+          <span v-else-if="category.feeType === 1" class="spv-subtitle--2 class-category-row__price--paid">
+            {{ getCategoryPrice(category.sessions) }}
           </span>
         </v-col>
         <v-spacer />
@@ -87,8 +93,16 @@ export default {
       'selectedCoaches',
       'classUsers'
     ]),
+    ...mapGetters('classLanding', ['generatedSessions']),
     isFree () {
-      return this.category.price === 0 || this.category.price === null
+      // if (this.category.feeType === 1) {
+      //   return this.category.sessionsFee
+      // } else if (this.category.feeType === 2) {
+      //   return this.category.packetFee
+      // } else {
+      //   return true
+      // }
+      return this.category.feeType
     }
   },
   methods: {
@@ -100,6 +114,11 @@ export default {
     },
     setPreviewModal () {
       this.$emit('preview', this.index)
+    },
+    getCategoryPrice (price) {
+      const min = price.reduce((min, b) => Math.min(min, b.price), price[0].price)
+      const max = price.reduce((max, b) => Math.max(max, b.price), price[0].price)
+      return min === max ? convertToPrice(min) : convertToPrice(min) + ' - ' + convertToPrice(max)
     }
   }
 }

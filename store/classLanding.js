@@ -110,6 +110,24 @@ export const actions = {
       .catch((e) => {
         errHandler && errHandler(e)
       })
+  },
+  updateClassLanding ({ _ }, { id, body, successCallback, errHandler } = {}) {
+    this.$axios.put(getUrl(api.classLanding.updateClass(id)), body)
+      .then((res) => {
+        successCallback && successCallback(res)
+      })
+      .catch((err) => {
+        errHandler && errHandler(err)
+      })
+  },
+  addClassCategoryLanding ({ commit }, { id, body, successCallback, errHandler } = {}) {
+    this.$axios.post(getUrl(api.classLanding.insertClassCategory(id)), body)
+      .then((res) => {
+        successCallback && successCallback(res)
+      })
+      .catch((err) => {
+        errHandler && errHandler(err)
+      })
   }
 
 }

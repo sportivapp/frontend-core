@@ -47,7 +47,7 @@
                   :'class-info__class-category__price'
                 "
               >
-                {{ getClassCategoryPrice(classCategory.price) }}
+                {{ getClassCategoryPrice(pricepermonth) }}
               </span>
             </v-card-title>
             <v-card-text class="pt-0">
@@ -159,7 +159,6 @@
     <class-landing-category-modal
       :show="showAddCategoryModal"
       :title-text="'Tambah Kategori'"
-      :access-from="core"
       @close="handleCloseCategoryModal"
       @save="handleAddClassCategory"
     />
@@ -170,12 +169,12 @@
 import { mapGetters, mapActions } from 'vuex'
 import { staticUrl } from '@/config/api'
 import { convertToPrice } from '@/utils/price'
-// import ClassLandingCategoryModal from '@/components/class/Category/ClassLandingCategoryModal'
+import ClassLandingCategoryModal from '@/components/class/Category/ClassLandingCategoryModal'
 
 export default {
   name: 'ClassInfo',
   components: {
-    // ClassLandingCategoryModal
+    ClassLandingCategoryModal
   },
   props: {
     isEnable: {
@@ -260,7 +259,8 @@ export default {
       'getUsers'
     ]),
     ...mapActions('classLanding', [
-      'getClassDetail'
+      'getClassDetail',
+      'addClassCategoryLanding'
     ]),
     ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
     async initPage () {
@@ -268,7 +268,6 @@ export default {
         id: this.$route.params.classId
       })
       // this.pricepermonth = this.getClassFee()
-
     },
     async handleGetUsers (keyword = '') {
       const params = {
@@ -291,10 +290,10 @@ export default {
     },
     handleAddClassCategory (newCategory) {
       this.showAddCategoryModal = false
-      this.addClassCategory({
+      this.addClassCategoryLanding({
         id: this.$route.params.classId,
         body: newCategory,
-        successCallback: location.reload()
+        successCallback: this.$router.push(`/class/${this.$route.params.classId}`)
       })
     }
   }

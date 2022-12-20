@@ -159,12 +159,14 @@ export default {
       this.showAddCategoryModal = false
       const newArray = duplicateObject(this.value)
       newArray[index] = duplicateObject(data)
+      console.log(this.showAddCategoryModal, 'xxxxxxxxxxxxxxxxxxxxx')
       this.$emit('input', newArray)
     },
     handleClickEdit (index) {
       this.isEditing = true
       this.selectedIndex = index
       this.selectedCategory = duplicateObject(this.value[index])
+      console.log(this.selectedCategory, 'this one is being used')
       this.showAddCategoryModal = true
     },
     handleClickDelete (index) {

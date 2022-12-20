@@ -25,7 +25,7 @@
           <img
             :id="'galleryFile'+file.key"
             :hidden="isVideo"
-            class="ma-0 pa-0"
+            class="ma-0 pa-0 object-fit-cover"
             :src="bannerPreview"
             width="100%"
             height="100%"
@@ -191,5 +191,9 @@ label{
     padding: 0;
     margin: 0;
   }
+}
+
+.object-fit-cover {
+  object-fit: cover;
 }
 </style>
