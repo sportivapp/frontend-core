@@ -639,7 +639,6 @@ export default {
       if (this.initialData) {
         this.initDataFromProps()
       }
-      console.log('PARENT COMPONENT', this)
     },
     initDataFromProps () {
       this.categoryTitle = this.initialData.title

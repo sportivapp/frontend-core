@@ -587,12 +587,11 @@ export default {
     },
     generateRawFiles (classMedia) {
       const generatedRawFiles = classMedia.map((media) => {
-        console.log(media)
         return {
-          efilename: media.file && media.file.efilename,
-          efilesize: media.file && media.file.efilesize,
-          efiletype: media.file && media.file.efiletype,
-          efilepath: media.file && media.file.efilepath,
+          name: media.file && media.file.efilename,
+          size: media.file && media.file.efilesize,
+          type: media.file && media.file.efiletype,
+          path: media.file && media.file.efilepath,
           fileId: media.fileId && media.file.efileid
           // "efilename": "1642568980908-cat.jpg",
           // "efilesize": 6981,
@@ -605,7 +604,6 @@ export default {
           // "efilechangeby": 1,
         }
       })
-      console.log(generatedRawFiles)
       return generatedRawFiles
     },
     checkFrontZero (value) {
