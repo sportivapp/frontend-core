@@ -1,84 +1,76 @@
 <template>
-  <v-data-table
-    class="class-category-session"
-    :items="session.categorySessions"
-  >
-    <template v-slot:header>
-      <thead class="class-category-session__header-container">
-        <tr class="class-category-session__header--background">
-          <th class="class-category-session__header--left pl-10">
-            <span class="class-category-session__header--left">
-              Hari
-            </span>
-          </th>
-          <th class="class-category-session__header--left">
-            <span class="class-category-session__header--left">
-              Tanggal
-            </span>
-          </th>
-          <th class="class-category-session__header--date">
-            <span class="class-category-session__header--date">
-              Tahun
-            </span>
-          </th>
-          <th class="class-category-session__header--left">
-            <span class="class-category-session__header--left">
-              Jam
-            </span>
-          </th>
-          <th class="class-category-session__header--left">
-            <span class="class-category-session__header--left">
-              Status
-            </span>
-          </th>
-          <th class="class-category-session__header" />
-        </tr>
-      </thead>
-    </template>
-    <template v-slot:item="{ item }">
-      <class-category-session-row
-        :session="item"
+  <div>
+    <div
+      v-for="(item, index) in categorySessions"
+      :key="index"
+      class="class-category-session-table"
+    >
+      <v-divider v-if="index > 0" />
+      <h1 class="class-category-session-table__title">
+        {{ convertMonthToIndonesia(item.name) }}
+      </h1>
+      <class-category-session-table
+        :value="mergeSessions(index)"
+        :session="session"
         :category="session"
       />
-    </template>
-  </v-data-table>
+    </div>
+  </div>
 </template>
 
 <script>
-import ClassCategorySessionRow from '@/components/Class/ClassCategory/ClassCategorySessionRow'
-
+import ClassCategorySessionTable from '@/components/Class/ClassCategory/ClassCategorySessionTable'
+import { toIndonesiaMonthText } from '@/utils/date'
 export default {
   name: 'ClassCategorySession',
-  components: { ClassCategorySessionRow },
+  components: { ClassCategorySessionTable },
   props: {
     session: {
       type: Object,
       required: true
+    }
+  },
+  data () {
+    return {
+      categorySessions: [],
+      allSessionsInMonth: []
+    }
+  },
+  created () {
+    this.init()
+  },
+  methods: {
+    init () {
+      this.categorySessions = this.session.categorySessions
+    },
+    mergeSessions (index) {
+      const sessionsPerMonth = []
+      const currentSession = this.session.categorySessions[index]
+      for (let i = 0; i < currentSession.days.length; i++) {
+        currentSession.days[i].sessions.forEach((item) => {
+          sessionsPerMonth.push(item)
+        })
+      }
+      return sessionsPerMonth
+    },
+    convertMonthToIndonesia (text) {
+      const month = toIndonesiaMonthText(text.toLowerCase())
+      return month.toUpperCase()
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.class-category-session {
+.class-category-session-table {
   width: 100%;
 
-  &__header {
-    color: $neutral-grey;
-    margin: 0;
-    padding: 0;
-
-    &--left {
-      width: 160px;
-    }
-
-    &--date {
-      width: 100px;
-    }
-
-    &--background {
-      height: 52px;
-    }
+  &__title {
+    color: $neutral-black;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 28px;
+    padding: 60px 0 0 40px;
   }
 }
 

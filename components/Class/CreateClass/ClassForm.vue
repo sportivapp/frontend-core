@@ -417,7 +417,7 @@ export default {
       'getUserCurrentCompany',
       'uploadFile']),
     ...mapActions(['getIndustries', 'getProvinces', 'getCities']),
-    ...mapActions('classLanding', ['createClassLanding', 'getClassDetail']),
+    ...mapActions('classLanding', ['createClassLanding', 'getClassDetail', 'updateClassLanding']),
     async initPage () {
       if (this.isEdit) {
         await this.getClassDetail({
@@ -483,8 +483,11 @@ export default {
       if (this.accessFrom === 'core') {
         classDataBody.picId = this.user.euserid
         classDataBody.picMobileNumber = this.user.eusermobilenumber
-
-        this.createClassLanding({ body: classDataBody, successCallback: this.successSaveClass })
+        if (this.isEdit) {
+          this.updateClassLanding({ id: this.$route.params.classId, body: classDataBody, successCallback: this.successSaveClass })
+        } else {
+          this.createClassLanding({ body: classDataBody, successCallback: this.successSaveClass })
+        }
       } else if (this.accessFrom !== 'core') {
         if (this.isEdit) {
           this.updateClass({ id: this.$route.params.classId, body: classDataBody, successCallback: this.successSaveClass })
@@ -552,11 +555,10 @@ export default {
         await this.updateCities()
         this.classData = {
           ...classDetail,
-          // industryId: classDetail.industry.eindustryid,
-          classCoachUserIds: this.getClassCoachUserIds(classDetail.coaches)
-          // picId: classDetail.pic.euserid,
-          // stateId: classDetail.state.estateid,
-          // initFiles: this.generateRawFiles(classDetail.classMedia),
+          industryId: classDetail.industry.eindustryid,
+          classCoachUserIds: this.getClassCoachUserIds(classDetail.coaches),
+          stateId: classDetail.state.estateid,
+          initFiles: this.generateRawFiles(classDetail.classMedia)
           // picMobileNumber: classDetail.picMobileNumber.slice(3, classDetail.picMobileNumber.length)
         }
         if (classDetail.administrationFee) {
@@ -590,7 +592,16 @@ export default {
           size: media.file && media.file.efilesize,
           type: media.file && media.file.efiletype,
           path: media.file && media.file.efilepath,
-          fileId: media.fileId
+          fileId: media.fileId && media.file.efileid
+          // "efilename": "1642568980908-cat.jpg",
+          // "efilesize": 6981,
+          // "efiletype": "image/jpeg",
+          // "efilepath": "temp\\1642568980908-cat.jpg",
+          // "efileid": 72
+          // "efilecreatetime": 1642568980909,
+          // "efilecreateby": 1,
+          // "efilechangetime": 1642568980909,
+          // "efilechangeby": 1,
         }
       })
       return generatedRawFiles

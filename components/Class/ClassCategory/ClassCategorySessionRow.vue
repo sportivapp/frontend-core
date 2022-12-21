@@ -1,28 +1,27 @@
 <template>
   <tr
-    v-if="session.status == 'ONGOING' || session.status == 'UPCOMING'"
     class="class-category-session-row"
     @mouseover="showButton"
     @mouseleave="hideButton"
   >
     <td class="class-category-session-row pl-10">
       <span class="class-category-session-row">
-        {{ dateStart[0] ? dateStart[0] : '' }}
+        {{ day }}
       </span>
     </td>
     <td class="class-category-session-row">
       <span>
-        {{ dateStart[1] ? dateStart[1] : '' }} {{ dateStart[2] ? dateStart[2] : '' }}
+        {{ startDate ? startDate : '' }} - {{ endDate ? endDate : '' }}
       </span>
     </td>
     <td class="class-category-session-row">
       <span class="class-category-session-row__time">
-        {{ dateStart[3] ? dateStart[3] : '' }}
+        {{ year ? year : '' }}
       </span>
     </td>
     <td class="class-category-session-row">
       <span class="class-category-session-row__time">
-        {{ timeStart ? timeStart : '' }} - {{ timeEnd ? timeEnd : '' }}
+        {{ startTime ? startTime : '' }} - {{ endTime ? endTime : '' }}
       </span>
     </td>
     <td
@@ -62,9 +61,9 @@
 </template>
 
 <script>
-import { toFullDateWeekdayHourMinute } from '@/utils/date'
 import ClassCategorySessionDialog from '@/components/Class/ClassCategory/ClassCategorySessionDialog'
-
+import moment from 'moment'
+import { toIndonesiaDateAndTime } from '@/utils/date'
 export default {
   name: 'ClassCategorySessionRow',
   components: { ClassCategorySessionDialog },
@@ -76,16 +75,22 @@ export default {
     category: {
       type: Object,
       required: true
+    },
+    value: {
+      type: Array,
+      required: true
     }
   },
   data () {
     return {
       showParticipantList: false,
       participantList: [],
-      dateStart: '',
-      dateEnd: '',
-      timeStart: '',
-      timeEnd: '',
+      day: '',
+      startDate: '',
+      endDate: '',
+      startTime: '',
+      endTime: '',
+      year: '',
       showHide: false
     }
   },
@@ -97,19 +102,15 @@ export default {
       this.getFullDate()
     },
     getFullDate () {
-      this.dateStart = toFullDateWeekdayHourMinute(this.session.startDate)
-      this.dateEnd = toFullDateWeekdayHourMinute(this.session.endDate)
-      this.dateStart = this.dateStart.split(' ')
-      this.dateEnd = this.dateEnd.split(' ')
-      // get weekday
-      this.dateStart[0] = this.dateStart[0].replace(',', '')
-      // delete milisecond
-      this.timeStart = this.dateStart[4].split(':')
-      this.timeStart.length = 2
-      this.timeStart = this.timeStart.join(':')
-      this.timeEnd = this.dateEnd[4].split(':')
-      this.timeEnd.length = 2
-      this.timeEnd = this.timeEnd.join(':')
+      const startDate = parseInt(this.session.startDate)
+      const endDate = parseInt(this.session.endDate)
+      const formattedDate = toIndonesiaDateAndTime(moment(startDate).format('dddd, DD MMMM YYYY')).split(',')[0]
+      this.day = formattedDate
+      this.startDate = moment(startDate).format('DD/MM')
+      this.endDate = moment(endDate).format('DD/MM')
+      this.startTime = moment(startDate).format('hh:mm')
+      this.endTime = moment(endDate).format('hh:mm')
+      this.year = moment(startDate).format('YYYY')
     },
     toggleShowParticipantList () {
       this.showParticipantList = !this.showParticipantList
