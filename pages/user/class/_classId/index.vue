@@ -131,7 +131,7 @@ export default {
         message: this.$t('cmsClass.deleteSuccess')
       }
       this.setSnackBar(data)
-      this.$router.push('/class')
+      this.$router.push('/user/class')
     }
   },
   head () {
