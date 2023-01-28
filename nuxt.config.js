@@ -26,7 +26,7 @@ export default {
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [
-    '~/assets/colors.scss',
+    // '~/assets/colors.scss',
     '~/assets/vendors/vue-sweetalert2.scss',
     '~/assets/vendors/vue-tel-input.scss',
     '~/assets/styles/index.scss'

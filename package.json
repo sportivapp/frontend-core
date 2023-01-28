@@ -20,11 +20,10 @@
     "fibers": "^5.0.3",
     "js-cookie": "^2.2.1",
     "moment": "^2.29.1",
-    "node-sass": "^5.0.0",
+    "node-sass": "4.14.1",
     "nuxt": "^2.14.6",
     "nuxt-i18n": "^6.15.4",
     "nuxt-sass-resources-loader": "^2.0.5",
-    "sass-loader": "^8.0.0",
     "tiptap-vuetify": "^2.24.0",
     "vue-clipboard2": "^0.3.1",
     "vue-slick-carousel": "^1.0.6",
@@ -40,6 +39,7 @@
     "@nuxtjs/vuetify": "^1.11.2",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.10.0",
-    "eslint-plugin-nuxt": "^1.0.0"
+    "eslint-plugin-nuxt": "^1.0.0",
+    "sass-loader": "10.1.1"
   }
 }
