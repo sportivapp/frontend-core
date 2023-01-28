@@ -400,7 +400,7 @@ import { mapGetters, mapActions } from 'vuex'
 import PreviewSessionList from '@/components/Class/Category/PreviewSessionList'
 
 export default {
-  name: 'ClassCategoryModal',
+  name: 'ClassLandingCategoryModal',
   components: {
     CategoryLandingScheduleList,
     PreviewSessionList
