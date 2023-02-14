@@ -46,6 +46,8 @@ export default {
   height: 100vh;
   width: 100vw;
   background-color: white;
+  overflow: hidden;
+  bottom: 0;
 
   img {
     position: absolute;

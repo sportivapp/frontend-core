@@ -308,6 +308,7 @@
               <!-- <small v-if="$v.categorySchedules.$error" class="red--text pl-2">
                 {{ categorySchedulesErrors[categorySchedulesErrors.length-1] }}
               </small> -->
+              <!-- <span v-if="$v.categorySchedules.$invalid">{{ categorySchedulesErrors[0] }}</span> -->
             </v-row>
             <v-row
               class="class-category-modal__form__section"
@@ -393,7 +394,6 @@
 import CategoryLandingScheduleList
   from '@/components/Class/Category/CategoryLandingScheduleList'
 import { dateToMonthAndYear } from '@/utils/date'
-import { duplicateObject } from '@/utils/object'
 import { convertToPrice } from '@/utils/price'
 import validationMixin from '@/components/Class/validationCategory.mixin'
 import { mapGetters, mapActions } from 'vuex'
@@ -542,6 +542,8 @@ export default {
         if (value !== 1) {
           this.isFeePerSession = false
           this.sessionFee = null
+        } else if (value !== 2) {
+          this.packetFee = null
         }
       }
     }
@@ -555,24 +557,41 @@ export default {
       let data = {}
       if (this.priceOption === 1) {
         data = {
+          categoryPeriod: this.categoryPeriod,
           title: this.categoryTitle,
           description: this.categoryDescription,
-          requirements: '',
-          isRecurring: false,
+          requirements: this.categoryRequirement,
+          priceOption: this.priceOption,
           minParticipant: this.minParticipant,
           maxParticipant: this.maxParticipant,
-          sessions: this.generatedSessions
+          categorySchedules: this.categorySchedules,
+          categoryPrice: this.categoryPrice,
+          feeType: this.feeType,
+          packetFee: this.packetFee,
+          sessionFee: this.sessionFee,
+          isFeePerSession: this.isFeePerSession,
+          price: this.packetFee,
+          sessions: this.generatedSessions,
+          isRecurring: this.categorySchedules[0].isRecurring
         }
       } else {
         data = {
+          categoryPeriod: this.categoryPeriod,
           title: this.categoryTitle,
           description: this.categoryDescription,
-          price: this.packetFee,
-          requirements: '',
-          isRecurring: true,
+          requirements: this.categoryRequirement,
+          priceOption: this.priceOption,
           minParticipant: this.minParticipant,
           maxParticipant: this.maxParticipant,
-          sessions: this.generatedSessions
+          categorySchedules: this.categorySchedules,
+          categoryPrice: this.categoryPrice,
+          feeType: this.feeType,
+          packetFee: this.packetFee,
+          sessionFee: this.sessionFee,
+          isFeePerSession: this.isFeePerSession,
+          price: this.packetFee,
+          sessions: this.generatedSessions,
+          isRecurring: this.categorySchedules[0].isRecurring
         }
       }
       return data
@@ -614,58 +633,61 @@ export default {
         })
       } else {
         this.$emit('save', this.constructCategoryObject())
-        this.addCategory()
       }
     },
     init () {
       if (this.initialData) {
-        // this.initDataFromProps()
+        this.initDataFromProps()
       }
     },
     initDataFromProps () {
       this.categoryTitle = this.initialData.title
       this.categoryDescription = this.initialData.description
+      this.categoryPeriod = this.initialData.categoryPeriod
+      this.categorySchedules = this.initialData.categorySchedules
+      this.minParticipant = this.initialData.minParticipant
+      this.maxParticipant = this.initialData.maxParticipant
+      this.feeType = this.initialData.feeType
+      this.packetFee = this.initialData.packetFee
+      this.sessionFee = this.initialData.sessionFee
+      this.isFeePerSession = this.initialData.isFeePerSession
       this.priceOption = this.initialData.price > 0 ? 2 : 1
       this.categoryPrice = this.initialData.price
-      this.categoryRequirement = this.initialData.requirements
-
-      if (this.isEditCategory) {
-        const schedule = []
-        schedule.push({
-          day: 'MONDAY',
-          endHour: 12,
-          endMinute: 0,
-          startHour: 10,
-          startMinute: 0
-        })
-        this.categorySchedules = duplicateObject(schedule)
-        const coachUserId = []
-        if (this.initialData && this.initialData.coaches) {
-          for (let i = 0; i < this.initialData.coaches.length; i++) {
-            coachUserId.push(this.initialData.coaches[i].userId)
-          }
-        }
-        this.categoryCoachUserIds = [...coachUserId]
-        this.categoryPeriod = [
-          new Date().toISOString(),
-          new Date().toISOString()
-        ]
-      } else {
-        this.categorySchedules = duplicateObject(this.initialData.schedules)
-        this.categoryCoachUserIds = [...this.initialData.categoryCoachUserIds]
-
-        if (this.initialData.startMonth && this.initialData.endMonth) {
-          this.categoryPeriod = [
-            new Date(this.initialData.startMonth).toISOString(),
-            new Date(this.initialData.endMonth).toISOString()
-          ]
-        }
-      }
+      // this.categoryRequirement = this.initialData.requirements
+      // if (this.isEditCategory) {
+      //   const schedule = []
+      //   schedule.push({
+      //     day: 'MONDAY',
+      //     endHour: 12,
+      //     endMinute: 0,
+      //     startHour: 10,
+      //     startMinute: 0
+      //   })
+      //   this.categorySchedules = duplicateObject(schedule)
+      //   const coachUserId = []
+      //   if (this.initialData && this.initialData.coaches) {
+      //     for (let i = 0; i < this.initialData.coaches.length; i++) {
+      //       coachUserId.push(this.initialData.coaches[i].userId)
+      //     }
+      //   }
+      //   this.categoryCoachUserIds = [...coachUserId]
+      //   this.categoryPeriod = [
+      //     new Date().toISOString(),
+      //     new Date().toISOString()
+      //   ]
+      // } else {
+      //   this.categorySchedules = duplicateObject(this.initialData.schedules)
+      //   this.categoryCoachUserIds = [...this.initialData.categoryCoachUserIds]
+      //   if (this.initialData.startMonth && this.initialData.endMonth) {
+      //     this.categoryPeriod = [
+      //       new Date(this.initialData.startMonth).toISOString(),
+      //       new Date(this.initialData.endMonth).toISOString()
+      //     ]
+      //   }
+      // }
     },
     handleClickResetPeriod () {
       this.categoryPeriod = []
-    },
-    addCategory () {
     }
   }
 }

@@ -32,7 +32,7 @@ const api = {
     classList: params => `/class-v2${serializeQueryParams(params)}`,
     myClassList: params => `/landing/my-class-v2${serializeQueryParams(params)}`,
     classDetail: id => `/class-v2/${id}`,
-    classCategoryDetail: (classId, classCategoryId) => `/class-v2/${classId}/class-category/${classCategoryId}`,
+    classCategoryDetail: (classId, classCategoryId) => `/mobile/class-v2/${classId}/class-category/${classCategoryId}`,
     classSessionParticipant: (classCategoryId, sessionId, params) => `/class-category/${classCategoryId}/class-category-session/${sessionId}/participants${serializeQueryParams(params)}`,
     createClass: '/class-v2',
     users: data => `/company/${data.companyId}/users${serializeQueryParams(data.params)}`,
@@ -44,7 +44,7 @@ const api = {
     updateClass: id => `/class-v2/${id}`,
     getCategorySchedule: categoryId => `/class-category/${categoryId}/schedule`,
     extendCategorySession: categoryId => `/class-category/${categoryId}/extend`,
-    updateClassCategory: (classId, classCategoryId) => `/class-v2/${classId}/class-category/${classCategoryId}`
+    updateClassCategory: (classId, classCategoryId) => `/landing/class-v2/${classId}/class-category/${classCategoryId}`
   },
   classLanding: {
     createClass: '/landing/class-v2',
@@ -53,7 +53,9 @@ const api = {
     deleteClass: id => `/landing/class-v2/${id}`,
     myClassList: params => `/landing/my-class-v2${serializeQueryParams(params)}`,
     users: data => `/landing/company/${data.companyId}/users${serializeQueryParams(data.params)}`,
-    sessionGenerate: '/common/class-category-session-generate'
+    sessionGenerate: '/common/class-category-session-generate',
+    updateClass: id => `/landing/class-v2/${id}`,
+    insertClassCategory: id => `/landing/class-v2/${id}/class-category`
   },
   setting: {
     getAllBanks: '/common/banks',

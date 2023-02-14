@@ -254,6 +254,7 @@ $ellipse-height: 200px;
    + ($ellipse-height / 2);
   background-color: $black-neutral;
   position: relative;
+  overflow-x: clip;
 
   &--small {
     margin-top: $footer-top-margin + ($organization-margin * 2);

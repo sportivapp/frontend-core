@@ -104,6 +104,100 @@ const msToHourMinute = (timestamp) => {
   return date
 }
 
+const toIndonesiaDateAndTime = (text) => {
+  const currentDate = text
+  let splitCurrentDate = currentDate.split(',')
+  let splitDay = splitCurrentDate[0]
+  const splitDate = splitCurrentDate[1].trim().split(' ')
+  switch (splitDay) {
+    case 'Monday':
+      splitDay = 'Senin'
+      break
+    case 'Tuesday':
+      splitDay = 'Selasa'
+      break
+    case 'Wednesday':
+      splitDay = 'Rabu'
+      break
+    case 'Thursday':
+      splitDay = 'Kamis'
+      break
+    case 'Friday':
+      splitDay = 'Jumat'
+      break
+    case 'Saturday':
+      splitDay = 'Sabtu'
+      break
+    default:
+      splitDay = 'Minggu'
+      break
+  }
+  switch (splitDate[1]) {
+    case 'January':
+      splitDate[1] = 'Januari'
+      break
+    case 'February':
+      splitDate[1] = 'Februari'
+      break
+    case 'March':
+      splitDate[1] = 'Maret'
+      break
+    case 'May':
+      splitDate[1] = 'Mei'
+      break
+    case 'June':
+      splitDate[1] = 'Juni'
+      break
+    case 'July':
+      splitDate[1] = 'Juli'
+      break
+    case 'August':
+      splitDate[1] = 'Agustus'
+      break
+    case 'October':
+      splitDate[1] = 'Oktober'
+      break
+    case 'December':
+      splitDate[1] = 'Desember'
+      break
+  }
+  splitCurrentDate = splitDay + ', ' + splitDate[0] + ' ' + splitDate[1] + ' ' + splitDate[2]
+  return splitCurrentDate
+}
+
+const toIndonesiaMonthText = (month) => {
+  switch (month) {
+    case 'january':
+      month = 'Januari'
+      break
+    case 'february':
+      month = 'Februari'
+      break
+    case 'march':
+      month = 'Maret'
+      break
+    case 'may':
+      month = 'Mei'
+      break
+    case 'june':
+      month = 'Juni'
+      break
+    case 'july':
+      month = 'Juli'
+      break
+    case 'august':
+      month = 'Agustus'
+      break
+    case 'october':
+      month = 'Oktober'
+      break
+    case 'december':
+      month = 'Desember'
+      break
+  }
+  return month
+}
+
 export {
   milisecondToFullDate,
   milisecondToFullDateShortMonth,
@@ -113,5 +207,7 @@ export {
   toFullDateWeekdayHourMinute,
   milisecondToLongFullDate,
   msToHourMinute,
-  milisecondForDatePicker
+  milisecondForDatePicker,
+  toIndonesiaDateAndTime,
+  toIndonesiaMonthText
 }

@@ -392,6 +392,7 @@ import { mapGetters } from 'vuex'
 import UserMenu from '@/components/Navigation/UserMenu'
 
 export default {
+  name: 'Default',
   components: { UserMenu, CreateOrganization, ViewMyOrganization },
   data () {
     return {

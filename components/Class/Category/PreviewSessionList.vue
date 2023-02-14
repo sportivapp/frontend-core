@@ -4,7 +4,7 @@
       <span class="spv-subtitle--1 grey--text">Berikut adalah daftar sesi kelas berdasarkan pengaturan sebelumnya.</span>
     </v-row>
     <v-row v-if="packetFee">
-      <span class="spv-subtitle--2">Harga Paket : Rp{{ packetFee }} / bulan</span>
+      <span class="spv-subtitle--2">Harga Paket : Rp {{ packetFee }} / bulan</span>
     </v-row>
     <v-row>
       <v-col cols="12">
@@ -20,7 +20,8 @@
 </template>
 
 <script>
-import { milisecondToLongFullDate, msToHourMinute } from '@/utils/date'
+import { msToHourMinute, toIndonesiaDateAndTime } from '@/utils/date'
+import moment from 'moment'
 export default {
   name: 'PreviewSessionList',
   props: {
@@ -58,10 +59,11 @@ export default {
   methods: {
     generateSessions (sessions) {
       return sessions.map((session) => {
+        const date = moment(session.startDate).format('dddd, DD MMMM YYYY')
         return {
-          date: milisecondToLongFullDate(session.startDate),
+          date: toIndonesiaDateAndTime(date),
           time: msToHourMinute(session.startDate) + '-' + msToHourMinute(session.endDate),
-          price: 'Rp.' + ((session.price) ? session.price : 0)
+          price: ((session.price) ? 'Rp. ' + session.price : ((this.packetFee > 0 && session.price === null) ? '-' : 'Gratis'))
         }
       })
     }

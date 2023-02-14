@@ -101,7 +101,7 @@ export default {
         {
           text: this.$t('common.class'),
           disabled: false,
-          to: '/class'
+          to: '/user/class'
         },
         {
           text: this.classDetail.title || this.$t('cmsClass.classDetail'),
@@ -131,7 +131,7 @@ export default {
         message: this.$t('cmsClass.deleteSuccess')
       }
       this.setSnackBar(data)
-      this.$router.push('/class')
+      this.$router.push('/user/class')
     }
   },
   head () {

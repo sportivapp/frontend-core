@@ -19,11 +19,12 @@
       <home-footer />
     </div>
   </v-container>
+  <v-container v-else>You don't have any permission</v-container>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { permissions } from '@/config/permission'
+// import { permissions } from '@/config/permission'
 import ClassCategoryDetail from '@/components/Class/ClassCategory/ClassCategoryDetail'
 import SimpleBreadcrumb from '@/components/Breadcrumb/SimpleBreadcrumb.vue'
 import SimpleSnackBar from '@/components/SnackBar/SimpleSnackBar'
@@ -40,7 +41,8 @@ export default {
       'snackBarData'
     ]),
     hasReadPermission () {
-      return this.hasClassPermission(permissions.read)
+      // return this.hasClassPermission(permissions.read)
+      return true
     },
     showSuccessSnackBar: {
       get () {

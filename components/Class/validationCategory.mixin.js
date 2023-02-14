@@ -13,33 +13,47 @@ export default {
         },
         // categorySchedules: {
         //   required,
-        //   hourValid: (v) => {
-        //     for (let i = 0; i < v.length; i++) {
-        //       if (v[i].endHour < v[i].startHour) {
+        //   isValid: () => {
+        //     console.log(this.$v.categorySchedules)
+        //     const keys = Object.keys(this.categorySchedules[0])
+        //     this.$v.categorySchedules.$model.forEach((item) => {
+        //       for (let index = 0; index < keys.length; index++) {
+        //         const element = item[keys[index]]
+        //         console.log(element, item, item[keys[index]])
+        //         if (element === null) {
+        //           return true
+        //         }
+        //       }
+        //     })
+        //     return false
+        //   }
+        // hourValid: (v) => {
+        //   for (let i = 0; i < v.length; i++) {
+        //     if (v[i].endHour < v[i].startHour) {
+        //       return false
+        //     } else if (v[i].endHour === v[i].startHour) {
+        //       if (v[i].endMinute <= v[i].startMinute) {
         //         return false
-        //       } else if (v[i].endHour === v[i].startHour) {
-        //         if (v[i].endMinute <= v[i].startMinute) {
+        //       }
+        //     }
+        //   }
+        //   return true
+        // },
+        // timeValid: (v) => {
+        //   for (let i = 0; i < v.length - 1; i++) {
+        //     for (let j = i + 1; j < v.length; j++) {
+        //       if (v[i].day === v[j].day) {
+        //         if (!(Number(v[j].startHour) < Number(v[i].startHour) ||
+        //       Number(v[j].startHour) > Number(v[i].endHour)) ||
+        //       !(Number(v[j].endHour) < Number(v[i].startHour) ||
+        //       Number(v[j].endHour) > Number(v[i].endHour))) {
         //           return false
         //         }
         //       }
         //     }
-        //     return true
-        //   },
-        //   timeValid: (v) => {
-        //     for (let i = 0; i < v.length - 1; i++) {
-        //       for (let j = i + 1; j < v.length; j++) {
-        //         if (v[i].day === v[j].day) {
-        //           if (!(Number(v[j].startHour) < Number(v[i].startHour) ||
-        //         Number(v[j].startHour) > Number(v[i].endHour)) ||
-        //         !(Number(v[j].endHour) < Number(v[i].startHour) ||
-        //         Number(v[j].endHour) > Number(v[i].endHour))) {
-        //             return false
-        //           }
-        //         }
-        //       }
-        //     }
-        //     return true
         //   }
+        //   return true
+        // }
         // },
         categoryPeriod: {
           required,
@@ -57,36 +71,50 @@ export default {
       return {
         categoryTitle: { required },
         categoryDescription: { required },
-        categorySchedules: {
-          required,
-          hourValid: (v) => {
-            for (let i = 0; i < v.length; i++) {
-              if (v[i].endHour < v[i].startHour) {
-                return false
-              } else if (v[i].endHour === v[i].startHour) {
-                if (v[i].endMinute <= v[i].startMinute) {
-                  return false
-                }
-              }
-            }
-            return true
-          },
-          timeValid: (v) => {
-            for (let i = 0; i < v.length - 1; i++) {
-              for (let j = i + 1; j < v.length; j++) {
-                if (v[i].day === v[j].day) {
-                  if (!(Number(v[j].startHour) < Number(v[i].startHour) ||
-                Number(v[j].startHour) > Number(v[i].endHour)) ||
-                !(Number(v[j].endHour) < Number(v[i].startHour) ||
-                Number(v[j].endHour) > Number(v[i].endHour))) {
-                    return false
-                  }
-                }
-              }
-            }
-            return true
-          }
-        },
+        // categorySchedules: {
+        //   required,
+        //   isValid: () => {
+        //     console.log(this.$v.categorySchedules)
+        //     const keys = Object.keys(this.categorySchedules[0])
+        //     this.$v.categorySchedules.$model.forEach((item) => {
+        //       for (let index = 0; index < keys.length; index++) {
+        //         const element = item[keys[index]]
+        //         console.log(element, item, item[keys[index]])
+        //         if (element === null) {
+        //           return true
+        //         }
+        //       }
+        //     })
+        //     return false
+        //   }
+        // hourValid: (v) => {
+        //   for (let i = 0; i < v.length; i++) {
+        //     if (v[i].endHour < v[i].startHour) {
+        //       return false
+        //     } else if (v[i].endHour === v[i].startHour) {
+        //       if (v[i].endMinute <= v[i].startMinute) {
+        //         return false
+        //       }
+        //     }
+        //   }
+        //   return true
+        // },
+        // timeValid: (v) => {
+        //   for (let i = 0; i < v.length - 1; i++) {
+        //     for (let j = i + 1; j < v.length; j++) {
+        //       if (v[i].day === v[j].day) {
+        //         if (!(Number(v[j].startHour) < Number(v[i].startHour) ||
+        //       Number(v[j].startHour) > Number(v[i].endHour)) ||
+        //       !(Number(v[j].endHour) < Number(v[i].startHour) ||
+        //       Number(v[j].endHour) > Number(v[i].endHour))) {
+        //           return false
+        //         }
+        //       }
+        //     }
+        //   }
+        //   return true
+        // }
+        // },
         categoryPeriod: {
           required,
           validPeriodRange: (v) => {
@@ -124,8 +152,9 @@ export default {
       const errors = []
       if (!this.$v.categorySchedules.$dirty) { return errors }
       !this.$v.categorySchedules.required && errors.push('Jadwal Kategori harus di isi minimal 1')
-      !this.$v.categorySchedules.timeValid && errors.push('Jadwal tidak boleh berlangsung bersamaan')
-      !this.$v.categorySchedules.hourValid && errors.push('Jam mulai harus lebih kecil dari jam berakhir')
+      !this.$v.categorySchedules.isValid && errors.push('Jadwal Kategori tidak boleh kosong')
+      // !this.$v.categorySchedules.timeValid && errors.push('Jadwal tidak boleh berlangsung bersamaan')
+      // !this.$v.categorySchedules.hourValid && errors.push('Jam mulai harus lebih kecil dari jam berakhir')
 
       return errors
     },

@@ -143,7 +143,7 @@
 </template>
 
 <script>
-import { milisecondToFullDate, milisecondForDatePicker } from '@/utils/date'
+import moment from 'moment'
 export default {
   name: 'CategoryLandingScheduleListItem',
   props: {
@@ -185,10 +185,6 @@ export default {
     endTime: null
   }),
   computed: {
-    convertedDate () {
-      const cDate = new Date(this.selectedDate)
-      return milisecondToFullDate(cDate.getTime())
-    },
     sessionFeeGen: {
       set (v) {
         this.fee = v
@@ -197,7 +193,7 @@ export default {
         if (!this.isFeePerSession) {
           return this.sessionFee
         }
-        return null
+        return this.fee
       }
     }
   },
@@ -214,7 +210,7 @@ export default {
   },
   methods: {
     initData (v) {
-      this.selectedDate = v.startTimeDate ? milisecondForDatePicker(v.startTimeDate) : new Date().toISOString().substr(0, 10)
+      this.selectedDate = v.startTimeDate ? moment(v.startTimeDate).format('YYYY-MM-DD') : moment(new Date()).format('YYYY-MM-DD')
       this.isRecurring = v.isRecurring
       this.startTime = v.startTime
       this.endTime = v.endTime
@@ -232,23 +228,9 @@ export default {
       this.$emit('input', session)
     },
     generateDate (selectedDt, time) {
-      const dt = new Date(selectedDt)
-      // dt.toLocaleString('en-US', { hour12: false })
-      // let newDate = ''
-      if (time && selectedDt) {
-        const timeArr = time.split(':')
-        const h = timeArr[0]
-        const m = timeArr[1]
-        // newDate = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate() + 1,)
-        // dt.setDate(dt.getDate())
-        dt.setHours(+h, +m, 0)
-        if (h <= 12) {
-          dt.setDate(dt.getDate() + 1)
-        }
-        return dt.getTime()
-      }
-      // const getTime = dt.getTime()
-      return dt
+      const formatTime = time ? time.split(':') : '01:00'.split(':')
+      const date = moment(selectedDt).set({ hour: formatTime[0], minute: formatTime[1] })
+      return date.valueOf()
     }
   }
 }

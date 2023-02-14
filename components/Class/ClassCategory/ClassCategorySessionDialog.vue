@@ -154,7 +154,7 @@ export default {
       this.isTableLoading = true
       this.getSessionParticipant({
         init,
-        classCategoryId: this.category.uuid,
+        classCategoryId: this.category.classCategoryUuid,
         sessionId: this.session.uuid,
         params: this.constructParams(),
         successCallback: this.handleParticipantCount
