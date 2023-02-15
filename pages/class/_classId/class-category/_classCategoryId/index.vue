@@ -55,7 +55,7 @@ export default {
         {
           text: this.$t('common.class'),
           disabled: false,
-          to: '/class'
+          to: '/user/class'
         },
         {
           text: this.$t('cmsClass.classDetail'),
