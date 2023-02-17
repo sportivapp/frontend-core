@@ -169,7 +169,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import { staticUrl } from '@/config/api'
 import { convertToPrice } from '@/utils/price'
-import ClassLandingCategoryModal from '@/components/class/Category/ClassLandingCategoryModal'
+import ClassLandingCategoryModal from '@/components/Class/Category/ClassLandingCategoryModal'
 
 export default {
   name: 'ClassInfo',
